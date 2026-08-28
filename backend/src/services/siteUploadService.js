@@ -19,9 +19,8 @@ const ZIP_MAX_FILE_BYTES = 10 * 1024 * 1024;
 const STATIC_EXTENSIONS = new Set(['.html', '.htm', '.css', '.js']);
 const RESUME_EXTENSIONS = new Set(['.pdf', '.docx', '.doc', '.txt']);
 const ZIP_EXTENSIONS = new Set(['.zip']);
-// Only AI-generated resume pages may be published on the primary domain.
-// Raw user HTML/JS bundles are a phishing and malware risk.
-const SAFE_GENERATED_EXTENSIONS = new Set(['.html', '.htm', '.css', '.png', '.jpg', '.jpeg', '.gif', '.webp', '.ico', '.woff', '.woff2']);
+// Bundles are published only after the static security review below.
+const SAFE_GENERATED_EXTENSIONS = new Set(['.html', '.htm', '.css', '.js', '.png', '.jpg', '.jpeg', '.gif', '.webp', '.ico', '.woff', '.woff2']);
 const ALLOWED_SITE_EXTENSIONS = new Set([
   ...STATIC_EXTENSIONS,
   ...RESUME_EXTENSIONS,
@@ -115,8 +114,65 @@ function sanitizeGeneratedHtml(value) {
     .replace(/\s(?:href|src|action|formaction)\s*=\s*(?:"\s*javascript:[^"]*"|'\s*javascript:[^']*'|\s*javascript:[^\s>]+)/gi, '');
 }
 
+function sanitizeSafeStaticHtml(value) {
+  return String(value || '')
+    .replace(/<iframe\b[^>]*>[\s\S]*?<\/iframe\s*>/gi, '')
+    .replace(/<iframe\b[^>]*\/?\s*>/gi, '')
+    .replace(/<object\b[^>]*>[\s\S]*?<\/object\s*>/gi, '')
+    .replace(/<object\b[^>]*\/?\s*>/gi, '')
+    .replace(/<embed\b[^>]*>/gi, '')
+    .replace(/<form\b[^>]*>[\s\S]*?<\/form\s*>/gi, '')
+    .replace(/<form\b[^>]*\/?\s*>/gi, '')
+    .replace(/<\/form\s*>/gi, '')
+    .replace(/<meta\b[^>]*http-equiv\s*=\s*["']?refresh["']?[^>]*>/gi, '')
+    .replace(/<base\b[^>]*>/gi, '')
+    .replace(/<script\b(?![^>]*\bsrc\s*=\s*["'][^"']+\.(?:js)(?:\?[^"']*)?["'])[^>]*>[\s\S]*?<\/script\s*>/gi, '')
+    .replace(/<script\b(?![^>]*\bsrc\s*=\s*["'][^"']+\.(?:js)(?:\?[^"']*)?["'])[^>]*\/?\s*>/gi, '')
+    .replace(/\son[a-z0-9_-]+\s*=\s*(?:"[^"]*"|'[^']*'|[^\s>]+)/gi, '')
+    .replace(/\s(?:href|src|action|formaction)\s*=\s*(?:"\s*(?:javascript:|https?:|data:text\/html|\/\/)[^"]*"|'\s*(?:javascript:|https?:|data:text\/html|\/\/)[^']*'|\s*(?:javascript:|https?:|data:text\/html|\/\/)[^\s>]+)/gi, '');
+}
+
+function scanStaticFile(file) {
+  const extension = file.extension;
+  if (!SAFE_GENERATED_EXTENSIONS.has(extension)) return 'unsupported file type';
+  if (!isTextLikeExtension(extension) && extension !== '.css') return null;
+  const text = file.buffer.toString('utf8');
+  if (text.includes('\u0000')) return 'binary content in a text file';
+  const checks = extension === '.js'
+    ? [
+      [/\beval\s*\(/i, 'eval'],
+      [/\bnew\s+Function\s*\(/i, 'dynamic code execution'],
+      [/document\s*\.\s*cookie/i, 'cookie access'],
+      [/\b(?:localStorage|sessionStorage)\s*\./i, 'browser storage access'],
+      [/\b(?:fetch|XMLHttpRequest|WebSocket|EventSource|sendBeacon)\s*\(/i, 'network exfiltration'],
+      [/(?:window\.)?location\s*(?:=|\.|\[)/i, 'forced navigation'],
+      [/https?:\/\/[^\s"'`]+/i, 'external network URL'],
+    ]
+    : [
+      [/<input\b[^>]*type\s*=\s*["']?password/i, 'password collection'],
+      [/<form\b/i, 'forms are not allowed'],
+      [/<iframe\b|<object\b|<embed\b/i, 'embedded content'],
+      [/javascript\s*:/i, 'javascript URL'],
+      [/\son[a-z0-9_-]+\s*=/i, 'inline event handler'],
+      [/https?:\/\/[^\s"'`]+/i, 'external URL'],
+    ];
+  const match = checks.find(([pattern]) => pattern.test(text));
+  return match ? match[1] : null;
+}
+
+function reviewStaticBundle(files) {
+  const findings = [];
+  for (const file of files) {
+    const finding = scanStaticFile(file);
+    if (finding) findings.push(`${file.relativePath || file.originalName}: ${finding}`);
+  }
+  if (findings.length) {
+    throw new UploadError('فایل به دلیل محتوای ناامن قابل انتشار نیست. موارد مشکوک: ' + findings.slice(0, 3).join('؛ '), 400, 'site');
+  }
+}
+
 function validateGeneratedBundle(bundle) {
-  if (!bundle?.aiGenerated) {
+  if (!bundle?.aiGenerated && !bundle?.publicSafe) {
     throw new UploadError('Raw website uploads are disabled for public safety', 400, 'site');
   }
 
@@ -127,12 +183,15 @@ function validateGeneratedBundle(bundle) {
 
   for (const file of files) {
     if (['.html', '.htm'].includes(file.extension)) {
-      file.buffer = Buffer.from(sanitizeGeneratedHtml(file.buffer.toString('utf8')), 'utf8');
+      const sanitizer = bundle.publicSafe ? sanitizeSafeStaticHtml : sanitizeGeneratedHtml;
+      file.buffer = Buffer.from(sanitizer(file.buffer.toString('utf8')), 'utf8');
       file.sizeBytes = file.buffer.length;
     }
   }
 
-  bundle.generatedHtml = sanitizeGeneratedHtml(bundle.generatedHtml);
+  bundle.generatedHtml = bundle.publicSafe
+    ? sanitizeSafeStaticHtml(bundle.generatedHtml)
+    : sanitizeGeneratedHtml(bundle.generatedHtml);
   return bundle;
 }
 
@@ -711,85 +770,56 @@ async function buildSiteBundleFromResume(files, fields) {
 }
 
 async function buildStaticSiteBundle(files) {
-  if (files.length === 1 && files[0].extension === '.zip') {
-    const zippedFiles = await extractZipBundle(files[0]);
-    const entryPoint = detectEntryPoint(zippedFiles);
-
-    if (!entryPoint) {
-      throw new UploadError('ZIP file must contain an index.html or another HTML entry point', 400, 'site');
-    }
-
-    const entryFile = zippedFiles.find((file) => file.relativePath === entryPoint);
-    const generatedHtml = entryFile?.buffer.toString('utf8') || '';
-
-    return {
-      files: zippedFiles.map((file) => ({
-        path: file.relativePath,
-        buffer: file.buffer,
-        mimetype: file.mimetype,
-        sizeBytes: file.sizeBytes,
-        extension: file.extension,
-      })),
-      entryPoint,
-      generatedHtml,
-      structuredJson: {
-        type: 'static-site',
-        source: 'zip',
-        entryPoint,
-        files: zippedFiles.map((file) => ({
-          path: file.relativePath,
-          mimetype: file.mimetype,
-          sizeBytes: file.sizeBytes,
-        })),
-      },
-      generatedCvPdfBase64: '',
-      aiGenerated: false,
-      rawText: JSON.stringify({
-        source: 'zip',
-        files: zippedFiles.map((file) => file.relativePath),
-      }),
-    };
-  }
-
-  const invalid = files.find((file) => !STATIC_EXTENSIONS.has(file.extension));
+  const sourceFiles = files.length === 1 && files[0].extension === '.zip'
+    ? await extractZipBundle(files[0])
+    : files;
+  const invalid = sourceFiles.find((file) => !SAFE_GENERATED_EXTENSIONS.has(file.extension));
   if (invalid) {
-    throw new UploadError('Static site uploads accept only HTML, CSS, JS, or ZIP files', 400, 'site');
+    throw new UploadError('این نوع فایل برای انتشار سایت مجاز نیست', 400, 'site');
   }
 
-  const htmlFiles = files.filter((file) => ['.html', '.htm'].includes(file.extension));
+  const htmlFiles = sourceFiles.filter((file) => ['.html', '.htm'].includes(file.extension));
   if (htmlFiles.length === 0) {
     throw new UploadError('A static site upload must include at least one HTML file', 400, 'site');
   }
 
-  const entryFile = htmlFiles.find((file) => sanitizeFilename(file.originalName).toLowerCase() === 'index.html') || htmlFiles[0];
-  const generatedHtml = entryFile.buffer.toString('utf8');
+  reviewStaticBundle(sourceFiles);
+
+  const entryFile = htmlFiles.find((file) => path.posix.basename(file.relativePath || file.originalName).toLowerCase() === 'index.html') || htmlFiles[0];
+  const entryPoint = sanitizeRelativePath(entryFile.relativePath || entryFile.originalName) || sanitizeFilename(entryFile.originalName);
+  const generatedHtml = sanitizeSafeStaticHtml(entryFile.buffer.toString('utf8'));
 
   return {
-    files: files.map((file) => ({
-      path: sanitizeRelativePath(file.originalName) || sanitizeFilename(file.originalName),
-      buffer: file.buffer,
+    files: sourceFiles.map((file) => ({
+      path: sanitizeRelativePath(file.relativePath || file.originalName) || sanitizeFilename(file.originalName),
+      buffer: ['.html', '.htm'].includes(file.extension)
+        ? Buffer.from(sanitizeSafeStaticHtml(file.buffer.toString('utf8')), 'utf8')
+        : file.buffer,
       mimetype: file.mimetype,
       sizeBytes: file.sizeBytes,
       extension: file.extension,
     })),
-    entryPoint: sanitizeRelativePath(entryFile.originalName) || sanitizeFilename(entryFile.originalName),
+    entryPoint,
     generatedHtml,
     structuredJson: {
       type: 'static-site',
-      source: 'files',
-      entryPoint: sanitizeRelativePath(entryFile.originalName) || sanitizeFilename(entryFile.originalName),
-      files: files.map((file) => ({
-        path: sanitizeRelativePath(file.originalName) || sanitizeFilename(file.originalName),
+      source: 'safe-files',
+      publicSafe: true,
+      entryPoint,
+      securityReviewed: true,
+      files: sourceFiles.map((file) => ({
+        path: sanitizeRelativePath(file.relativePath || file.originalName) || sanitizeFilename(file.originalName),
         mimetype: file.mimetype,
         sizeBytes: file.sizeBytes,
       })),
     },
     generatedCvPdfBase64: '',
     aiGenerated: false,
+    publicSafe: true,
     rawText: JSON.stringify({
       source: 'files',
-      files: files.map((file) => ({
-        name: file.originalName,
+      files: sourceFiles.map((file) => ({
+        name: file.relativePath || file.originalName,
         mimetype: file.mimetype,
         sizeBytes: file.sizeBytes,
       })),
@@ -963,7 +993,14 @@ async function uploadWebsiteBundle(request, userId, options = {}) {
     return { ...result, conversionUsage };
   }
 
-  throw new UploadError('Raw HTML, JavaScript, and ZIP website uploads are disabled for public safety', 400, 'site');
+  const bundle = await buildStaticSiteBundle(files);
+  return persistSiteBundle({
+    userId,
+    bundle,
+    fields: normalizedFields,
+    sourceType: 'manual',
+    originalFilename: files.map((file) => file.originalName).join(', '),
+  });
 
 }
 
@@ -978,6 +1015,8 @@ module.exports = {
   sanitizeRelativePath,
   getContentTypeForPath,
   sanitizeGeneratedHtml,
+  sanitizeSafeStaticHtml,
+  reviewStaticBundle,
   ALLOWED_SITE_EXTENSIONS,
   STATIC_EXTENSIONS,
   RESUME_EXTENSIONS,

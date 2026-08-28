@@ -427,6 +427,22 @@ button:disabled {
   color: var(--muted);
   line-height: 1.8;
 }
+.security-review {
+  display: grid;
+  gap: 9px;
+  padding: 14px 16px;
+  border: 1px solid #b9ddd2;
+  border-radius: 14px;
+  background: #eefaf6;
+  color: var(--brand-dark);
+}
+.security-review-title { display: flex; align-items: center; gap: 9px; font-weight: 800; }
+.security-spinner { width: 15px; height: 15px; border: 2px solid #b9ddd2; border-top-color: var(--brand); border-radius: 50%; animation: security-spin .8s linear infinite; }
+.security-progress { height: 8px; overflow: hidden; border-radius: 999px; background: #d8ece5; }
+.security-progress span { display: block; width: 38%; height: 100%; border-radius: inherit; background: var(--brand); animation: security-progress 1.4s ease-in-out infinite; }
+.security-review small { color: var(--muted); line-height: 1.6; }
+@keyframes security-spin { to { transform: rotate(360deg); } }
+@keyframes security-progress { 0% { transform: translateX(-130%); } 100% { transform: translateX(350%); } }
 .file-picker {
   display: grid;
   gap: 8px;

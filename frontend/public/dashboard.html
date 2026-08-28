@@ -9,6 +9,7 @@
     <link rel="stylesheet" href="dashboard-app.css" />
     <link rel="stylesheet" href="theme.css">
     <script src="theme.js" defer></script>
+    <link rel="stylesheet" href="emerald-aurora.css">
   </head>
   <body>
     <div id="auth-loader" class="auth-loader">
@@ -76,16 +77,18 @@
                   داشبورد شخصی
                 </p>
                 <h1 id="welcome">خوش آمدید</h1>
-                <p
-                  data-fa="سایت حرفه‌ای خود را از یک‌جا مدیریت کنید."
-                  data-en="Manage your professional site from one place."
-                >
-                  سایت حرفه‌ای خود را از یک‌جا مدیریت کنید.
+                <p data-fa="از همین‌جا سایتت را بساز، منتشر کن و وضعیتش را دنبال کن." data-en="Build, publish, and follow your site from one calm space.">
+                  از همین‌جا سایتت را بساز، منتشر کن و وضعیتش را دنبال کن.
                 </p>
               </div>
               <span class="plan-pill" id="plan-pill">—</span>
             </div>
             <div id="trial-card" class="notice"></div>
+            <div class="setup-checklist" aria-label="مراحل ساخت سایت">
+              <div><b>۱</b><span data-fa="مسیرت را انتخاب کن" data-en="Choose your path">مسیرت را انتخاب کن</span></div>
+              <div><b>۲</b><span data-fa="اطلاعاتت را بفرست" data-en="Send your details">اطلاعاتت را بفرست</span></div>
+              <div><b>۳</b><span data-fa="لینکت را منتشر کن" data-en="Publish your link">لینکت را منتشر کن</span></div>
+            </div>
             <div id="site-card" class="card site-card">
               <div class="skeleton"></div>
             </div>
@@ -111,17 +114,30 @@
                 <p data-fa="سایت آماده دارید؟ همین‌جا منتشرش کنید. هنوز سایت ندارید؟ اطلاعاتتان را برای تیم ما بفرستید." data-en="Publish an existing site here, or send your material to our team.">سایت آماده دارید؟ همین‌جا منتشرش کنید. هنوز سایت ندارید؟ اطلاعاتتان را برای تیم ما بفرستید.</p>
               </div>
             </div>
-            <div class="new-site-grid">
-              <form id="site-upload-form" class="card upload-card">
+            <div id="new-site-choice" class="aurora-paths">
+              <button type="button" class="card path-card" data-path="upload"><span class="path-icon">↥</span><span><span class="new-site-kicker" data-fa="سایت آماده دارم" data-en="I have a ready site">سایت آماده دارم</span><h2 data-fa="فایل‌ها را آپلود کن" data-en="Upload your files">فایل‌ها را آپلود کن</h2><p data-fa="ZIP یا مجموعهٔ HTML، CSS و JavaScript را آپلود کن." data-en="Upload a ZIP or a collection of HTML, CSS, and JavaScript files.">ZIP یا مجموعهٔ HTML، CSS و JavaScript را آپلود کن.</p></span></button>
+              <button type="button" class="card path-card" data-path="brief"><span class="path-icon">✦</span><span><span class="new-site-kicker" data-fa="ساخت با I’m This" data-en="Build with I’m This">ساخت با I’m This</span><h2 data-fa="ساخت را به تیم ما بسپار" data-en="Let our team build it">ساخت را به تیم ما بسپار</h2><p data-fa="داستان، تجربه و نمونه‌کارهات را مرحله‌به‌مرحله بفرست." data-en="Send your story, experience, and work samples step by step.">داستان، تجربه و نمونه‌کارهات را مرحله‌به‌مرحله بفرست.</p></span></button>
+            </div>
+            <div id="new-site-upload" class="new-site-flow" hidden>
+              <button type="button" class="secondary back-to-paths">← <span data-fa="انتخاب مسیر دیگر" data-en="Choose another path">انتخاب مسیر دیگر</span></button>
+              <form id="site-upload-form" class="card upload-card" style="margin-top:16px">
                 <span class="new-site-kicker" data-fa="سایت آماده دارم" data-en="I have a site">سایت آماده دارم</span>
                 <h2 data-fa="فایل‌ها را آپلود و سایت را آنلاین کنید" data-en="Upload files and put your site online">فایل‌ها را آپلود و سایت را آنلاین کنید</h2>
-                <p data-fa="یک فایل ZIP یا فایل‌های HTML، CSS و JavaScript را با هم انتخاب کنید. پس از آپلود، سایت شما در آدرس اختصاصی‌تان آنلاین می‌شود." data-en="Choose one ZIP file or your HTML, CSS, and JavaScript files together. Your site goes live at your personal address after upload.">یک فایل ZIP یا فایل‌های HTML، CSS و JavaScript را با هم انتخاب کنید. پس از آپلود، سایت شما در آدرس اختصاصی‌تان آنلاین می‌شود.</p>
+                <p data-fa="یک فایل ZIP یا فایل‌های HTML، CSS و JavaScript را انتخاب کنید. قبل از انتشار، فایل‌ها از نظر امنیتی بررسی می‌شوند و فقط محتوای امن آنلاین می‌شود." data-en="Choose a ZIP file or HTML, CSS, and JavaScript files. We scan everything for security before publishing and only safe content goes live.">یک فایل ZIP یا فایل‌های HTML، CSS و JavaScript را انتخاب کنید. قبل از انتشار، فایل‌ها از نظر امنیتی بررسی می‌شوند و فقط محتوای امن آنلاین می‌شود.</p>
                 <label class="file-picker">فایل سایت<input name="site" type="file" multiple required accept=".zip,.html,.htm,.css,.js,application/zip,text/html,text/css,application/javascript" /><small>ZIP تا ۲۵ مگابایت؛ مجموع فایل‌ها تا ۵۰ مگابایت</small></label>
                 <label>نام سایت<input name="siteTitle" maxlength="160" placeholder="نمونه‌کار من" /></label>
                 <div class="actions"><button type="submit" class="primary">آپلود و آنلاین کردن سایت</button></div>
+                <div id="site-security-review" class="security-review" hidden aria-live="polite">
+                  <div class="security-review-title"><span class="security-spinner" aria-hidden="true"></span><span data-fa="در حال بررسی امنیتی فایل‌ها…" data-en="Checking your files for security…">در حال بررسی امنیتی فایل‌ها…</span></div>
+                  <div class="security-progress" role="progressbar" aria-label="بررسی امنیتی"><span></span></div>
+                  <small data-fa="تا پایان بررسی این صفحه را نبندید. در صورت مشاهده محتوای مشکوک، انتشار متوقف می‌شود." data-en="Please keep this page open. Suspicious content is blocked before publication.">تا پایان بررسی این صفحه را نبندید. در صورت مشاهده محتوای مشکوک، انتشار متوقف می‌شود.</small>
+                </div>
                 <p id="site-upload-result" role="status" aria-live="polite"></p>
               </form>
-              <form id="team-site-request" class="card">
+            </div>
+            <div id="new-site-brief" class="new-site-flow" hidden>
+              <button type="button" class="secondary back-to-paths">← <span data-fa="انتخاب مسیر دیگر" data-en="Choose another path">انتخاب مسیر دیگر</span></button>
+              <form id="team-site-request" class="card wizard" style="margin-top:16px">
                 <span class="new-site-kicker" data-fa="هنوز سایت ندارم" data-en="I need a site">هنوز سایت ندارم</span>
               <h2
                 data-fa="به ما بگویید چه کسی هستید"
@@ -131,10 +147,9 @@
               </h2>
               <p data-fa="رزومه اختیاری است؛ می‌توانید با متن، پروژه، تصویر و لینک شروع کنید." data-en="A résumé is optional; you can start with text, projects, images, and links.">رزومه اختیاری است؛ می‌توانید با متن، پروژه، تصویر و لینک شروع کنید.</p>
               <div id="request-status" class="notice" hidden></div>
-              <div class="form-grid">
-                <label>نوع سایت<select name="siteType"><option value="mixed">ترکیبی</option><option value="portfolio">نمونه‌کار</option><option value="biography">بیوگرافی</option><option value="resume">رزومه</option></select></label>
-                <label>رزومه اختیاری (PDF یا DOCX)<input name="resume" type="file" accept=".pdf,.docx,application/pdf,application/vnd.openxmlformats-officedocument.wordprocessingml.document" /></label>
-                <label class="full">تصاویر و فایل‌های نمونه‌کار<input name="attachments" type="file" multiple accept=".jpg,.jpeg,.png,.webp,.pdf,image/jpeg,image/png,image/webp,application/pdf" /><small>حداکثر ۱۲ فایل، هرکدام ۱۰ مگابایت و مجموعاً ۵۰ مگابایت</small></label>
+              <div class="wizard-progress" aria-label="پیشرفت فرم"><i class="active"></i><i></i><i></i><i></i><i></i></div>
+              <div class="wizard-step form-grid" data-step="1"><h3 class="full" data-fa="۱. نوع و زبان" data-en="1. Type and language">۱. نوع و زبان</h3><label>نوع سایت<select name="siteType"><option value="mixed">ترکیبی</option><option value="portfolio">نمونه‌کار</option><option value="biography">بیوگرافی</option><option value="resume">رزومه</option></select></label><label>زبان ترجیحی<input name="preferredLanguage" maxlength="80" /></label></div>
+              <div class="wizard-step form-grid" data-step="2" hidden><h3 class="full" data-fa="۲. معرفی" data-en="2. Introduction">۲. معرفی</h3>
                 <label
                   >نام حرفه‌ای<input
                     name="name"
@@ -153,36 +168,11 @@
                   >هدف اصلی سایت<textarea
                     name="goal"
                     maxlength="600"
-                  ></textarea></label
-                ><label>مهارت‌ها<input name="skills" maxlength="600" /></label
-                ><label
-                  >تجربه‌ها<input name="experience" maxlength="2000" /></label
-                ><label class="full">پروژه‌ها و نمونه‌کارها<textarea name="projects" maxlength="2400"></textarea></label
-                ><label
-                  >زبان ترجیحی<input
-                    name="preferredLanguage"
-                    maxlength="80" /></label
-                ><label
-                  >سبک و رنگ‌ها<input name="style" maxlength="300" /></label
-                ><label class="full"
-                  >لینک‌ها و راه تماس<textarea
-                    name="links"
-                    maxlength="1000"
-                  ></textarea></label
-                ><label class="full"
-                  >توضیحات بیشتر<textarea
-                    name="notes"
-                    maxlength="1500"
-                  ></textarea>
-                </label>
-              </div>
-              <div class="actions">
-                <button type="button" id="save-brief" class="secondary">
-                  ذخیره پیش‌نویس</button
-                ><button type="submit" class="primary">
-                  ارسال درخواست ساخت سایت
-                </button>
-              </div>
+                  ></textarea></label></div>
+              <div class="wizard-step form-grid" data-step="3" hidden><h3 class="full" data-fa="۳. تجربه" data-en="3. Experience">۳. تجربه</h3><label>مهارت‌ها<input name="skills" maxlength="600" /></label><label>تجربه‌ها<input name="experience" maxlength="2000" /></label></div>
+              <div class="wizard-step form-grid" data-step="4" hidden><h3 class="full" data-fa="۴. نمونه‌کارها" data-en="4. Work samples">۴. نمونه‌کارها</h3><label class="full">پروژه‌ها و نمونه‌کارها<textarea name="projects" maxlength="2400"></textarea></label><label>رزومه اختیاری (PDF یا DOCX)<input name="resume" type="file" accept=".pdf,.docx,application/pdf,application/vnd.openxmlformats-officedocument.wordprocessingml.document" /></label><label>تصاویر و فایل‌های نمونه‌کار<input name="attachments" type="file" multiple accept=".jpg,.jpeg,.png,.webp,.pdf,image/jpeg,image/png,image/webp,application/pdf" /><small>حداکثر ۱۲ فایل، هرکدام ۱۰ مگابایت و مجموعاً ۵۰ مگابایت</small></label></div>
+              <div class="wizard-step form-grid" data-step="5" hidden><h3 class="full" data-fa="۵. ظاهر و بازبینی" data-en="5. Appearance and review">۵. ظاهر و بازبینی</h3><label>سبک و رنگ‌ها<input name="style" maxlength="300" /></label><label class="full">لینک‌ها و راه تماس<textarea name="links" maxlength="1000"></textarea></label><label class="full">توضیحات بیشتر<textarea name="notes" maxlength="1500"></textarea></label></div>
+              <div class="wizard-footer"><button type="button" id="wizard-prev" class="secondary" hidden>قبلی</button><span></span><button type="button" id="save-brief" class="secondary">ذخیره پیش‌نویس</button><button type="button" id="wizard-next" class="primary">بعدی</button><button type="submit" id="wizard-submit" class="primary" hidden>ارسال درخواست ساخت سایت</button></div>
               <p id="brief-result" role="status" aria-live="polite"></p>
               </form>
             </div>

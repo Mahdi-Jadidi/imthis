@@ -3,7 +3,7 @@ const { pool } = require('../config/db');
 const { downloadFile } = require('../config/minio');
 const billingService = require('../services/billingService');
 const { trackAnalyticsEvent } = require('../services/analyticsService');
-const { getContentTypeForPath, sanitizeGeneratedHtml } = require('../services/siteUploadService');
+const { getContentTypeForPath, sanitizeGeneratedHtml, sanitizeSafeStaticHtml } = require('../services/siteUploadService');
 const { getPublicSiteRouteInfo } = require('../config/publicSite');
 
 async function getDomainBySlug(slug) {
@@ -48,7 +48,7 @@ async function getLatestDeploymentForSlug(slug) {
      WHERE dom.slug = $1
       AND dom.is_active = true
       AND d.status = 'live'
-      AND (d.method <> 'files' OR pc.ai_generated = true)
+      AND (d.method <> 'files' OR pc.ai_generated = true OR pc.structured_json->>'publicSafe' = 'true')
      ORDER BY d.deployed_at DESC NULLS LAST, d.created_at DESC
      LIMIT 1`,
     [slug],
@@ -145,9 +145,9 @@ function resolveBundleAssetPath(requestPath, bundle) {
   return normalized;
 }
 
-function buildCspForMethod(method, aiGenerated = false) {
-  if (method === 'files' && !aiGenerated) {
-    return "default-src 'self'; script-src 'self' 'unsafe-inline'; style-src 'self' 'unsafe-inline'; img-src 'self' data: https:; font-src 'self' data: https:; base-uri 'self'; form-action 'self'; frame-ancestors 'none'";
+function buildCspForMethod(method, aiGenerated = false, publicSafe = false) {
+  if (publicSafe && !aiGenerated) {
+    return "default-src 'self'; script-src 'self'; style-src 'self' 'unsafe-inline'; img-src 'self' data:; font-src 'self' data:; connect-src 'none'; base-uri 'self'; form-action 'none'; object-src 'none'; frame-ancestors 'none'";
   }
 
   return "default-src 'none'; style-src 'self' 'unsafe-inline'; img-src 'self' data: https:; font-src 'self' data: https:; base-uri 'none'; form-action 'none'; script-src 'none'; object-src 'none'; frame-ancestors 'none'";
@@ -191,7 +191,9 @@ async function deployRoutes(fastify) {
     const bundleEntry = normalizeRequestPath(bundle.entryPoint || 'index.html') || 'index.html';
     // Generated resume bundles are stored with safe static assets, but raw
     // user file deployments are never eligible for this public route.
-    const isStaticFilesDeployment = deployment.method === 'files' || deployment.ai_generated === true;
+    const isStaticFilesDeployment = deployment.method === 'files'
+      || deployment.ai_generated === true
+      || bundle.publicSafe === true;
     let responseBody = deployment.generated_html || null;
     let responseType = 'text/html; charset=utf-8';
     let isHtmlDocument = true;
@@ -240,7 +242,9 @@ async function deployRoutes(fastify) {
     if (isHtmlDocument) {
       // Defense in depth: sanitize every generated document at the public
       // boundary, including output produced by future AI providers.
-      responseBody = sanitizeGeneratedHtml(responseBody);
+      responseBody = bundle.publicSafe && !deployment.ai_generated
+        ? sanitizeSafeStaticHtml(responseBody)
+        : sanitizeGeneratedHtml(responseBody);
       trackAnalyticsEvent({
         domainSlug: slug,
         ip: request.ip,
@@ -261,7 +265,7 @@ async function deployRoutes(fastify) {
           ? 'public, max-age=0, s-maxage=300, stale-while-revalidate=86400'
           : 'public, max-age=31536000, immutable',
       )
-      .header('Content-Security-Policy', buildCspForMethod(deployment.method, deployment.ai_generated === true))
+      .header('Content-Security-Policy', buildCspForMethod(deployment.method, deployment.ai_generated === true, bundle.publicSafe === true))
       .header('X-Content-Type-Options', 'nosniff')
       .header('Referrer-Policy', 'strict-origin-when-cross-origin')
       .header('Permissions-Policy', 'camera=(), microphone=(), geolocation=()')
