@@ -26,6 +26,13 @@ function normalizeEmail(email) {
   return String(email || '').trim().toLowerCase();
 }
 
+function assertValidPassword(value) {
+  const password = String(value || '');
+  if (password.length < 8) throw new AuthError('Password must be at least 8 characters', 400, 'password');
+  if (Buffer.byteLength(password, 'utf8') > 72) throw new AuthError('Password must be at most 72 UTF-8 bytes', 400, 'password');
+  return password;
+}
+
 function normalizeSlug(slug) {
   return slugify(String(slug || ''), {
     lower: true,
@@ -124,13 +131,7 @@ function assertValidRegistrationInput(input) {
     throw new AuthError('Invalid email format', 400, 'email');
   }
 
-  if (password.length < 8) {
-    throw new AuthError('Password must be at least 8 characters', 400, 'password');
-  }
-
-  if (Buffer.byteLength(password, 'utf8') > 72) {
-    throw new AuthError('Password must be at most 72 UTF-8 bytes', 400, 'password');
-  }
+  assertValidPassword(password);
 
   if (!VALID_PLANS.includes(plan)) {
     throw new AuthError('Invalid plan', 400, 'plan');
@@ -516,6 +517,15 @@ async function verifyEmail(email) {
   return rows[0] ? getUserById(rows[0].id) : null;
 }
 
+async function resetPassword(email, password) {
+  const passwordHash = await bcrypt.hash(assertValidPassword(password), BCRYPT_ROUNDS);
+  const { rowCount } = await pool.query(
+    'UPDATE users SET password_hash = $2, updated_at = NOW() WHERE email = $1 AND is_active = true',
+    [normalizeEmail(email), passwordHash],
+  );
+  return rowCount > 0;
+}
+
 module.exports = {
   AuthError,
   normalizeSlug,
@@ -526,6 +536,8 @@ module.exports = {
   getUserById,
   getUserByEmail,
   verifyEmail,
+  assertValidPassword,
+  resetPassword,
   revokeToken,
   isTokenRevoked,
 };

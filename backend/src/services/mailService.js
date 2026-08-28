@@ -77,6 +77,15 @@ async function sendVerificationCode({ email, code }) {
   });
 }
 
+async function sendPasswordResetCode({ email, code }) {
+  return sendMail({
+    to: email,
+    subject: 'کد بازیابی رمز عبور I’m This',
+    text: `Your I’m This password reset code is ${code}. It expires in 30 minutes.`,
+    html: `<p>کد بازیابی رمز عبور شما:</p><p style="font-size:28px;font-weight:700;letter-spacing:6px">${code}</p><p>این کد تا ۳۰ دقیقه معتبر است.</p>`,
+  });
+}
+
 async function sendEmailChangeConfirmation({ email, confirmationUrl }) {
   return sendMail({
     to: email,
@@ -99,6 +108,7 @@ async function sendSiteDeliveryNotice({ email, url, trialEndsAt }) {
 module.exports = {
   sendMail,
   sendVerificationCode,
+  sendPasswordResetCode,
   sendPublicationConfirmation,
   sendExpirationNotice,
   sendRenewalReminder,

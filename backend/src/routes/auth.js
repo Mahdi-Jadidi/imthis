@@ -8,12 +8,14 @@ const {
   revokeToken,
   getUserByEmail,
   verifyEmail,
+  assertValidPassword,
+  resetPassword,
 } = require('../services/authService');
 const requireAuth = require('../middleware/requireAuth');
 const rateLimiter = require('../middleware/rateLimiter');
 const env = require('../config/env');
 const { issueCode, verifyCode, normalizeEmail } = require('../services/authCodeService');
-const { sendVerificationCode } = require('../services/mailService');
+const { sendVerificationCode, sendPasswordResetCode } = require('../services/mailService');
 
 const COOKIE_NAME = 'dropcv_token';
 const COOKIE_MAX_AGE_SECONDS = 7 * 24 * 60 * 60;
@@ -126,6 +128,42 @@ async function authRoutes(fastify) {
         await sendVerificationCode({ email, code });
       }
       return reply.send({ success: true, message: 'If the account needs verification, a code has been sent.', to: email, from: env.smtp.from });
+    } catch (error) {
+      return sendError(reply, error);
+    }
+  });
+
+  fastify.post('/password-reset/request', {
+    preHandler: rateLimiter({ name: 'auth-password-reset-request', windowSeconds: 60 * 60, maxRequests: 10 }),
+  }, async function requestPasswordResetHandler(request, reply) {
+    try {
+      const email = normalizeEmail(request.body?.email);
+      const user = await getUserByEmail(email);
+      if (user) {
+        const code = await issueCode('reset-password', email);
+        await sendPasswordResetCode({ email, code });
+      }
+      return reply.send({ success: true, message: 'If the account exists, a reset code has been sent.' });
+    } catch (error) {
+      return sendError(reply, error);
+    }
+  });
+
+  fastify.post('/password-reset/confirm', {
+    preHandler: rateLimiter({ name: 'auth-password-reset-confirm', windowSeconds: 15 * 60, maxRequests: 10 }),
+  }, async function confirmPasswordResetHandler(request, reply) {
+    try {
+      const email = normalizeEmail(request.body?.email);
+      // Validate before consuming the one-time code, so a weak password does
+      // not force the user to request a replacement email.
+      assertValidPassword(request.body?.password);
+      if (!(await verifyCode('reset-password', email, request.body?.code))) {
+        return reply.code(400).send({ error: 'Invalid or expired reset code', field: 'code' });
+      }
+      if (!(await resetPassword(email, request.body?.password))) {
+        return reply.code(400).send({ error: 'Invalid or expired reset code', field: 'code' });
+      }
+      return reply.send({ success: true });
     } catch (error) {
       return sendError(reply, error);
     }
