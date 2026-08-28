@@ -74,6 +74,18 @@ window.dropCVApi = {
   async register(payload) {
     return this.request('POST', '/api/auth/register', payload);
   },
+  async verifyEmail(email, code) {
+    return this.request('POST', '/api/auth/verify-email', { email, code });
+  },
+  async resendVerification(email) {
+    return this.request('POST', '/api/auth/verify-email/resend', { email });
+  },
+  async requestPasswordReset(email) {
+    return this.request('POST', '/api/auth/password-reset/request', { email });
+  },
+  async confirmPasswordReset(email, code, password) {
+    return this.request('POST', '/api/auth/password-reset/confirm', { email, code, password });
+  },
   async checkSlugAvailability(slug) {
     return this.request('GET', `/api/auth/slug-availability?slug=${encodeURIComponent(slug || '')}`);
   },

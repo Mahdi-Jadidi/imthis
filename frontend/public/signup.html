@@ -922,12 +922,12 @@
               );
               return;
             }
+            if (r.data && r.data.requiresEmailVerification) {
+              location.replace("login.html?verify=1&email=" + encodeURIComponent(email));
+              return;
+            }
             markRecentAuth("signup");
-            location.replace(
-              getDashboardUrl(
-                (r.data && r.data.user && r.data.user.plan) || plan,
-              ),
-            );
+            location.replace(getDashboardUrl((r.data && r.data.user && r.data.user.plan) || plan));
           });
         document
           .getElementById("storySwitch")

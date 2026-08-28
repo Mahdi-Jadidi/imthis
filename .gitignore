@@ -1,0 +1,14 @@
+# Dependencies and build output
+**/node_modules/
+**/.next/
+**/dist/
+**/coverage/
+
+# Local environment and logs
+**/.env
+**/.env.*
+!**/.env.example
+**/*.log
+
+# Vercel local project links
+**/.vercel/

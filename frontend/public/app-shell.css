@@ -347,6 +347,19 @@ select:focus-visible {
   padding: 32px;
 }
 
+/* Standalone verification/reset screens use a single centered panel. */
+.auth-main {
+  width: min(560px, calc(100% - 32px));
+  max-width: 560px;
+  grid-template-columns: 1fr;
+  margin-inline: auto;
+}
+
+.auth-main .auth-panel {
+  width: 100%;
+  justify-self: stretch;
+}
+
 .auth-panel .top {
   display: flex;
   justify-content: space-between;
