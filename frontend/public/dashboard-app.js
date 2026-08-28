@@ -432,6 +432,42 @@
           "</span>";
     };
   }
+  function setupNewSiteFlow() {
+    var choice = document.getElementById("new-site-choice"), upload = document.getElementById("new-site-upload"), brief = document.getElementById("new-site-brief");
+    if (!choice || !upload || !brief) return;
+    function selectPath(path) {
+      choice.hidden = true;
+      upload.hidden = path !== "upload";
+      brief.hidden = path !== "brief";
+      var target = path === "upload" ? upload : brief;
+      var focus = target.querySelector("input,select,textarea,button");
+      if (focus) focus.focus();
+    }
+    choice.querySelectorAll("[data-path]").forEach(function (button) {
+      button.onclick = function () { selectPath(button.dataset.path); };
+    });
+    document.querySelectorAll(".back-to-paths").forEach(function (button) {
+      button.onclick = function () { choice.hidden = false; upload.hidden = true; brief.hidden = true; choice.querySelector("[data-path]").focus(); };
+    });
+    var step = 1, steps = brief.querySelectorAll(".wizard-step"), progress = brief.querySelectorAll(".wizard-progress i"), prev = document.getElementById("wizard-prev"), next = document.getElementById("wizard-next"), submit = document.getElementById("wizard-submit");
+    function renderStep() {
+      steps.forEach(function (item) { item.hidden = Number(item.dataset.step) !== step; });
+      progress.forEach(function (item, index) { item.classList.toggle("active", index < step); });
+      prev.hidden = step === 1;
+      next.hidden = step === 5;
+      submit.hidden = step !== 5;
+    }
+    prev.onclick = function () { step = Math.max(1, step - 1); renderStep(); };
+    next.onclick = function () {
+      var current = brief.querySelector('.wizard-step[data-step="' + step + '"]');
+      var invalid = Array.prototype.find.call(current.querySelectorAll("input,select,textarea"), function (field) { return !field.checkValidity(); });
+      if (invalid) { invalid.reportValidity(); return; }
+      step = Math.min(5, step + 1); renderStep();
+      var focus = brief.querySelector('.wizard-step[data-step="' + step + '"] input, .wizard-step[data-step="' + step + '"] textarea, .wizard-step[data-step="' + step + '"] select');
+      if (focus) focus.focus();
+    };
+    renderStep();
+  }
   function setupSiteUpload() {
     var form = document.getElementById("site-upload-form");
     form.onsubmit = async function (event) {
@@ -443,18 +479,27 @@
         return;
       }
       var submit = form.querySelector('button[type="submit"]');
+      var review = document.getElementById("site-security-review");
       submit.disabled = true;
-      out.textContent = text("در حال آپلود و انتشار سایت…", "Uploading and publishing your site…");
-      var result = await dropCVApi.uploadSite({
-        files: files,
-        fields: { siteTitle: form.elements.siteTitle.value.trim() },
-      });
+      if (review) review.hidden = false;
+      out.textContent = text("در حال بررسی امنیتی فایل‌ها…", "Checking your files for security…");
+      var result;
+      try {
+        result = await dropCVApi.uploadSite({
+          files: files,
+          fields: { siteTitle: form.elements.siteTitle.value.trim() },
+        });
+      } catch (error) {
+        result = { ok: false, error: text("بررسی امنیتی انجام نشد. دوباره تلاش کنید.", "Security review failed. Please try again.") };
+      }
       submit.disabled = false;
       if (!result.ok) {
+        if (review) review.hidden = true;
         out.innerHTML = '<span class="error">' + escape(result.error || text("آپلود ناموفق بود", "Upload failed")) + '</span>';
         return;
       }
       form.reset();
+      if (review) review.hidden = true;
       out.textContent = text("سایت آنلاین شد و آزمایش سه‌روزه شما شروع شد.", "Your site is live and your three-day trial has started.");
       await refreshUser();
       show("sites");
@@ -537,6 +582,7 @@
       return;
     }
     setupBrief();
+    setupNewSiteFlow();
     setupSiteUpload();
     setupSettings();
     setupAccountActions();
