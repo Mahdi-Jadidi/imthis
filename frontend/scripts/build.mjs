@@ -12,20 +12,13 @@ const standaloneNextDir = join(standaloneDir, '.next');
 const publicDir = join(root, 'public');
 const staticDir = join(root, '.next', 'static');
 const productionConfigPath = join(publicDir, 'site-config.production.js');
-const apiBaseUrl = (process.env.NEXT_PUBLIC_API_BASE_URL || process.env.API_BASE_URL || '')
-  .trim()
-  .replace(/\/$/, '');
-
-if (isVercel && !apiBaseUrl) {
-  throw new Error('Missing NEXT_PUBLIC_API_BASE_URL or API_BASE_URL for the Vercel frontend build');
-}
-
-if (apiBaseUrl) {
-  writeFileSync(
-    productionConfigPath,
-    `window.dropCVConfig = window.dropCVConfig || {};\nwindow.dropCVConfig.apiBaseUrl = ${JSON.stringify(apiBaseUrl)};\n`,
-  );
-}
+// Keep browser API calls same-origin. The Next proxy forwards them to the
+// backend, so the httpOnly authentication cookie stays on imthis.site instead
+// of being split across the frontend and api hostnames.
+writeFileSync(
+  productionConfigPath,
+  'window.dropCVConfig = window.dropCVConfig || {};\nwindow.dropCVConfig.apiBaseUrl = "";\n',
+);
 
 execFileSync(process.execPath, [nextBin, 'build', '--webpack'], { stdio: 'inherit' });
 
