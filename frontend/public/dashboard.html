@@ -50,6 +50,14 @@
             ><span data-icon="billing"></span
             ><b data-fa="صورتحساب" data-en="Billing">صورتحساب</b></a
           >
+          <details class="mobile-more">
+            <summary data-fa="بیشتر" data-en="More">بیشتر</summary>
+            <div class="mobile-more-menu">
+              <button class="nav" data-section="link"><span data-icon="link"></span><b data-fa="لینک عمومی" data-en="Public Link">لینک عمومی</b></button>
+              <button class="nav" data-section="settings"><span data-icon="settings"></span><b data-fa="تنظیمات" data-en="Settings">تنظیمات</b></button>
+              <a class="nav" href="billing.html"><span data-icon="billing"></span><b data-fa="صورتحساب" data-en="Billing">صورتحساب</b></a>
+            </div>
+          </details>
         </nav>
         <div class="account">
           <span class="avatar" id="avatar">—</span
@@ -71,10 +79,10 @@
               <div>
                 <p
                   class="eyebrow"
-                  data-fa="داشبورد شخصی"
-                  data-en="Personal dashboard"
+                  data-fa="فضای شخصی تو"
+                  data-en="Your personal space"
                 >
-                  داشبورد شخصی
+                  فضای شخصی تو
                 </p>
                 <h1 id="welcome">خوش آمدید</h1>
                 <p data-fa="از همین‌جا سایتت را بساز، منتشر کن و وضعیتش را دنبال کن." data-en="Build, publish, and follow your site from one calm space.">
@@ -223,7 +231,8 @@
                 </p>
               </div>
             </div>
-            <form id="settings-form" class="card form-grid">
+            <form id="settings-form" class="card form-grid settings-section">
+              <div class="full"><p class="eyebrow">۱</p><h2 data-fa="پروفایل و زبان" data-en="Profile and language">پروفایل و زبان</h2><p data-fa="نامی که در حساب می‌بینی و زبان محیط را تنظیم کن." data-en="Set the name shown in your account and your interface language.">نامی که در حساب می‌بینی و زبان محیط را تنظیم کن.</p></div>
               <label>نام حرفه‌ای<input name="fullName" maxlength="120" /></label
               ><label
                 >زبان<select name="language">
@@ -248,25 +257,29 @@
                 aria-live="polite"
               ></p>
             </form>
-            <form id="email-form" class="card form-grid">
-              <div class="full"><h2>تغییر ایمیل</h2><p>یک پیوند تأیید ۳۰ دقیقه‌ای به ایمیل جدید ارسال می‌شود.</p></div>
+            <form id="email-form" class="card form-grid settings-section">
+              <div class="full"><p class="eyebrow">۲</p><h2 data-fa="ایمیل و تأیید" data-en="Email and verification">ایمیل و تأیید</h2><p data-fa="یک پیوند تأیید ۳۰ دقیقه‌ای به ایمیل جدید ارسال می‌شود." data-en="A 30-minute confirmation link is sent to your new email.">یک پیوند تأیید ۳۰ دقیقه‌ای به ایمیل جدید ارسال می‌شود.</p></div>
               <label class="full">ایمیل جدید<input name="newEmail" type="email" required /></label>
               <div class="full"><button class="primary" type="submit">ارسال پیوند تأیید</button></div>
-              <p id="email-result" class="full" role="status"></p>
+              <p id="email-result" class="full" role="status" aria-live="polite"></p>
             </form>
-            <form id="password-form" class="card form-grid">
-              <div class="full"><h2>تغییر رمز عبور</h2></div>
+            <form id="password-form" class="card form-grid settings-section">
+              <div class="full"><p class="eyebrow">۳</p><h2 data-fa="امنیت و رمز عبور" data-en="Security and password">امنیت و رمز عبور</h2></div>
               <label>رمز فعلی<input name="currentPassword" type="password" required autocomplete="current-password" /></label>
               <label>رمز جدید<input name="newPassword" type="password" required minlength="8" autocomplete="new-password" /></label>
               <div class="full"><button class="primary" type="submit">تغییر رمز</button></div>
-              <p id="password-result" class="full" role="status"></p>
+              <p id="password-result" class="full" role="status" aria-live="polite"></p>
             </form>
-            <form id="delete-form" class="card form-grid danger-zone">
-              <div class="full"><h2>حذف حساب</h2><p>این کار حساب، سایت‌ها، پرداخت‌ها و اطلاعات ذخیره‌شده شما را برای همیشه حذف می‌کند.</p></div>
-              <label class="full">برای تأیید، رمز عبور خود را وارد کنید<input name="password" type="password" required /></label>
-              <div class="full"><button class="danger-button" type="submit">حذف همیشگی حساب</button></div>
-              <p id="delete-result" class="full" role="status"></p>
-            </form>
+            <section class="card settings-section"><p class="eyebrow">۴</p><h2 data-fa="پشتیبانی" data-en="Support">پشتیبانی</h2><p data-fa="برای پرسش‌های حساب، پرداخت یا سایتت با ما در تماس باش." data-en="Contact us with questions about your account, payment, or site.">برای پرسش‌های حساب، پرداخت یا سایتت با ما در تماس باش.</p><a class="secondary button-link" href="contact.html" data-fa="تماس با پشتیبانی" data-en="Contact support">تماس با پشتیبانی</a></section>
+            <details class="card danger-zone settings-section">
+              <summary data-fa="۵. ناحیهٔ حساس" data-en="5. Dangerous zone">۵. ناحیهٔ حساس</summary>
+              <form id="delete-form" class="form-grid">
+                <div class="full"><h2>حذف حساب</h2><p>این کار حساب، سایت‌ها، پرداخت‌ها و اطلاعات ذخیره‌شده‌ات را برای همیشه حذف می‌کند.</p></div>
+                <label class="full">برای تأیید، رمز عبورت را وارد کن<input name="password" type="password" required autocomplete="current-password" /></label>
+                <div class="full"><button class="danger-button" type="submit">حذف همیشگی حساب</button></div>
+                <p id="delete-result" class="full" role="status" aria-live="polite"></p>
+              </form>
+            </details>
           </section>
         </main>
       </div>

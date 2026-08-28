@@ -91,6 +91,7 @@
     }
   </style>
   <link rel="stylesheet" href="theme.css">
+  <link rel="stylesheet" href="emerald-aurora.css">
   <script src="theme.js" defer></script>
 </head>
 <body>
@@ -220,6 +221,7 @@
       function enableVerificationMode(email, lockEmail, requestCode) {
         if (email) emailInput.value = email;
         emailInput.readOnly = Boolean(lockEmail);
+        document.getElementById('form').hidden = true;
         passwordField.hidden = true;
         submitButton.hidden = true;
         verificationBox.hidden = false;
@@ -256,7 +258,9 @@
         var totalSeconds = Math.ceil(remaining / 1000);
         var minutes = Math.floor(totalSeconds / 60);
         var seconds = String(totalSeconds % 60).padStart(2, '0');
-        resendCountdown.textContent = 'ارسال کد جدید تا ' + minutes + ':' + seconds;
+        resendCountdown.textContent = window.dropCVI18n && window.dropCVI18n.get() === 'en'
+          ? 'New code available in ' + minutes + ':' + seconds
+          : 'ارسال کد جدید تا ' + minutes + ':' + seconds;
         resendCountdown.hidden = false;
       }
       function startCooldown() {

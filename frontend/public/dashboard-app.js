@@ -62,15 +62,12 @@
         { dateStyle: "medium", timeStyle: "short" },
       ).format(end);
       card.className = "notice trial-reminder";
+      var grace = subscription.graceEndsAt ? formatTrialTimeLeft(subscription.graceEndsAt) : "";
       card.innerHTML =
-        '<div><strong>' + escape(text("دورهٔ آزمایشی شما فعال است", "Your trial is active")) + "</strong>" +
-        '<p>' + escape(text("" + remaining + " تا پایان تریال مانده است.", remaining + " remain in your trial.")) +
-        (date ? " " + escape(text("پایان: ", "Ends: ")) + escape(date) : "") + "</p>" +
-        '<p class="trial-warning">' + escape(text(
-          "اگر تا پایان تریال خرید نکنید، سایت آفلاین می‌شود. نام شما فقط تا ۱ روز دیگر رزرو می‌ماند؛ سپس سایت و نام ثبت‌شده حذف می‌شوند و نام برای دیگران آزاد خواهد شد.",
-          "If you do not purchase before the trial ends, your site goes offline. Your name stays reserved for only one more day; then the site and reserved name are deleted and the name becomes available to others.",
-        )) + "</p></div>" +
-        '<a class="primary trial-cta" href="billing.html">' + escape(text("خرید و آنلاین نگه‌داشتن سایت", "Purchase and keep site online")) + "</a>";
+        '<div><strong>' + escape(text("نسخهٔ آزمایشی‌ات فعاله", "Your trial is active")) + "</strong>" +
+        '<p>' + escape(text("تا " + (date || remaining) + " فرصت داری سایتت را راه بیندازی. برای آنلاین ماندن پس از پایان تریال، اشتراکت را فعال کن.", "You have until " + (date || remaining) + " to get your site ready. Activate your subscription to keep it online after the trial.")) + "</p>" +
+        (grace ? '<p class="trial-warning">' + escape(text("نام انتخابی تو تا " + grace + " دیگر محفوظ می‌ماند.", "Your chosen name remains reserved for another " + grace + ".")) + "</p>" : "") + "</div>" +
+        '<a class="primary trial-cta" href="billing.html">' + escape(text("فعال نگه‌داشتن سایت", "Keep my site active")) + "</a>";
       return;
     }
     card.className = "notice";
@@ -85,6 +82,79 @@
     document.documentElement.dir = state.language === "fa" ? "rtl" : "ltr";
     document.querySelectorAll("[data-fa][data-en]").forEach(function (el) {
       el.textContent = el.getAttribute("data-" + state.language);
+    });
+    var fieldCopy = {
+      "site-upload-form": {
+        site: ["فایل سایت", "Site files"],
+        siteTitle: ["نام سایت", "Site name"],
+      },
+      "team-site-request": {
+        siteType: ["نوع سایت", "Site type"],
+        preferredLanguage: ["زبان ترجیحی", "Preferred language"],
+        name: ["نام حرفه‌ای", "Professional name"],
+        role: ["عنوان شغلی", "Job title"],
+        bio: ["معرفی کوتاه", "Short biography"],
+        goal: ["هدف اصلی سایت", "Main site goal"],
+        skills: ["مهارت‌ها", "Skills"],
+        experience: ["تجربه‌ها", "Experience"],
+        projects: ["پروژه‌ها و نمونه‌کارها", "Projects and work samples"],
+        resume: ["رزومه اختیاری (PDF یا DOCX)", "Optional résumé (PDF or DOCX)"],
+        attachments: ["تصاویر و فایل‌های نمونه‌کار", "Images and work attachments"],
+        style: ["سبک و رنگ‌ها", "Style and colors"],
+        links: ["لینک‌ها و راه تماس", "Links and contact details"],
+        notes: ["توضیحات بیشتر", "Additional notes"],
+      },
+      "settings-form": {
+        fullName: ["نام حرفه‌ای", "Professional name"],
+        language: ["زبان", "Language"],
+        email: ["ایمیل", "Email"],
+      },
+      "email-form": { newEmail: ["ایمیل جدید", "New email"] },
+      "password-form": {
+        currentPassword: ["رمز فعلی", "Current password"],
+        newPassword: ["رمز جدید", "New password"],
+      },
+      "delete-form": { password: ["برای تأیید، رمز عبورت را وارد کن", "Enter your password to confirm"] },
+    };
+    Object.keys(fieldCopy).forEach(function (formId) {
+      var form = document.getElementById(formId);
+      if (!form) return;
+      Object.keys(fieldCopy[formId]).forEach(function (name) {
+        var field = form.elements[name];
+        var label = field && field.closest("label");
+        var leadingText = label && Array.prototype.find.call(label.childNodes, function (node) {
+          return node.nodeType === 3 && node.nodeValue.trim();
+        });
+        if (leadingText) leadingText.nodeValue = fieldCopy[formId][name][state.language === "en" ? 1 : 0];
+      });
+    });
+    var siteType = document.querySelector('[name="siteType"]');
+    if (siteType) {
+      var optionCopy = state.language === "en"
+        ? ["Mixed", "Portfolio", "Biography", "Résumé"]
+        : ["ترکیبی", "نمونه‌کار", "بیوگرافی", "رزومه"];
+      Array.prototype.forEach.call(siteType.options, function (option, index) { option.textContent = optionCopy[index]; });
+    }
+    var buttonCopy = {
+      "save-brief": ["ذخیره پیش‌نویس", "Save draft"],
+      "wizard-prev": ["قبلی", "Previous"],
+      "wizard-next": ["بعدی", "Next"],
+      "wizard-submit": ["ارسال درخواست ساخت سایت", "Submit site request"],
+    };
+    Object.keys(buttonCopy).forEach(function (id) {
+      var button = document.getElementById(id);
+      if (button) button.textContent = buttonCopy[id][state.language === "en" ? 1 : 0];
+    });
+    var submitCopy = {
+      "site-upload-form": ["آپلود و آنلاین کردن سایت", "Upload and publish site"],
+      "settings-form": ["ذخیره تنظیمات", "Save settings"],
+      "email-form": ["ارسال پیوند تأیید", "Send confirmation link"],
+      "password-form": ["تغییر رمز", "Change password"],
+      "delete-form": ["حذف همیشگی حساب", "Permanently delete account"],
+    };
+    Object.keys(submitCopy).forEach(function (formId) {
+      var submit = document.querySelector("#" + formId + ' button[type="submit"]');
+      if (submit) submit.textContent = submitCopy[formId][state.language === "en" ? 1 : 0];
     });
     document.getElementById("language").textContent =
       state.language === "fa" ? "EN" : "فا";
@@ -121,8 +191,10 @@
       .trim()
       .slice(0, 1)
       .toUpperCase();
-    document.getElementById("welcome").textContent =
-      text("خوش آمدید، ", "Welcome, ") + (state.user.firstName || name);
+    document.getElementById("welcome").textContent = text(
+      "همه‌چیز برای دیده‌شدن آماده‌ست، ",
+      "Everything is ready to help you be seen, ",
+    ) + (state.user.firstName || name);
     var sub = state.user.subscription || {};
     renderTrialCard(sub);
     var form = document.getElementById("settings-form");
@@ -142,7 +214,7 @@
         '<span class="empty-site-step">' +
         text("قدم اول", "Your first step") +
         "</span><h2>" +
-        text("اولین سایت خود را اضافه کنید", "Add your first site") +
+        text("اولین صفحه‌ات را بساز", "Build your first page") +
         "</h2><p>" +
         text(
           "سایت آماده‌تان را آپلود کنید یا اطلاعات و نمونه‌کارهایتان را برای تیم ما بفرستید.",
@@ -155,12 +227,10 @@
         show("new-site");
       };
       document.getElementById("public-link-card").innerHTML =
-        "<p>" +
-        text(
-          "پس از آنلاین شدن سایت، لینک قابل اشتراک شما اینجا نمایش داده می‌شود.",
-          "Your shareable link will appear here when your site is online.",
-        ) +
-        "</p>";
+        '<h2>' + text("لینک تو بعد از انتشار اینجا آماده می‌شود", "Your link will be ready here after publishing") + '</h2><p>' +
+        text("اول سایتت را بساز یا آپلود کن؛ بعد می‌توانی لینک نهایی را کپی و به اشتراک بگذاری.", "Build or upload your site first, then copy and share the final link.") +
+        '</p><button class="primary" id="link-empty-action">' + text("ساخت سایت", "Build a site") + "</button>";
+      document.getElementById("link-empty-action").onclick = function () { show("new-site"); };
       return;
     }
 
@@ -270,10 +340,11 @@
     var sites = Array.isArray(state.sites) ? state.sites : [];
     if (!sites.length) {
       host.innerHTML = '<div class="card empty-site"><h2>' +
-        text("هنوز سایتی ندارید", "No sites yet") + '</h2><p>' +
-        text("از بخش سایت جدید، فایل‌های آماده را آپلود کنید یا درخواست ساخت سایت بدهید.", "Use New site to upload a ready site or request one from our team.") +
-        '</p><button class="primary" id="sites-empty-action">' + text("سایت جدید", "New site") + '</button></div>';
+        text("اولین صفحه‌ات را بساز", "Build your first page") + '</h2><p>' +
+        text("اطلاعاتت را بفرست یا یک سایت آماده را همین‌جا آنلاین کن.", "Send your information or publish a ready-made site here.") +
+        '</p><div class="actions"><button class="primary" id="sites-empty-action">' + text("ساخت سایت", "Build a site") + '</button><button class="secondary" id="sites-upload-action">' + text("سایت آماده دارم", "I have a ready site") + '</button></div></div>';
       document.getElementById("sites-empty-action").onclick = function () { show("new-site"); };
+      document.getElementById("sites-upload-action").onclick = function () { show("new-site"); document.querySelector('[data-path="upload"]').click(); };
       return;
     }
     host.innerHTML = sites.map(function (site) {
@@ -329,13 +400,11 @@
     host.innerHTML = '<div class="skeleton"></div>';
     var result = await dropCVApi.getAnalyticsDashboard();
     if (!result.ok) {
-      host.innerHTML =
-        '<p class="error">' +
-        escape(
-          result.error ||
-            text("دریافت آمار ممکن نشد.", "Could not load analytics."),
-        ) +
-        "</p>";
+      if (result.status === 402 || result.status === 403) {
+        host.innerHTML = '<div class="locked-analytics"><span class="eyebrow">' + text("نمای کلی آمار", "Analytics preview") + '</span><h2>' + text("بفهم چه کسانی صفحه‌ات را می‌بینند", "Understand who sees your page") + '</h2><p>' + text("بازدیدهای واقعی، منابع ورود و روند رشد را یک‌جا دنبال کن.", "Follow real visits, referral sources, and growth in one place.") + '</p><div class="metrics" aria-hidden="true"><div class="metric"><span>' + text("کل بازدید", "Total visits") + '</span><strong>—</strong></div><div class="metric"><span>' + text("بازدید یکتا", "Unique visits") + '</span><strong>—</strong></div><div class="metric"><span>' + text("روند رشد", "Growth") + '</span><strong>—</strong></div></div><a class="primary button-link" href="billing.html">' + text("دیدن امکانات پلن", "See plan features") + '</a></div>';
+      } else {
+        host.innerHTML = '<p class="error">' + escape(result.error || text("دریافت آمار ممکن نشد.", "Could not load analytics.")) + "</p>";
+      }
       return;
     }
     var a = result.data || {};
@@ -408,6 +477,12 @@
         "Draft saved on this device.",
       );
     };
+    form.addEventListener("input", function () {
+      document.getElementById("brief-result").textContent = text(
+        "تغییرات ذخیره‌نشده داری.",
+        "You have unsaved changes.",
+      );
+    });
     form.onsubmit = async function (e) {
       e.preventDefault();
       var d = values(),
@@ -564,6 +639,8 @@
     document.querySelectorAll(".nav[data-section]").forEach(function (el) {
       el.onclick = function () {
         show(el.dataset.section);
+        var more = el.closest(".mobile-more");
+        if (more) more.open = false;
       };
     });
     document.getElementById("menu").onclick = function () {

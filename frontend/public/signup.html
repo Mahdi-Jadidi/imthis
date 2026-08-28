@@ -355,6 +355,7 @@
       }
     </style>
     <link rel="stylesheet" href="theme.css">
+    <link rel="stylesheet" href="emerald-aurora.css">
     <script src="theme.js" defer></script>
   </head>
   <body>
@@ -424,10 +425,10 @@
               <div
                 class="amount"
                 data-dropcv-plan-amount="Annual"
-                data-fa="۷۱۰٬۰۰۰"
-                data-en="710,000"
+                data-fa="—"
+                data-en="—"
               >
-                ۷۱۰٬۰۰۰
+                —
               </div>
               <span
                 data-fa="ساخت توسط تیم، میزبانی، آدرس شخصی و آمار بازدید"
@@ -715,10 +716,10 @@
             <div
               class="price"
               id="payAmount"
-              data-fa="۷۱۰٬۰۰۰"
-              data-en="710,000"
+              data-fa="—"
+              data-en="—"
             >
-              ۷۱۰٬۰۰۰
+              —
             </div>
             <p
               class="muted"
@@ -1089,9 +1090,7 @@
             window.dropCVPricing &&
             window.dropCVPricing.formatAmount
               ? window.dropCVPricing.formatAmount(amount, lang)
-              : lang === "en"
-                ? "710,000"
-                : "۷۱۰٬۰۰۰";
+              : "—";
           document.getElementById("payPlan").textContent =
             lang === "fa" ? "سالانه" : "Annual";
           document.getElementById("payAmount").innerHTML =

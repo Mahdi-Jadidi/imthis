@@ -219,6 +219,7 @@
       }
     </style>
     <link rel="stylesheet" href="theme.css">
+    <link rel="stylesheet" href="emerald-aurora.css">
     <script src="theme.js" defer></script>
   </head>
   <body>
@@ -241,10 +242,15 @@
           </p>
           <div class="plan-row" role="group" aria-label="انتخاب پلن">
             <button class="plan" data-plan="Annual" aria-pressed="false">
-              <strong>I’m This سالانه</strong><span class="price">۷۱۰٬۰۰۰ تومان</span
+              <strong>I’m This سالانه</strong><span class="price" id="annual-plan-price" aria-live="polite">—</span
               ><span class="muted">برای یک سال</span>
             </button>
           </div>
+          <ul class="plan-features">
+            <li>ساخت یا میزبانی سایت شخصی</li>
+            <li>آدرس اختصاصی روی imthis.site</li>
+            <li>آمار بازدید و مدیریت انتشار</li>
+          </ul>
           <div id="subscription-status" class="status"></div>
           <button id="pay-button" class="pay" disabled>
             دریافت اطلاعات کارت
@@ -428,6 +434,12 @@
           }
           user = me.data.user;
           var plansResponse = await dropCVApi.getPlans();
+          var annualPlan = plansResponse.ok && plansResponse.data && plansResponse.data.plans
+            ? plansResponse.data.plans.Annual
+            : null;
+          document.getElementById("annual-plan-price").textContent = annualPlan && annualPlan.amount != null
+            ? faNumber(annualPlan.amount) + " تومان"
+            : "—";
           paymentsEnabled = Boolean(
             plansResponse.ok &&
             plansResponse.data &&
