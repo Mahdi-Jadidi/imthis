@@ -82,6 +82,13 @@
     #mailNotice::backdrop { background: rgba(18, 32, 28, .42); }
     #mailNotice p { margin: 0 0 18px; font-weight: 700; }
     #mailNotice button { width: 100%; }
+
+    /* The countdown is a hard UI lock, not only a muted visual state. */
+    #resendVerification:disabled {
+      cursor: not-allowed;
+      pointer-events: none;
+      opacity: .56;
+    }
   </style>
   <link rel="stylesheet" href="theme.css">
   <script src="theme.js" defer></script>
@@ -210,13 +217,14 @@
       var resendTimer = null;
       var cooldownDurationMs = 2 * 60 * 1000;
 
-      function enableVerificationMode(email, lockEmail) {
+      function enableVerificationMode(email, lockEmail, requestCode) {
         if (email) emailInput.value = email;
         emailInput.readOnly = Boolean(lockEmail);
         passwordField.hidden = true;
         submitButton.hidden = true;
         verificationBox.hidden = false;
-        restoreOrStartCooldown();
+        if (requestCode) requestVerificationCode();
+        else restoreOrStartCooldown();
         document.getElementById('verificationCode').focus();
       }
 
@@ -283,7 +291,7 @@
         box.textContent = r.error || 'کد تأیید معتبر نیست.'; box.classList.remove('hidden');
       });
 
-      resendButton.addEventListener('click', async function () {
+      async function requestVerificationCode() {
         if (resendButton.disabled) return;
         resendButton.disabled = true;
         resendButton.setAttribute('aria-busy', 'true');
@@ -311,7 +319,9 @@
             resendButton.removeAttribute('aria-busy');
           }
         }
-      });
+      }
+
+      resendButton.addEventListener('click', requestVerificationCode);
 
       var params = new URLSearchParams(window.location.search);
       if (params.get('verify') !== '1') return;
@@ -353,7 +363,10 @@
         document.getElementById('error').textContent = 'ایمیل شما هنوز تأیید نشده است. کد را وارد کنید یا دوباره ارسال کنید.';
         document.getElementById('error').classList.remove('hidden');
         if (window.__dropcvEnableVerification) {
-          window.__dropcvEnableVerification(document.getElementById('email').value, false);
+          // This route may be reached long after the original registration.
+          // Request a fresh code first; the server applies the authoritative
+          // cooldown and the UI starts its matching timer from that response.
+          window.__dropcvEnableVerification(document.getElementById('email').value, false, true);
         }
         return;
       }
