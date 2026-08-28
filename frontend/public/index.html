@@ -1,0 +1,749 @@
+<!doctype html>
+<html lang="fa" dir="rtl">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <meta name="description" content="I’m This داستان، نمونه‌کار، بیوگرافی و رزومه شما را به یک وب‌سایت شخصی حرفه‌ای تبدیل و میزبانی می‌کند.">
+  <link rel="canonical" href="https://imthis.site/">
+  <meta property="og:title" content="I’m This — داستان شما، سایت شما">
+  <meta property="og:description" content="ما سایت شخصی شما را می‌سازیم و در آدرس اختصاصی‌تان میزبانی می‌کنیم.">
+  <meta property="og:url" content="https://imthis.site/">
+  <meta property="og:type" content="website">
+  <meta name="twitter:card" content="summary">
+  <link rel="icon" href="/logo.svg" type="image/svg+xml">
+  <title>I’m This — داستان شما، سایت شما</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&family=Vazirmatn:wght@400;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="app-shell.css">
+  <style>
+    header {
+      background: rgba(247, 250, 249, 0.9);
+      backdrop-filter: blur(14px);
+      position: sticky;
+      top: 0;
+      z-index: 20;
+      border-bottom: 1px solid rgba(220, 231, 226, 0.7);
+    }
+
+    .hero {
+      padding: 84px 0 36px;
+      display: grid;
+      grid-template-columns: 1.05fr 0.95fr;
+      gap: 64px;
+      align-items: center;
+    }
+
+    .hero h1 {
+      font-size: clamp(42px, 6vw, 76px);
+      line-height: 1.06;
+      letter-spacing: -0.045em;
+      margin: 12px 0 24px;
+    }
+
+    .hero-copy {
+      font-size: 19px;
+      color: var(--muted);
+      max-width: 610px;
+    }
+
+    .hero-actions {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 12px;
+      margin-top: 28px;
+    }
+
+    .proof {
+      margin-top: 20px;
+      color: var(--muted);
+      font-size: 14px;
+    }
+
+    .domain-search-card {
+      padding: 30px;
+      border: 1px solid var(--line);
+      border-radius: 20px;
+      background: rgba(255, 255, 255, .96);
+      box-shadow: 0 24px 70px rgba(15, 55, 45, .12);
+    }
+
+    .domain-search-card h2 {
+      margin: 8px 0 10px;
+      font-size: clamp(26px, 3vw, 38px);
+    }
+
+    .domain-search-box {
+      display: flex;
+      direction: ltr;
+      align-items: stretch;
+      margin-top: 24px;
+    }
+
+    .domain-search-box input {
+      min-width: 0;
+      flex: 1 1 auto;
+      border-radius: 12px 0 0 12px;
+      font: inherit;
+      font-weight: 700;
+    }
+
+    .domain-suffix {
+      display: inline-flex;
+      align-items: center;
+      padding: 0 12px;
+      border: 1px solid var(--line);
+      border-left: 0;
+      background: var(--brand-soft);
+      color: var(--brand-dark);
+      font-weight: 800;
+      white-space: nowrap;
+    }
+
+    .domain-search-box .btn {
+      width: auto;
+      border-radius: 0 12px 12px 0;
+      white-space: nowrap;
+    }
+
+    .domain-search-result {
+      display: none;
+      margin-top: 16px;
+      padding: 15px;
+      border: 1px solid var(--line);
+      border-radius: 13px;
+      line-height: 1.7;
+    }
+
+    .domain-search-result.visible { display: block; }
+    .domain-search-result.is-available { background: #ecf9f4; border-color: #9ddac6; }
+    .domain-search-result.is-unavailable { background: #fff5f5; border-color: #f1c4c4; }
+    .domain-result-actions { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 12px; }
+    .domain-result-actions .btn { width: auto; }
+
+    .preview {
+      padding: 20px;
+    }
+
+    .browser {
+      border: 1px solid var(--line);
+      border-radius: 14px;
+      overflow: hidden;
+      background: white;
+      box-shadow: var(--shadow);
+      transform: rotate(-0.75deg);
+      transition: transform 0.25s ease;
+    }
+
+    .browser:hover {
+      transform: rotate(0deg) translateY(-2px);
+    }
+
+    .browser-bar {
+      padding: 11px 14px;
+      background: #edf4f1;
+      border-bottom: 1px solid var(--line);
+      display: flex;
+      gap: 8px;
+      align-items: center;
+    }
+
+    .dot {
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      background: #b6c6c0;
+    }
+
+    .url {
+      margin-inline-start: 10px;
+      font-size: 12px;
+      color: var(--brand);
+    }
+
+    .profile {
+      padding: 34px;
+    }
+
+    .avatar {
+      width: 64px;
+      height: 64px;
+      background: var(--brand);
+      color: #fff;
+      border-radius: 20px;
+      display: grid;
+      place-items: center;
+      font-size: 22px;
+      font-weight: 800;
+    }
+
+    .profile h2 {
+      margin: 18px 0 3px;
+      font-size: 28px;
+    }
+
+    .profile-role {
+      margin: 0;
+      color: var(--muted);
+    }
+
+    .profile-desc {
+      margin: 18px 0 0;
+      line-height: 1.75;
+    }
+
+    .chips {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin-top: 24px;
+    }
+
+    .chip {
+      background: var(--brand-soft);
+      color: var(--brand-dark);
+      padding: 6px 11px;
+      border-radius: 999px;
+      font-size: 13px;
+    }
+
+    .trust-strip {
+      grid-column: 1 / -1;
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 14px;
+      margin-top: 6px;
+    }
+
+    .trust-item {
+      padding: 18px;
+      border: 1px solid var(--line);
+      border-radius: 14px;
+      background: rgba(255, 255, 255, 0.95);
+      box-shadow: var(--shadow);
+      display: grid;
+      gap: 6px;
+    }
+
+    .trust-item strong {
+      font-size: 16px;
+      line-height: 1.25;
+    }
+
+    .trust-item span {
+      font-size: 14px;
+      color: var(--muted);
+      line-height: 1.55;
+    }
+
+    .section {
+      padding: 80px 0;
+    }
+
+    .section h2 {
+      font-size: clamp(30px, 4vw, 48px);
+      margin: 6px 0 12px;
+    }
+
+    .section-note {
+      margin-top: 8px;
+    }
+
+    .steps,
+    .pricing {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 18px;
+      margin-top: 36px;
+    }
+
+    .step {
+      padding: 26px;
+    }
+
+    .num {
+      width: 38px;
+      height: 38px;
+      border-radius: 50%;
+      display: grid;
+      place-items: center;
+      background: var(--brand);
+      color: white;
+      font-weight: 800;
+    }
+
+    .step h3 {
+      margin: 18px 0 8px;
+    }
+
+    .pricing {
+      grid-template-columns: minmax(0, 620px);
+      justify-content: center;
+    }
+
+    .pricing .plan.featured {
+      display: none;
+    }
+
+    .plan {
+      padding: 30px;
+      position: relative;
+    }
+
+    .plan.featured {
+      border: 2px solid var(--brand);
+      box-shadow: 0 24px 60px rgba(15, 55, 45, 0.1);
+    }
+
+    .badge {
+      position: absolute;
+      top: 18px;
+      inset-inline-end: 18px;
+      background: var(--brand-soft);
+      color: var(--brand-dark);
+      padding: 5px 9px;
+      border-radius: 999px;
+      font-size: 12px;
+      font-weight: 800;
+    }
+
+    .plan p {
+      margin: 12px 0 0;
+    }
+
+    .plan ul {
+      padding-inline-start: 20px;
+      color: var(--muted);
+      display: grid;
+      gap: 10px;
+      line-height: 1.6;
+    }
+
+    .faq-grid {
+      display: grid;
+      gap: 12px;
+      margin-top: 28px;
+    }
+
+    details.card.faq-item {
+      padding: 0;
+      overflow: hidden;
+    }
+
+    details.card.faq-item summary {
+      list-style: none;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 18px;
+      padding: 22px 24px;
+      font-weight: 800;
+      cursor: pointer;
+    }
+
+    details.card.faq-item summary::-webkit-details-marker {
+      display: none;
+    }
+
+    details.card.faq-item summary::after {
+      content: "+";
+      font-size: 22px;
+      line-height: 1;
+      color: var(--brand);
+      transition: transform 0.2s ease;
+    }
+
+    details.card.faq-item[open] summary::after {
+      content: "−";
+    }
+
+    details.card.faq-item[open] {
+      border-color: rgba(15, 110, 86, 0.38);
+      box-shadow: 0 16px 42px rgba(15, 55, 45, 0.08);
+    }
+
+    .faq-answer {
+      padding: 0 24px 22px;
+      color: var(--muted);
+      line-height: 1.75;
+    }
+
+    .final {
+      margin: 36px auto 80px;
+      padding: 48px;
+      text-align: center;
+      background: var(--ink);
+      color: white;
+    }
+
+    .final .muted {
+      color: #b8c9c3;
+    }
+
+    footer {
+      padding: 28px 0;
+      border-top: 1px solid var(--line);
+    }
+
+    footer a {
+      min-height: 44px;
+      display: inline-flex;
+      align-items: center;
+      padding-inline: 8px;
+    }
+
+    html[data-lang="en"] .hero h1,
+    html[data-lang="en"] .section h2,
+    html[data-lang="en"] .final h2 {
+      letter-spacing: -0.035em;
+    }
+
+    html[data-lang="en"] .browser {
+      transform: rotate(0deg);
+    }
+
+    @media (max-width: 900px) {
+      .hero {
+        grid-template-columns: 1fr;
+        padding-top: 48px;
+        gap: 32px;
+      }
+
+      .hero h1 {
+        font-size: 46px;
+      }
+
+      .trust-strip {
+        grid-template-columns: 1fr;
+      }
+
+      .steps {
+        grid-template-columns: 1fr;
+      }
+
+      .pricing {
+        grid-template-columns: 1fr;
+      }
+
+      .hero-actions {
+        flex-direction: column;
+      }
+
+      .final {
+        padding: 32px 20px;
+      }
+
+      .section-note {
+        font-size: 16px;
+      }
+    }
+
+    @media (max-width: 720px) {
+      header .nav {
+        gap: 10px;
+      }
+
+      header .brand {
+        flex-shrink: 0;
+        white-space: nowrap;
+      }
+
+      header .actions {
+        flex-wrap: nowrap;
+        gap: 8px;
+      }
+
+      header .actions .btn {
+        width: auto;
+        padding: 9px 12px;
+      }
+
+      header .actions .btn-primary {
+        display: none;
+      }
+
+      html[data-lang="en"] header .actions {
+        margin-right: 0;
+      }
+
+      html[data-lang="fa"] header .actions {
+        margin-left: 0;
+      }
+
+      .nav-links {
+        display: none;
+      }
+
+      .grid-2 {
+        grid-template-columns: 1fr;
+      }
+
+      .container {
+        width: min(100% - 24px, 1120px);
+      }
+
+      .actions {
+        flex-wrap: wrap;
+      }
+
+      .btn {
+        width: 100%;
+      }
+
+      .domain-search-card { padding: 22px 18px; }
+      .domain-search-box { flex-wrap: wrap; }
+      .domain-search-box input { flex-basis: calc(100% - 112px); }
+      .domain-search-box .btn { width: 100%; margin-top: 10px; border-radius: 12px; }
+      .domain-result-actions .btn { width: 100%; }
+    }
+  </style>
+  <link rel="stylesheet" href="theme.css">
+  <script src="theme.js" defer></script>
+</head>
+<body>
+  <a class="skip-link" href="#main" data-fa="رفتن به محتوای اصلی" data-en="Skip to content">رفتن به محتوای اصلی</a>
+  <header>
+    <nav class="container nav" aria-label="Main">
+      <a class="brand" href="index.html">
+        <img class="brand-mark" src="/logo.svg" alt="I’m This" />
+        <span>I’m This</span>
+      </a>
+      <div class="nav-links">
+        <a href="#how" data-fa="چطور کار می‌کند" data-en="How it works">چطور کار می‌کند</a>
+        <a href="#pricing" data-fa="تعرفه‌ها" data-en="Pricing">تعرفه‌ها</a>
+        <a href="#faq" data-fa="سؤالات" data-en="FAQ">سؤالات</a>
+      </div>
+      <div class="actions">
+        <span data-theme-slot></span>
+        <button class="language-toggle" data-lang-toggle aria-label="Change language">EN</button>
+        <a class="btn" href="login.html" data-fa="ورود" data-en="Log in">ورود</a>
+        <a class="btn btn-primary" href="signup.html" data-fa="شروع آزمایشی رایگان" data-en="Start free trial">شروع آزمایشی رایگان</a>
+      </div>
+    </nav>
+  </header>
+
+  <main id="main">
+    <section class="container hero">
+      <div>
+        <div class="eyebrow" data-fa="داستان شما، سایت شما" data-en="Your story, your site">داستان شما، سایت شما</div>
+        <h1 class="ltr" data-fa="im this site" data-en="im this site">im this site</h1>
+        <p class="hero-copy" data-fa="نمونه‌کار، بیوگرافی، رزومه و لینک‌هایتان را بفرستید. I’m This آن‌ها را به یک سایت حرفه‌ای تبدیل می‌کند و در آدرس اختصاصی شما میزبانی می‌کند." data-en="Share your portfolio, biography, résumé, and links. I’m This turns them into a polished personal site and hosts it at your own address.">نمونه‌کار، بیوگرافی، رزومه و لینک‌هایتان را بفرستید. I’m This آن‌ها را به یک سایت حرفه‌ای تبدیل می‌کند و در آدرس اختصاصی شما میزبانی می‌کند.</p>
+        <div class="hero-actions">
+          <a class="btn btn-primary" href="signup.html" data-fa="ساخت سایت من" data-en="Build my site">ساخت سایت من</a>
+        </div>
+        <p class="proof" data-fa="پس از تحویل، {{trialDays}} روز رایگان امتحان کنید؛ سپس برای ادامه میزبانی پرداخت کنید." data-en="Try your delivered site free for {{trialDays}} days, then pay to keep it online.">پس از تحویل، 3 روز رایگان امتحان کنید؛ سپس برای ادامه میزبانی پرداخت کنید.</p>
+      </div>
+
+      <div class="preview">
+        <section class="domain-search-card" aria-labelledby="domain-search-title">
+          <div class="eyebrow" data-fa="آدرس اختصاصی شما" data-en="Your personal address">آدرس اختصاصی شما</div>
+          <h2 id="domain-search-title" data-fa="نام دامنه‌تان را پیدا کنید" data-en="Find your imthis.site name">نام دامنه‌تان را پیدا کنید</h2>
+          <p class="muted" data-fa="نام دلخواه را جست‌وجو کنید؛ اگر آزاد باشد همان را هنگام ثبت‌نام برایتان انتخاب می‌کنیم." data-en="Search for your preferred name. If it is available, we’ll carry it into signup for you.">نام دلخواه را جست‌وجو کنید؛ اگر آزاد باشد همان را هنگام ثبت‌نام برایتان انتخاب می‌کنیم.</p>
+          <form id="domain-search-form" novalidate>
+            <div class="domain-search-box">
+              <input id="domain-search-input" type="text" minlength="3" maxlength="63" pattern="[a-z0-9-]+" autocomplete="off" aria-label="نام دامنه" placeholder="your-name">
+              <span class="domain-suffix">.imthis.site</span>
+              <button class="btn btn-primary" type="submit" data-fa="جست‌وجو" data-en="Search">جست‌وجو</button>
+            </div>
+          </form>
+          <div id="domain-search-result" class="domain-search-result" role="status" aria-live="polite"></div>
+        </section>
+      </div>
+
+      <div class="trust-strip" aria-label="Why people choose I’m This">
+        <article class="trust-item">
+          <strong data-fa="آزمایش رایگان {{trialDays}} روزه" data-en="{{trialDays}}-day free trial">آزمایش رایگان 3 روزه</strong>
+          <span data-fa="آزمایش از زمان تحویل سایت شروع می‌شود." data-en="Your trial starts when the site is delivered.">آزمایش از زمان تحویل سایت شروع می‌شود.</span>
+        </article>
+        <article class="trust-item">
+          <strong data-fa="آدرس شخصی imthis.site" data-en="Your own imthis.site address">آدرس شخصی imthis.site</strong>
+          <span data-fa="لینکی تمیز و اختصاصی برای شما." data-en="A clean link that feels made for you.">لینکی تمیز و اختصاصی برای شما.</span>
+        </article>
+        <article class="trust-item">
+          <strong data-fa="ویرایش قبل از انتشار" data-en="Edit before publishing">ویرایش قبل از انتشار</strong>
+          <span data-fa="متن، ساختار و جزئیات را به‌سادگی تغییر دهید." data-en="Adjust copy, structure, and details with ease.">متن، ساختار و جزئیات را به‌سادگی تغییر دهید.</span>
+        </article>
+      </div>
+    </section>
+
+    <section class="section" id="how">
+      <div class="container">
+        <div class="eyebrow" data-fa="ساده و شفاف" data-en="Simple and clear">ساده و شفاف</div>
+        <h2 data-fa="از داستان شما تا سایت شما، در سه مرحله" data-en="From your story to your site in three steps">از داستان شما تا سایت شما، در سه مرحله</h2>
+        <div class="steps">
+          <article class="card step">
+            <div class="num" data-fa="۱" data-en="1">۱</div>
+            <h3 data-fa="نامتان را رزرو کنید" data-en="Reserve your name">نامتان را رزرو کنید</h3>
+            <p class="muted" data-fa="نام لینک عمومی خود را انتخاب و حساب‌تان را بسازید." data-en="Choose your public-link name and create an account.">نام لینک عمومی خود را انتخاب و حساب‌تان را بسازید.</p>
+          </article>
+          <article class="card step">
+            <div class="num" data-fa="۲" data-en="2">۲</div>
+            <h3 data-fa="خودتان را معرفی کنید" data-en="Tell us about yourself">خودتان را معرفی کنید</h3>
+            <p class="muted" data-fa="فرم کوتاه را کامل کنید و رزومه، پروژه‌ها، تصاویر و لینک‌هایتان را بفرستید." data-en="Complete a short brief and share your résumé, projects, images, and links.">فرم کوتاه را کامل کنید و رزومه، پروژه‌ها، تصاویر و لینک‌هایتان را بفرستید.</p>
+          </article>
+          <article class="card step">
+            <div class="num" data-fa="۳" data-en="3">۳</div>
+            <h3 data-fa="سایت آماده را تحویل بگیرید" data-en="Receive your finished site">سایت آماده را تحویل بگیرید</h3>
+            <p class="muted" data-fa="ما سایت را می‌سازیم، منتشر می‌کنیم و آزمایش سه‌روزه شما از زمان تحویل آغاز می‌شود." data-en="We build and publish the site; your three-day trial starts at delivery.">ما سایت را می‌سازیم، منتشر می‌کنیم و آزمایش سه‌روزه شما از زمان تحویل آغاز می‌شود.</p>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <section class="section" id="pricing">
+      <div class="container">
+        <div style="text-align:center">
+          <div class="eyebrow" data-fa="تعرفه سالانه" data-en="Annual pricing">تعرفه سالانه</div>
+          <h2 data-fa="یک سایت شخصی، یک قیمت روشن" data-en="One personal site, one clear price">یک سایت شخصی، یک قیمت روشن</h2>
+          <p class="section-note" data-fa="یک محصول، یک قیمت سالانه و {{trialDays}} روز آزمایش رایگان." data-en="One product, one annual price, and a {{trialDays}}-day free trial.">یک محصول، یک قیمت سالانه و 3 روز آزمایش رایگان.</p>
+        </div>
+        <div class="pricing">
+          <article class="card plan">
+            <h3 data-fa="I’m This سالانه" data-en="I’m This Annual">I’m This سالانه</h3>
+            <div class="price">
+              <span class="ltr" data-dropcv-plan-amount="Annual" data-fa="۷۱۰٬۰۰۰" data-en="710,000">۷۱۰٬۰۰۰</span>
+              <small data-fa="تومان / سال" data-en="toman / year">تومان / سال</small>
+            </div>
+            <p data-fa="ساخت سایت توسط تیم، میزبانی سالانه، آدرس اختصاصی و آمار بازدید در یک عضویت." data-en="Team-built site, annual hosting, a personal address, and visitor analytics in one membership.">ساخت سایت توسط تیم، میزبانی سالانه، آدرس اختصاصی و آمار بازدید در یک عضویت.</p>
+            <ul>
+              <li data-fa="مناسب نمونه‌کار، بیوگرافی، رزومه یا ترکیبی از آن‌ها" data-en="Portfolio, biography, résumé, or a mix">مناسب نمونه‌کار، بیوگرافی، رزومه یا ترکیبی از آن‌ها</li>
+              <li data-fa="ساخت و تحویل توسط تیم I’m This" data-en="Built and delivered by the I’m This team">ساخت و تحویل توسط تیم I’m This</li>
+              <li data-fa="آدرس name.imthis.site و آمار بازدید" data-en="name.imthis.site address and visitor analytics">آدرس name.imthis.site و آمار بازدید</li>
+            </ul>
+            <a class="btn btn-primary" href="signup.html" data-fa="شروع آزمایش ۳ روزه" data-en="Start the 3-day trial">شروع آزمایش ۳ روزه</a>
+          </article>
+
+        </div>
+      </div>
+    </section>
+
+    <section class="section" id="faq">
+      <div class="container">
+        <div class="eyebrow" data-fa="سوال‌های پرتکرار" data-en="Questions, answered">سوال‌های پرتکرار</div>
+        <h2 data-fa="قبل از شروع معمولا این چند سؤال را می‌پرسند" data-en="A few things people usually ask before starting">قبل از شروع معمولا این چند سؤال را می‌پرسند</h2>
+        <div class="faq-grid">
+          <details class="card faq-item" open>
+            <summary data-fa="آزمایش سه‌روزه از چه زمانی شروع می‌شود؟" data-en="When does the three-day trial start?">آزمایش سه‌روزه از چه زمانی شروع می‌شود؟</summary>
+            <div class="faq-answer" data-fa="وقتی سایت آماده و تحویل شما شد. سه روز فرصت دارید سایت زنده را بررسی کنید و سپس برای ادامه میزبانی سالانه پرداخت کنید." data-en="When your finished site is delivered. You can review the live site for three days, then pay for annual hosting.">وقتی سایت آماده و تحویل شما شد. سه روز فرصت دارید سایت زنده را بررسی کنید و سپس برای ادامه میزبانی سالانه پرداخت کنید.</div>
+          </details>
+
+          <details class="card faq-item">
+            <summary data-fa="اگر رزومه آماده نداشته باشم چه؟" data-en="Can I start without a CV?">اگر رزومه آماده نداشته باشم چه؟</summary>
+            <div class="faq-answer" data-fa="بله. می‌توانید فقط به پرسش‌های کوتاه ما پاسخ دهید و پروژه‌ها، تصاویر یا لینک‌های خود را بفرستید. رزومه اختیاری است." data-en="Yes. Answer our short brief and share projects, images, or links. A résumé is optional.">بله. می‌توانید فقط به پرسش‌های کوتاه ما پاسخ دهید و پروژه‌ها، تصاویر یا لینک‌های خود را بفرستید. رزومه اختیاری است.</div>
+          </details>
+
+          <details class="card faq-item">
+            <summary data-fa="می‌توانم بین فارسی و انگلیسی جابه‌جا شوم؟" data-en="Can I switch between Persian and English?">می‌توانم بین فارسی و انگلیسی جابه‌جا شوم؟</summary>
+            <div class="faq-answer" data-fa="بله. فقط با یک ضربه می‌توانید کل تجربه را بین فارسی و انگلیسی عوض کنید و متن‌ها همیشه خوانا و مرتب می‌مانند." data-en="Yes. One tap switches the whole experience between Persian and English while keeping the layout clean and readable.">بله. فقط با یک ضربه می‌توانید کل تجربه را بین فارسی و انگلیسی عوض کنید و متن‌ها همیشه خوانا و مرتب می‌مانند.</div>
+          </details>
+
+          <details class="card faq-item">
+            <summary data-fa="بعد از پایان آزمایش چه می‌شود؟" data-en="What happens when the trial ends?">بعد از پایان آزمایش چه می‌شود؟</summary>
+            <div class="faq-answer" data-fa="اگر پرداخت نکنید سایت متوقف می‌شود، اما اطلاعات و پیش‌نویس شما ذخیره می‌ماند تا بعداً عضویت سالانه را فعال کنید." data-en="Without payment the site pauses, but your draft stays saved so you can activate annual hosting later.">اگر پرداخت نکنید سایت متوقف می‌شود، اما اطلاعات و پیش‌نویس شما ذخیره می‌ماند تا بعداً عضویت سالانه را فعال کنید.</div>
+          </details>
+        </div>
+      </div>
+    </section>
+
+    <section class="container card final">
+      <h2 data-fa="داستان شما شایسته یک خانه حرفه‌ای است." data-en="Your story deserves a professional home.">داستان شما شایسته یک خانه حرفه‌ای است.</h2>
+      <p class="muted" data-fa="اطلاعاتتان را بفرستید؛ ما ساخت، انتشار و میزبانی سایت شخصی شما را انجام می‌دهیم." data-en="Share your information and we’ll build, publish, and host your personal site.">اطلاعاتتان را بفرستید؛ ما ساخت، انتشار و میزبانی سایت شخصی شما را انجام می‌دهیم.</p>
+      <p>
+        <a class="btn btn-primary" href="signup.html" data-fa="ساخت سایت من" data-en="Build my site">ساخت سایت من</a>
+      </p>
+    </section>
+  </main>
+
+  <footer>
+    <div class="container nav">
+      <span>© <span id="footerYear">2026</span> I’m This</span>
+      <div class="actions">
+        <a href="contact.html" data-fa="تماس" data-en="Contact">تماس</a>
+        <a href="cookies.html" data-fa="کوکی‌ها" data-en="Cookies">کوکی‌ها</a>
+        <a href="privacy.html" data-fa="حریم خصوصی" data-en="Privacy">حریم خصوصی</a>
+        <a href="terms.html" data-fa="قوانین" data-en="Terms">قوانین</a>
+        <a href="terms.html#acceptable-use" data-fa="استفاده مجاز" data-en="Acceptable use">استفاده مجاز</a>
+      </div>
+    </div>
+  </footer>
+
+  <script src="site-config.js?v=20260713h"></script>
+  <script src="i18n.js"></script>
+  <script src="dropcv-api.js?v=20260713g"></script>
+  <script src="dropcv-pricing.js"></script>
+  <script>
+    document.getElementById('footerYear').textContent = new Date().getFullYear();
+    (function () {
+      var form = document.getElementById('domain-search-form');
+      var input = document.getElementById('domain-search-input');
+      var result = document.getElementById('domain-search-result');
+
+      function language() {
+        return window.dropCVI18n && window.dropCVI18n.get() === 'en' ? 'en' : 'fa';
+      }
+
+      function clean(value) {
+        return String(value || '').toLowerCase().replace(/[^a-z0-9-]/g, '').replace(/-+/g, '-').replace(/^-|-$/g, '');
+      }
+
+      function cleanWhileTyping(value) {
+        return String(value || '').toLowerCase().replace(/[^a-z0-9-]/g, '').replace(/-+/g, '-').replace(/^-+/g, '');
+      }
+
+      function signupLink(slug) {
+        return 'signup.html?slug=' + encodeURIComponent(slug);
+      }
+
+      function render(data) {
+        var en = language() === 'en';
+        var address = data.slug + '.imthis.site';
+        result.replaceChildren();
+        result.className = 'domain-search-result visible ' + (data.available ? 'is-available' : 'is-unavailable');
+        var message = document.createElement('strong');
+        message.textContent = data.available
+          ? (en ? address + ' is available.' : address + ' آزاد است.')
+          : (en ? address + ' is already taken.' : address + ' قبلاً انتخاب شده است.');
+        result.appendChild(message);
+        var actions = document.createElement('div');
+        actions.className = 'domain-result-actions';
+        if (data.available) {
+          var register = document.createElement('a');
+          register.className = 'btn btn-primary';
+          register.href = signupLink(data.slug);
+          register.textContent = en ? 'Register this address' : 'ثبت همین آدرس';
+          actions.appendChild(register);
+        } else {
+          (data.suggestions || []).forEach(function (suggestion) {
+            var option = document.createElement('a');
+            option.className = 'btn';
+            option.href = signupLink(suggestion.slug);
+            option.textContent = suggestion.slug + '.imthis.site';
+            actions.appendChild(option);
+          });
+        }
+        result.appendChild(actions);
+      }
+
+      input.addEventListener('input', function () { this.value = cleanWhileTyping(this.value); });
+      form.addEventListener('submit', async function (event) {
+        event.preventDefault();
+        var slug = clean(input.value);
+        input.value = slug;
+        if (slug.length < 4) {
+          result.className = 'domain-search-result visible is-unavailable';
+          result.textContent = language() === 'en' ? 'Enter at least 4 characters.' : 'حداقل ۴ نویسه وارد کنید.';
+          return;
+        }
+        result.className = 'domain-search-result visible';
+        result.textContent = language() === 'en' ? 'Checking…' : 'در حال بررسی…';
+        var response = await dropCVApi.checkSlugAvailability(slug);
+        if (!response.ok) {
+          result.className = 'domain-search-result visible is-unavailable';
+          result.textContent = response.error || (language() === 'en' ? 'Could not check this address.' : 'بررسی این آدرس انجام نشد.');
+          return;
+        }
+        render(response.data);
+      });
+    })();
+  </script>
+</body>
+</html>

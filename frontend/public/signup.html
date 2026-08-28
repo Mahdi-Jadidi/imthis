@@ -1,0 +1,1181 @@
+<!doctype html>
+<html lang="fa" dir="rtl">
+  <head>
+    <meta charset="utf-8" />
+    <link rel="icon" href="/logo.svg" type="image/svg+xml" />
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <meta name="robots" content="noindex,nofollow" />
+    <title>ساخت سایت شخصی — I’m This</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&family=Vazirmatn:wght@400;600;700;800&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="app-shell.css" />
+    <style>
+      header {
+        border-bottom: 1px solid var(--line);
+        background: white;
+      }
+      .flow {
+        max-width: 900px;
+        margin: 42px auto 80px;
+      }
+      .flow-head {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        gap: 20px;
+        margin-bottom: 20px;
+      }
+      .flow-head h1 {
+        font-size: clamp(28px, 5vw, 42px);
+        line-height: 1.2;
+        margin: 0;
+      }
+      .panel {
+        padding: 32px;
+      }
+      .step {
+        display: none;
+      }
+      .step.active {
+        display: block;
+      }
+      .step h2 {
+        margin-top: 0;
+        font-size: 28px;
+      }
+      .plans {
+        display: grid;
+        grid-template-columns: minmax(0, 560px);
+        justify-content: center;
+        gap: 16px;
+        margin: 24px 0;
+      }
+      .plan {
+        padding: 22px;
+        border: 2px solid var(--line);
+        border-radius: 14px;
+        background: white;
+        text-align: start;
+        min-height: 180px;
+      }
+      .plan[aria-pressed="true"] {
+        border-color: var(--brand);
+        background: var(--brand-soft);
+      }
+      .plan strong {
+        font-size: 21px;
+      }
+      .plan .amount {
+        font-size: 25px;
+        font-weight: 850;
+        margin: 8px 0;
+      }
+      .form-stack {
+        display: grid;
+        gap: 16px;
+        margin: 22px 0;
+      }
+      /* The password meter is taller than the email field. Do not stretch the
+         adjacent field to the same height, otherwise the email input expands. */
+      .signup-account-grid {
+        align-items: start;
+      }
+      .signup-account-grid > .field {
+        align-self: start;
+        align-content: start;
+      }
+      .step-actions {
+        display: flex;
+        gap: 10px;
+        justify-content: space-between;
+        margin-top: 26px;
+      }
+      .upload {
+        display: grid;
+        place-items: center;
+        text-align: center;
+        padding: 34px;
+        border: 2px dashed #b9ccc4;
+        border-radius: 14px;
+        background: #fbfdfc;
+      }
+      .upload input {
+        margin-top: 14px;
+      }
+      .preview-grid {
+        display: grid;
+        grid-template-columns: 0.9fr 1.1fr;
+        gap: 20px;
+      }
+      .preview-frame {
+        width: 100%;
+        min-height: 520px;
+        border: 1px solid var(--line);
+        border-radius: 12px;
+        background: white;
+      }
+      .payment-summary {
+        padding: 24px;
+        display: grid;
+        gap: 14px;
+      }
+      .fine {
+        font-size: 13px;
+        color: var(--muted);
+      }
+      .password-strength-root {
+        margin-top: 12px;
+        min-height: 190px;
+      }
+      .password-strength-panel {
+        position: relative;
+        overflow: hidden;
+        padding: 14px;
+        border: 1px solid var(--line);
+        border-radius: 16px;
+        background: linear-gradient(180deg, #fff 0%, #f8fbf9 100%);
+        box-shadow: 0 16px 34px rgba(15, 55, 45, 0.06);
+      }
+      .password-strength-panel:before {
+        content: "";
+        position: absolute;
+        inset: -30% auto auto -15%;
+        width: 170px;
+        height: 170px;
+        border-radius: 999px;
+        background: radial-gradient(
+          circle,
+          rgba(15, 110, 86, 0.12),
+          transparent 70%
+        );
+        pointer-events: none;
+      }
+      .password-strength-head {
+        display: flex;
+        align-items: flex-start;
+        justify-content: space-between;
+        gap: 12px;
+        position: relative;
+        z-index: 1;
+      }
+      .password-strength-copy {
+        display: grid;
+        gap: 3px;
+        min-width: 0;
+      }
+      .password-strength-title {
+        font-size: 13px;
+        font-weight: 800;
+        color: var(--ink);
+      }
+      .password-strength-subtitle {
+        font-size: 12px;
+        color: var(--muted);
+        line-height: 1.45;
+      }
+      .password-strength-badge {
+        display: inline-flex;
+        align-items: center;
+        gap: 6px;
+        padding: 8px 11px;
+        border-radius: 999px;
+        font-size: 12px;
+        font-weight: 800;
+        white-space: nowrap;
+        border: 1px solid transparent;
+        box-shadow: 0 10px 20px rgba(15, 55, 45, 0.08);
+      }
+      .password-strength-track {
+        height: 10px;
+        margin-top: 12px;
+        border-radius: 999px;
+        background: #e7efec;
+        padding: 2px;
+        overflow: hidden;
+        position: relative;
+        z-index: 1;
+      }
+      .password-strength-fill {
+        height: 100%;
+        border-radius: inherit;
+        box-shadow: 0 8px 18px rgba(15, 110, 86, 0.24);
+      }
+      .password-strength-hint {
+        margin-top: 10px;
+        font-size: 12px;
+        color: var(--muted);
+        line-height: 1.5;
+        position: relative;
+        z-index: 1;
+      }
+      .password-strength-checks {
+        display: grid;
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        gap: 8px;
+        margin-top: 12px;
+        position: relative;
+        z-index: 1;
+      }
+      .password-strength-check {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        padding: 10px 12px;
+        border: 1px solid var(--line);
+        border-radius: 12px;
+        background: #fff;
+        font-size: 12px;
+        font-weight: 650;
+        color: var(--muted);
+        transition:
+          transform 0.2s ease,
+          border-color 0.2s ease,
+          background 0.2s ease,
+          color 0.2s ease,
+          box-shadow 0.2s ease;
+      }
+      .password-strength-check.is-on {
+        border-color: rgba(15, 110, 86, 0.18);
+        background: var(--brand-soft);
+        color: var(--ink);
+        box-shadow: 0 10px 20px rgba(15, 110, 86, 0.08);
+      }
+      .password-strength-check-icon {
+        width: 18px;
+        height: 18px;
+        border-radius: 999px;
+        display: grid;
+        place-items: center;
+        flex: none;
+        background: rgba(148, 163, 184, 0.22);
+        color: #64748b;
+        font-size: 11px;
+        font-weight: 800;
+      }
+      .password-strength-check.is-on .password-strength-check-icon {
+        background: rgba(15, 110, 86, 0.16);
+        color: var(--brand);
+      }
+      @media (max-width: 760px) {
+        .password-strength-checks {
+          grid-template-columns: 1fr;
+        }
+        .password-strength-panel {
+          padding: 12px;
+        }
+      }
+      @media (max-width: 760px) {
+        .plans,
+        .preview-grid {
+          grid-template-columns: 1fr;
+        }
+        .panel {
+          padding: 20px;
+        }
+        .step-actions {
+          flex-direction: column-reverse;
+        }
+        .flow {
+          margin-top: 24px;
+        }
+      }
+    </style>
+    <style>
+      .signup-motion {
+        margin: 18px 0 20px;
+      }
+
+      .password-field {
+        display: grid;
+        gap: 8px;
+      }
+
+      .password-row {
+        display: flex;
+        gap: 8px;
+        align-items: stretch;
+      }
+
+      .password-row input {
+        flex: 1;
+      }
+
+      .password-toggle {
+        min-width: 92px;
+        min-height: 48px;
+        padding: 0 14px;
+        border: 1px solid var(--line);
+        border-radius: 11px;
+        background: var(--brand-soft);
+        color: var(--brand-dark);
+        font-weight: 800;
+        transition:
+          background 0.2s ease,
+          border-color 0.2s ease,
+          color 0.2s ease,
+          transform 0.2s ease;
+      }
+
+      .password-toggle:hover {
+        background: #dcf3ec;
+        border-color: rgba(15, 110, 86, 0.25);
+        color: var(--brand);
+      }
+
+      .password-toggle[aria-pressed="true"] {
+        background: var(--brand);
+        border-color: var(--brand);
+        color: white;
+      }
+
+      .password-strength-root {
+        margin-top: 10px;
+        min-height: 160px;
+      }
+
+      @media (max-width: 760px) {
+        .signup-motion {
+          margin: 14px 0 18px;
+        }
+
+        .password-row {
+          flex-direction: column;
+        }
+
+        .password-toggle {
+          width: 100%;
+        }
+
+        .password-strength-root {
+          min-height: 148px;
+        }
+      }
+    </style>
+    <link rel="stylesheet" href="theme.css">
+    <script src="theme.js" defer></script>
+  </head>
+  <body>
+    <header>
+      <nav class="container nav">
+        <a class="brand" href="index.html"
+          ><img class="brand-mark" src="/logo.svg" alt="I’m This" />I’m This</a
+        >
+        <div class="actions">
+          <span data-theme-slot></span>
+          <button class="language-toggle" data-lang-toggle>EN</button
+          ><a
+            href="login.html"
+            data-fa="قبلاً حساب دارید؟ ورود"
+            data-en="Already registered? Log in"
+            >قبلاً حساب دارید؟ ورود</a
+          >
+        </div>
+      </nav>
+    </header>
+    <main class="container flow">
+      <div class="flow-head">
+        <div>
+          <div class="eyebrow" id="stepLabel">۱ / ۲</div>
+          <h1
+            data-fa="سایت شخصی‌تان را شروع کنید"
+            data-en="Start your personal site"
+          >
+            سایت شخصی‌تان را شروع کنید
+          </h1>
+        </div>
+      </div>
+      <div
+        id="auth-motion"
+        class="auth-motion signup-motion"
+        data-mode="signup"
+      ></div>
+      <div class="progress" aria-label="Progress">
+        <span id="progressBar" style="width: 50%"></span>
+      </div>
+      <div class="card panel" style="margin-top: 18px">
+        <div
+          id="globalStatus"
+          class="status hidden"
+          role="status"
+          aria-live="polite"
+        ></div>
+        <section class="step active" data-step="1">
+          <h2 data-fa="عضویت سالانه I’m This" data-en="I’m This Annual">
+            عضویت سالانه I’m This
+          </h2>
+          <p
+            class="muted"
+            data-fa="حساب و آدرس خود را بسازید، اطلاعاتتان را بفرستید و سایت آماده را سه روز رایگان امتحان کنید."
+            data-en="Create your account and address, send your information, and try the delivered site free for three days."
+          >
+            حساب و آدرس خود را بسازید، اطلاعاتتان را بفرستید و سایت آماده را سه روز رایگان امتحان کنید.
+          </p>
+          <div class="plans">
+            <button
+              class="plan"
+              type="button"
+              data-plan="Annual"
+              aria-pressed="true"
+            >
+              <strong data-fa="یک سال دسترسی" data-en="One year of access">یک سال دسترسی</strong>
+              <div
+                class="amount"
+                data-dropcv-plan-amount="Annual"
+                data-fa="۷۱۰٬۰۰۰"
+                data-en="710,000"
+              >
+                ۷۱۰٬۰۰۰
+              </div>
+              <span
+                data-fa="ساخت توسط تیم، میزبانی، آدرس شخصی و آمار بازدید"
+                data-en="Team-built site, hosting, personal address, and analytics"
+                >ساخت توسط تیم، میزبانی، آدرس شخصی و آمار بازدید</span
+            ></button>
+          </div>
+          <div class="step-actions">
+            <span></span
+            ><button
+              class="btn btn-primary"
+              data-next
+              data-fa="ادامه"
+              data-en="Continue"
+            >
+              ادامه
+            </button>
+          </div>
+        </section>
+        <section class="step" data-step="2">
+          <h2 data-fa="نام و حساب شما" data-en="Your name and account">
+            نام و حساب شما
+          </h2>
+          <p
+            class="muted"
+            data-fa="این حساب پیش‌نویس خصوصی شما را ذخیره می‌کند."
+            data-en="This account securely saves your private draft."
+          >
+            این حساب پیش‌نویس خصوصی شما را ذخیره می‌کند.
+          </p>
+          <div class="form-stack">
+            <div class="field">
+              <label for="fullName" data-fa="نام کامل" data-en="Full name"
+                >نام کامل</label
+              ><input id="fullName" autocomplete="name" required />
+            </div>
+            <div class="field">
+              <label
+                for="slug"
+                data-fa="آدرس دلخواه"
+                data-en="Preferred address"
+                >آدرس دلخواه</label
+              >
+              <div style="display: flex; direction: ltr">
+                <input
+                  id="slug"
+                  style="border-radius: 11px 0 0 11px"
+                  autocomplete="off"
+                  pattern="[a-z0-9-]+"
+                  minlength="4"
+                  required
+                /><span
+                  style="
+                    padding: 11px;
+                    border: 1px solid #cbd8d3;
+                    border-left: 0;
+                    background: #edf4f1;
+                    border-radius: 0 11px 11px 0;
+                  "
+                  >.imthis.site</span
+                >
+              </div>
+              <span
+                class="fine"
+                data-fa="فقط حروف انگلیسی، عدد و خط تیره"
+                data-en="English letters, numbers, and hyphens only"
+                >فقط حروف انگلیسی، عدد و خط تیره</span
+              >
+            </div>
+            <div class="grid-2 signup-account-grid">
+              <div class="field">
+                <label for="email" data-fa="ایمیل" data-en="Email">ایمیل</label
+                ><input id="email" type="email" autocomplete="email" required />
+              </div>
+              <div class="field">
+                <label for="password" data-fa="رمز عبور" data-en="Password"
+                  >رمز عبور</label
+                >
+                <div class="password-field">
+                  <div class="password-row">
+                    <input
+                      id="password"
+                      type="password"
+                      minlength="8"
+                      autocomplete="new-password"
+                      required
+                      aria-describedby="password-strength-root"
+                    /><button
+                      type="button"
+                      class="password-toggle"
+                      id="passwordToggle"
+                      aria-pressed="false"
+                      data-fa="نمایش"
+                      data-en="Show"
+                    >
+                      نمایش
+                    </button>
+                  </div>
+                  <div
+                    id="password-strength-root"
+                    class="password-strength-root"
+                  ></div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="step-actions">
+            <button class="btn" data-back data-fa="بازگشت" data-en="Back">
+              بازگشت</button
+            ><button
+              class="btn btn-primary"
+              id="registerBtn"
+              data-fa="ساخت حساب و ادامه"
+              data-en="Create account and continue"
+            >
+              ساخت حساب و ادامه
+            </button>
+          </div>
+        </section>
+        <section class="step" data-step="3">
+          <h2
+            data-fa="اطلاعات حرفه‌ای‌تان را وارد کنید"
+            data-en="Add your professional information"
+          >
+            اطلاعات حرفه‌ای‌تان را وارد کنید
+          </h2>
+          <div id="uploadChoice">
+            <div class="upload">
+              <strong
+                data-fa="PDF یا DOCX خود را اینجا انتخاب کنید"
+                data-en="Choose your PDF or DOCX"
+                >PDF یا DOCX خود را اینجا انتخاب کنید</strong
+                ><span class="domain-suffix"
+                class="muted"
+                data-fa="حداکثر ۲۰ مگابایت"
+                data-en="Up to 20 MB"
+                >حداکثر ۲۰ مگابایت</span
+              ><input
+                id="cvFile"
+                type="file"
+                accept=".pdf,.docx,application/pdf,application/vnd.openxmlformats-officedocument.wordprocessingml.document"
+              /><button
+                class="btn btn-primary"
+                id="uploadBtn"
+                style="margin-top: 14px"
+                data-fa="ساخت پیش‌نمایش"
+                data-en="Generate preview"
+              >
+                ساخت پیش‌نمایش
+              </button>
+            </div>
+            <button
+              class="btn hidden"
+              id="storySwitch"
+              style="margin-top: 14px"
+              data-fa="رزومه ندارم؛ با پاسخ‌ها بساز"
+              data-en="I have no CV; build from my answers"
+            >
+              رزومه ندارم؛ با پاسخ‌ها بساز
+            </button>
+          </div>
+          <div id="storyForm" class="form-stack hidden">
+            <div class="field">
+              <label
+                data-fa="چه کاری انجام می‌دهید؟"
+                data-en="What do you do professionally?"
+              >
+                <textarea id="q1"></textarea>
+              </label>
+            </div>
+            <div class="field">
+              <label
+                data-fa="مهم‌ترین دستاوردها"
+                data-en="Your strongest achievements"
+              >
+                <textarea id="q2"></textarea>
+              </label>
+            </div>
+            <div class="field">
+              <label data-fa="مهارت‌های اصلی" data-en="Your main skills">
+                <textarea id="q3"></textarea>
+              </label>
+            </div>
+            <div class="field">
+              <label
+                data-fa="چه چیزی شما را متفاوت می‌کند؟"
+                data-en="What makes you different?"
+              >
+                <textarea id="q4"></textarea>
+              </label>
+            </div>
+            <button
+              class="btn btn-primary"
+              id="storyBtn"
+              data-fa="ساخت پیش‌نمایش"
+              data-en="Generate preview"
+            >
+              ساخت پیش‌نمایش
+            </button>
+          </div>
+          <div class="step-actions">
+            <button class="btn" data-back data-fa="بازگشت" data-en="Back">
+              بازگشت</button
+            ><span></span>
+          </div>
+        </section>
+        <section class="step" data-step="4">
+          <h2
+            data-fa="پیش‌نمایش را بررسی و ویرایش کنید"
+            data-en="Review and edit your preview"
+          >
+            پیش‌نمایش را بررسی و ویرایش کنید
+          </h2>
+          <div class="preview-grid">
+            <div class="form-stack">
+              <div class="field">
+                <label for="previewName" data-fa="نام" data-en="Name">نام</label
+                ><input id="previewName" />
+              </div>
+              <div class="field">
+                <label
+                  for="previewHeadline"
+                  data-fa="عنوان حرفه‌ای"
+                  data-en="Professional headline"
+                  >عنوان حرفه‌ای</label
+                ><input id="previewHeadline" />
+              </div>
+              <div class="field">
+                <label
+                  for="previewSummary"
+                  data-fa="درباره من"
+                  data-en="Summary"
+                  >درباره من</label
+                ><textarea id="previewSummary"></textarea>
+              </div>
+              <div class="field">
+                <label
+                  for="previewSkills"
+                  data-fa="مهارت‌ها (با ویرگول جدا کنید)"
+                  data-en="Skills (comma separated)"
+                  >مهارت‌ها (با ویرگول جدا کنید)</label
+                ><input id="previewSkills" />
+              </div>
+              <button
+                class="btn"
+                id="savePreview"
+                data-fa="ذخیره تغییرات"
+                data-en="Save changes"
+              >
+                ذخیره تغییرات
+              </button>
+            </div>
+            <iframe
+              id="previewFrame"
+              class="preview-frame"
+              title="Resume preview"
+              sandbox="allow-same-origin"
+            ></iframe>
+          </div>
+          <div class="step-actions">
+            <button class="btn" data-back data-fa="بازگشت" data-en="Back">
+              بازگشت</button
+            ><button
+              class="btn btn-primary"
+              data-next
+              data-fa="تایید و پرداخت"
+              data-en="Approve and pay"
+            >
+              تایید و پرداخت
+            </button>
+          </div>
+        </section>
+        <section class="step" data-step="5">
+          <h2 data-fa="انتشار وب‌سایت" data-en="Publish your website">
+            انتشار وب‌سایت
+          </h2>
+          <div class="card payment-summary">
+            <span
+              class="eyebrow"
+              data-fa="پرداخت امن"
+              data-en="Secure payment"
+              >پرداخت امن</span
+            >
+            <h3 id="payPlan">استاندارد</h3>
+            <div
+              class="price"
+              id="payAmount"
+              data-fa="۷۱۰٬۰۰۰"
+              data-en="710,000"
+            >
+              ۷۱۰٬۰۰۰
+            </div>
+            <p
+              class="muted"
+              data-fa="سایت شما در طول آزمایش ۳ روزه زنده می‌ماند. پرداخت، اشتراک سالانه را فعال می‌کند تا بعد از آزمایش هم آنلاین بماند."
+              data-en="Your site stays live during the 3-day trial. Payment activates the annual plan so it stays online after the trial ends."
+            >
+              سایت شما در طول آزمایش ۳ روزه زنده می‌ماند. پرداخت، اشتراک سالانه
+              را فعال می‌کند تا بعد از آزمایش هم آنلاین بماند.
+            </p>
+            <button
+              class="btn btn-primary"
+              id="paymentBtn"
+              data-fa="شروع اشتراک سالانه"
+              data-en="Start annual plan"
+            >
+              شروع اشتراک سالانه</button
+            ><span
+              class="fine"
+              data-fa="اطلاعات کارت بانکی فقط در درگاه پرداخت وارد می‌شود."
+              data-en="Your bank card details are entered only on the payment gateway."
+              >اطلاعات کارت بانکی فقط در درگاه پرداخت وارد می‌شود.</span
+            >
+          </div>
+          <div class="step-actions">
+            <button class="btn" data-back data-fa="بازگشت" data-en="Back">
+              بازگشت</button
+            ><a
+              class="btn"
+              href="dashboard.html"
+              data-fa="ذخیره و ادامه در آینده"
+              data-en="Save and continue later"
+              >ذخیره و ادامه در آینده</a
+            >
+          </div>
+        </section>
+      </div>
+    </main>
+    <footer style="padding: 0 24px 40px">
+      <div
+        style="
+          max-width: 900px;
+          margin: 0 auto;
+          padding-top: 16px;
+          border-top: 1px solid var(--line);
+          display: flex;
+          flex-wrap: wrap;
+          justify-content: space-between;
+          align-items: center;
+          gap: 12px;
+          color: var(--muted);
+          font-size: 14px;
+        "
+      >
+        <span>© <span id="footerYear">2026</span> I’m This</span>
+        <div style="display: flex; flex-wrap: wrap; gap: 16px">
+          <a
+            href="contact.html"
+            data-fa="تماس"
+            data-en="Contact"
+            style="color: var(--brand); font-weight: 800; text-decoration: none"
+            >تماس</a
+          ><a
+            href="cookies.html"
+            data-fa="کوکی‌ها"
+            data-en="Cookies"
+            style="color: var(--brand); font-weight: 800; text-decoration: none"
+            >کوکی‌ها</a
+          ><a
+            href="privacy.html"
+            data-fa="حریم خصوصی"
+            data-en="Privacy"
+            style="color: var(--brand); font-weight: 800; text-decoration: none"
+            >حریم خصوصی</a
+          ><a
+            href="terms.html"
+            data-fa="قوانین"
+            data-en="Terms"
+            style="color: var(--brand); font-weight: 800; text-decoration: none"
+            >قوانین</a
+          >
+        </div>
+      </div>
+    </footer>
+    <script src="site-config.js?v=20260713h"></script>
+    <script src="i18n.js?v=20260710b"></script>
+    <script src="dropcv-api.js?v=20260713g"></script>
+    <script src="dropcv-pricing.js?v=20260710b"></script>
+    <script>
+      (async function () {
+        var current = 1,
+          plan = "Annual",
+          deploymentId = "",
+          preview = {},
+          currentUser = null;
+        var status = document.getElementById("globalStatus");
+        if (window.dropCVPricing && window.dropCVPricing.load) {
+          await window.dropCVPricing.load();
+        }
+        function getDashboardUrl(planName) {
+          return window.dropCVApi &&
+            typeof window.dropCVApi.getDashboardUrl === "function"
+            ? window.dropCVApi.getDashboardUrl(planName)
+            : "dashboard.html";
+        }
+        function markRecentAuth(reason) {
+          try {
+            window.sessionStorage.setItem(
+              "dropcv_recent_auth",
+              JSON.stringify({ at: Date.now(), reason: reason || "auth" }),
+            );
+          } catch (error) {}
+        }
+        function msg(fa, en, type) {
+          status.textContent =
+            window.dropCVI18n && dropCVI18n.get() === "en" ? en : fa;
+          status.className = "status " + (type || "");
+          status.classList.remove("hidden");
+        }
+        function hasExistingDeployment() {
+          return Boolean(
+            deploymentId || (currentUser && currentUser.latestDeployment),
+          );
+        }
+        function getUploadMode() {
+          return hasExistingDeployment() ? "regenerate" : "convert";
+        }
+        function show(n) {
+          current = n;
+          document.querySelectorAll(".step").forEach(function (s) {
+            s.classList.toggle("active", Number(s.dataset.step) === n);
+          });
+          document.getElementById("progressBar").style.width = n * 50 + "%";
+          document.getElementById("stepLabel").textContent = n + " / 2";
+          status.classList.add("hidden");
+          scrollTo({ top: 0, behavior: "smooth" });
+          if (n === 5) renderPayment();
+        }
+        document.querySelectorAll("[data-next]").forEach(function (b) {
+          b.addEventListener("click", function () {
+            show(Math.min(2, current + 1));
+          });
+        });
+        document.querySelectorAll("[data-back]").forEach(function (b) {
+          b.addEventListener("click", function () {
+            show(Math.max(1, current - 1));
+          });
+        });
+        document.querySelectorAll("[data-plan]").forEach(function (b) {
+          b.setAttribute("aria-pressed", String(b.dataset.plan === plan));
+          b.addEventListener("click", function () {
+            plan = b.dataset.plan;
+            document.querySelectorAll("[data-plan]").forEach(function (x) {
+              x.setAttribute("aria-pressed", String(x === b));
+            });
+          });
+        });
+        document.getElementById("slug").addEventListener("input", function () {
+          this.value = this.value
+            .toLowerCase()
+            .replace(/[^a-z0-9-]/g, "")
+            .replace(/-+/g, "-");
+        });
+        try {
+          var requestedSlug = new URLSearchParams(window.location.search).get("slug") || "";
+          document.getElementById("slug").value = requestedSlug
+            .toLowerCase()
+            .replace(/[^a-z0-9-]/g, "")
+            .replace(/-+/g, "-")
+            .replace(/^-|-$/g, "");
+        } catch (error) {}
+        document
+          .getElementById("registerBtn")
+          .addEventListener("click", async function () {
+            var fullName = document.getElementById("fullName").value.trim(),
+              slug = document.getElementById("slug").value.trim(),
+              email = document.getElementById("email").value.trim(),
+              password = document.getElementById("password").value;
+            if (!fullName || slug.length < 4 || !email || password.length < 8) {
+              msg(
+                "لطفاً همه فیلدها را درست تکمیل کنید.",
+                "Please complete every field correctly.",
+                "error",
+              );
+              return;
+            }
+            this.disabled = true;
+            var r = await dropCVApi.register({
+              email: email,
+              password: password,
+              plan: plan,
+              userType: "professional",
+              slug: slug,
+              professionalProfile: { fullName: fullName, isPublic: false },
+            });
+            this.disabled = false;
+            if (!r.ok) {
+              msg(
+                r.error || "ساخت حساب انجام نشد.",
+                r.error || "Could not create the account.",
+                "error",
+              );
+              return;
+            }
+            markRecentAuth("signup");
+            location.replace(
+              getDashboardUrl(
+                (r.data && r.data.user && r.data.user.plan) || plan,
+              ),
+            );
+          });
+        document
+          .getElementById("storySwitch")
+          .addEventListener("click", function () {
+            document.getElementById("uploadChoice").classList.add("hidden");
+            document.getElementById("storyForm").classList.remove("hidden");
+          });
+        async function waitForDraft(id) {
+          for (var i = 0; i < 60; i++) {
+            var s = await dropCVApi.getDeploymentStatus(id);
+            if (
+              s.ok &&
+              s.data &&
+              (s.data.status === "draft" || s.data.status === "live")
+            )
+              return true;
+            if (s.ok && s.data && s.data.status === "failed")
+              throw new Error("Generation failed");
+            await new Promise(function (resolve) {
+              setTimeout(resolve, 1000);
+            });
+          }
+          throw new Error("Generation timed out");
+        }
+        async function loadPreview() {
+          var r = await dropCVApi.getPreview(deploymentId);
+          if (!r.ok) throw new Error(r.error || "Preview unavailable");
+          var p = r.data.preview;
+          preview = p.structured_json || {};
+          document.getElementById("previewName").value = preview.fullName || "";
+          document.getElementById("previewHeadline").value =
+            preview.headline || "";
+          document.getElementById("previewSummary").value =
+            preview.summary || "";
+          document.getElementById("previewSkills").value = (
+            preview.skills || []
+          ).join(", ");
+          document.getElementById("previewFrame").srcdoc =
+            p.generated_html || "";
+          show(4);
+        }
+        async function resumeExisting() {
+          var me = await dropCVApi.getMe();
+          if (!me.ok || !me.data || !me.data.user) return;
+          currentUser = me.data.user;
+          plan = "Annual";
+          document.querySelectorAll("[data-plan]").forEach(function (b) {
+            b.setAttribute("aria-pressed", String(b.dataset.plan === plan));
+            b.disabled = true;
+          });
+          document
+            .getElementById("storySwitch")
+            .classList.add("hidden");
+          location.replace(getDashboardUrl(plan));
+        }
+        document
+          .getElementById("uploadBtn")
+          .addEventListener("click", async function () {
+            var file = document.getElementById("cvFile").files[0];
+            if (!file) {
+              msg(
+                "یک فایل PDF یا DOCX انتخاب کنید.",
+                "Choose a PDF or DOCX file.",
+                "error",
+              );
+              return;
+            }
+            this.disabled = true;
+            msg("در حال ساخت پیش‌نمایش…", "Generating your preview…");
+            try {
+              var r = await dropCVApi.uploadCV(file, { mode: getUploadMode() });
+              if (!r.ok) throw new Error(r.error);
+              deploymentId = r.data.deploymentId;
+              await waitForDraft(deploymentId);
+              await loadPreview();
+            } catch (e) {
+              msg(
+                "ساخت پیش‌نمایش انجام نشد. دوباره تلاش کنید.",
+                e.message || "Generation failed. Please retry.",
+                "error",
+              );
+            }
+            this.disabled = false;
+          });
+        document
+          .getElementById("storyBtn")
+          .addEventListener("click", async function () {
+            var body = {
+              q1: document.getElementById("q1").value,
+              q2: document.getElementById("q2").value,
+              q3: document.getElementById("q3").value,
+              q4: document.getElementById("q4").value,
+            };
+            if (!body.q1 || !body.q2 || !body.q3) {
+              msg(
+                "سه پاسخ اول ضروری است.",
+                "The first three answers are required.",
+                "error",
+              );
+              return;
+            }
+            this.disabled = true;
+            msg("در حال نگارش رزومه…", "Writing your resume…");
+            try {
+              var r = await dropCVApi.uploadStory(body, {
+                mode: getUploadMode(),
+              });
+              if (!r.ok) throw new Error(r.error);
+              deploymentId = r.data.deploymentId;
+              await waitForDraft(deploymentId);
+              await loadPreview();
+            } catch (e) {
+              msg(
+                "ساخت پیش‌نمایش انجام نشد.",
+                e.message || "Generation failed.",
+                "error",
+              );
+            }
+            this.disabled = false;
+          });
+        async function save() {
+          preview.fullName = document.getElementById("previewName").value;
+          preview.headline = document.getElementById("previewHeadline").value;
+          preview.summary = document.getElementById("previewSummary").value;
+          preview.skills = document
+            .getElementById("previewSkills")
+            .value.split(",")
+            .map(function (x) {
+              return x.trim();
+            })
+            .filter(Boolean);
+          var r = await dropCVApi.updatePreview(deploymentId, preview);
+          if (!r.ok) throw new Error(r.error);
+          document.getElementById("previewFrame").srcdoc =
+            r.data.generatedHtml || "";
+        }
+        document
+          .getElementById("savePreview")
+          .addEventListener("click", async function () {
+            this.disabled = true;
+            try {
+              await save();
+              msg("تغییرات ذخیره شد.", "Changes saved.", "success");
+            } catch (e) {
+              msg("ذخیره انجام نشد.", e.message || "Could not save.", "error");
+            }
+            this.disabled = false;
+          });
+        function renderPayment() {
+          var planData =
+            window.dropCVPricing && window.dropCVPricing.getPlan
+              ? window.dropCVPricing.getPlan(plan)
+              : null;
+          var amount =
+            planData && planData.amount != null ? planData.amount : null;
+          var lang = (window.dropCVI18n && dropCVI18n.get()) || "fa";
+          var amountText =
+            amount != null &&
+            window.dropCVPricing &&
+            window.dropCVPricing.formatAmount
+              ? window.dropCVPricing.formatAmount(amount, lang)
+              : lang === "en"
+                ? "710,000"
+                : "۷۱۰٬۰۰۰";
+          document.getElementById("payPlan").textContent =
+            lang === "fa" ? "سالانه" : "Annual";
+          document.getElementById("payAmount").innerHTML =
+            amountText +
+            " <small>" +
+            (lang === "fa" ? "تومان / سال" : "toman / year") +
+            "</small>";
+        }
+        window.addEventListener("dropcv:language", renderPayment);
+        if (window.dropCVPricing) {
+          await window.dropCVPricing.load();
+          var capabilities = window.dropCVPricing.getCapabilities();
+          if (!capabilities || !capabilities.payments) {
+            var unavailablePaymentButton = document.getElementById("paymentBtn");
+            unavailablePaymentButton.disabled = true;
+            unavailablePaymentButton.textContent =
+              (window.dropCVI18n && window.dropCVI18n.get() === "en")
+                ? "Payments coming soon"
+                : "درگاه پرداخت به‌زودی فعال می‌شود";
+            msg(
+              "درگاه پرداخت به‌زودی فعال می‌شود. ثبت‌نام و دوره آزمایشی در دسترس است.",
+              "Payments will be enabled soon. Signup and the trial remain available.",
+            );
+          }
+        }
+        document
+          .getElementById("paymentBtn")
+          .addEventListener("click", async function () {
+            this.disabled = true;
+            msg("در حال اتصال به زرین‌پال…", "Connecting to ZarinPal…");
+            try {
+              await save();
+              var r = await dropCVApi.requestPayment(plan);
+              if (!r.ok || !r.data.paymentUrl)
+                throw new Error(r.error || "Payment unavailable");
+              location.href = r.data.paymentUrl;
+            } catch (e) {
+              msg(
+                "اتصال به درگاه انجام نشد. دوباره تلاش کنید.",
+                e.message || "Could not open payment.",
+                "error",
+              );
+              this.disabled = false;
+            }
+          });
+        await resumeExisting();
+      })();
+    </script>
+    <script>
+      (function () {
+        var input = document.getElementById("password");
+        var toggle = document.getElementById("passwordToggle");
+
+        if (!input || !toggle) return;
+
+        function syncLabel() {
+          var lang =
+            window.dropCVI18n && window.dropCVI18n.get() === "fa" ? "fa" : "en";
+          var visible = input.type === "text";
+
+          toggle.textContent = visible
+            ? lang === "fa"
+              ? "مخفی"
+              : "Hide"
+            : lang === "fa"
+              ? "نمایش"
+              : "Show";
+          toggle.setAttribute("aria-pressed", String(visible));
+        }
+
+        toggle.addEventListener("click", function () {
+          input.type = input.type === "password" ? "text" : "password";
+          syncLabel();
+          input.focus();
+        });
+
+        window.addEventListener("dropcv:language", syncLabel);
+        syncLabel();
+      })();
+    </script>
+    <script src="signup-strength.js"></script>
+    <script>
+      document.getElementById("footerYear").textContent =
+        new Date().getFullYear();
+    </script>
+  </body>
+</html>

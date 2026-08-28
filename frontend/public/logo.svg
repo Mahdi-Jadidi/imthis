@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" role="img" aria-labelledby="title desc">
+  <title id="title">I’m This</title>
+  <desc id="desc">The letters I and T joined as a personal-site monogram</desc>
+  <defs>
+    <linearGradient id="surface" x1="8" y1="5" x2="56" y2="59" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#11866B"/>
+      <stop offset="1" stop-color="#075E4D"/>
+    </linearGradient>
+  </defs>
+  <rect x="2" y="2" width="60" height="60" rx="18" fill="url(#surface)"/>
+  <path d="M15 15h17v7h-5v20h5v7H15v-7h5V22h-5z" fill="#F8FCFA"/>
+  <path d="M33 15h18v7h-5.5v27h-7V22H33z" fill="#F8FCFA"/>
+  <circle cx="53" cy="11" r="3" fill="#A7E4D1"/>
+</svg>

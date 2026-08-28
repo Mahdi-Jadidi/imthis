@@ -1,0 +1,86 @@
+<!doctype html>
+<html lang="fa" dir="rtl">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+    <meta name="robots" content="noindex,nofollow">
+    <title>مدیریت I’m This</title>
+    <link rel="icon" href="/logo.svg" type="image/svg+xml">
+    <link rel="stylesheet" href="design-system.css">
+    <link rel="stylesheet" href="app-shell.css">
+    <style>
+      body { background: #f7faf9; color: #13251f; }
+      .shell { max-width: 1180px; margin: auto; padding: 32px 20px 64px; }
+      .head { display: flex; justify-content: space-between; align-items: center; gap: 16px; }
+      .metrics { display: grid; grid-template-columns: repeat(5, 1fr); gap: 12px; margin: 24px 0; }
+      .metric, .panel { background: #fff; border: 1px solid #dfe8e4; border-radius: 14px; padding: 18px; }
+      .metric b { font-size: 24px; display: block; margin-top: 8px; }
+      .panel { overflow: auto; margin-top: 18px; }
+      table { width: 100%; border-collapse: collapse; }
+      th, td { padding: 12px 8px; border-bottom: 1px solid #edf2f0; text-align: right; white-space: nowrap; }
+      .muted { color: #66776f; }
+      .actions { display: flex; gap: 8px; }
+      .approve, .reject { border: 0; border-radius: 8px; padding: 8px 12px; color: white; font: inherit; cursor: pointer; }
+      .approve { background: #0f6e56; }
+      .reject { background: #a32d2d; }
+      .customer-link { appearance: none; border: 0; background: none; padding: 0; color: #0f6e56; font: inherit; font-weight: 800; text-align: right; cursor: pointer; }
+      .customer-link:hover { text-decoration: underline; }
+      dialog.request-dialog { width: min(760px, calc(100vw - 32px)); max-height: min(82vh, 900px); border: 0; border-radius: 18px; padding: 0; color: #13251f; box-shadow: 0 24px 80px #0005; }
+      dialog.request-dialog::backdrop { background: #10231b88; }
+      .dialog-content { padding: 24px; overflow: auto; max-height: min(82vh, 900px); }
+      .dialog-head { display: flex; justify-content: space-between; align-items: start; gap: 14px; border-bottom: 1px solid #e7efeb; padding-bottom: 16px; margin-bottom: 18px; }
+      .dialog-head h2, .dialog-head p { margin: 0; }
+      .dialog-close { border: 1px solid #dfe8e4; background: #fff; border-radius: 8px; padding: 7px 11px; font: inherit; cursor: pointer; }
+      .request-detail-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 12px; }
+      .request-detail { border: 1px solid #e3ece8; background: #fbfdfc; border-radius: 10px; padding: 12px; min-width: 0; }
+      .request-detail.full { grid-column: 1 / -1; }
+      .request-detail b, .request-detail small { display: block; }
+      .request-detail small { color: #66776f; margin-bottom: 6px; }
+      .request-detail .value { white-space: pre-wrap; line-height: 1.8; overflow-wrap: anywhere; }
+      .request-files { display: grid; gap: 8px; }
+      .request-files a { color: #0f6e56; overflow-wrap: anywhere; }
+      @media (max-width: 800px) { .metrics { grid-template-columns: repeat(2, 1fr); } }
+      @media (max-width: 620px) { .request-detail-grid { grid-template-columns: 1fr; } .request-detail.full { grid-column: auto; } }
+    </style>
+    <link rel="stylesheet" href="theme.css">
+    <script src="theme.js" defer></script>
+  </head>
+  <body>
+    <main class="shell">
+      <header class="head">
+        <div><h1>پنل مدیریت</h1><p class="muted">بررسی و تأیید پرداخت‌های کارت‌به‌کارت</p></div>
+        <div class="actions"><span data-theme-slot></span><a href="/dashboard">داشبورد کاربری</a></div>
+      </header>
+      <p id="access-block" class="panel muted" hidden aria-live="polite"></p>
+      <section id="admin-content" hidden>
+      <section id="metrics" class="metrics"></section>
+      <section class="panel">
+        <div class="head"><h2>درخواست‌های ساخت دستی سایت</h2><span class="muted">رزومه و توضیحات مشتری</span></div>
+        <table><thead><tr><th>مشتری</th><th>فایل‌ها</th><th>بریف</th><th>وضعیت</th><th>تحویل سایت نهایی</th></tr></thead><tbody id="site-request-rows"></tbody></table>
+      </section>
+      <section class="panel">
+        <div class="head"><h2>درخواست‌های لغوشده</h2><span class="muted">مرتب‌شده بر اساس زمان ارسال</span></div>
+        <table><thead><tr><th>مشتری</th><th>فایل‌ها</th><th>بریف</th><th>زمان لغو</th></tr></thead><tbody id="cancelled-site-request-rows"></tbody></table>
+      </section>
+      <section class="panel">
+        <div class="head"><h2>درخواست‌های در انتظار بررسی</h2><button id="refresh" type="button">به‌روزرسانی</button></div>
+        <p id="message" class="muted"></p>
+        <table><thead><tr><th>حساب کاربر</th><th>پلن</th><th>مبلغ اختصاصی</th><th>شناسه پرداخت</th><th>اعتبار تا</th><th>عملیات</th></tr></thead><tbody id="pending-rows"></tbody></table>
+      </section>
+      <section class="panel">
+        <div class="head"><h2>درخواست‌های تأییدشده</h2></div>
+        <table><thead><tr><th>حساب کاربر</th><th>پلن</th><th>مبلغ</th><th>شناسه مرجع</th><th>زمان تأیید</th></tr></thead><tbody id="approved-rows"></tbody></table>
+      </section>
+      </section>
+      <dialog id="request-details" class="request-dialog" aria-labelledby="request-details-title">
+        <div class="dialog-content">
+          <div class="dialog-head"><div><h2 id="request-details-title">جزئیات درخواست</h2><p id="request-details-subtitle" class="muted"></p></div><button id="close-request-details" class="dialog-close" type="button">بستن</button></div>
+          <div id="request-details-content"></div>
+        </div>
+      </dialog>
+    </main>
+    <script src="site-config.js"></script>
+    <script src="dropcv-api.js"></script>
+    <script src="admin-app.js"></script>
+  </body>
+</html>

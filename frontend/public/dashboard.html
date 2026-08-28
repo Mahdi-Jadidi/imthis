@@ -1,0 +1,290 @@
+<!doctype html>
+<html lang="fa" dir="rtl" data-auth="loading">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <meta name="robots" content="noindex,nofollow" />
+    <title>داشبورد — I’m This</title>
+    <link rel="icon" href="/logo.svg" type="image/svg+xml" />
+    <link rel="stylesheet" href="dashboard-app.css" />
+    <link rel="stylesheet" href="theme.css">
+    <script src="theme.js" defer></script>
+  </head>
+  <body>
+    <div id="auth-loader" class="auth-loader">
+      <span class="spinner"></span>
+      <p>در حال آماده‌سازی داشبورد…</p>
+    </div>
+    <div id="app" class="app" hidden>
+      <aside class="sidebar" id="sidebar">
+        <a class="brand" href="index.html"
+          ><img src="logo.svg" alt="I’m This" /><span>I’m This</span></a
+        >
+        <nav aria-label="بخش‌های داشبورد">
+          <button class="nav active" data-section="home">
+            <span data-icon="home"></span
+            ><b data-fa="خانه" data-en="Home">خانه</b>
+          </button>
+          <button class="nav" data-section="sites">
+            <span data-icon="site"></span
+            ><b data-fa="سایت‌ها" data-en="Sites">سایت‌ها</b>
+          </button>
+          <button class="nav" data-section="new-site">
+            <span data-icon="site"></span
+            ><b data-fa="سایت جدید" data-en="New site">سایت جدید</b>
+          </button>
+          <button class="nav" data-section="analytics">
+            <span data-icon="analytics"></span
+            ><b data-fa="آمار" data-en="Analytics">آمار</b>
+          </button>
+          <button class="nav" data-section="link">
+            <span data-icon="link"></span
+            ><b data-fa="لینک عمومی" data-en="Public Link">لینک عمومی</b>
+          </button>
+          <button class="nav" data-section="settings">
+            <span data-icon="settings"></span
+            ><b data-fa="تنظیمات" data-en="Settings">تنظیمات</b>
+          </button>
+          <a class="nav" href="billing.html"
+            ><span data-icon="billing"></span
+            ><b data-fa="صورتحساب" data-en="Billing">صورتحساب</b></a
+          >
+        </nav>
+        <div class="account">
+          <span class="avatar" id="avatar">—</span
+          ><span
+            ><b id="account-name">—</b><small id="account-plan">—</small></span
+          ><button id="logout" title="خروج" aria-label="خروج">↪</button>
+        </div>
+      </aside>
+      <div class="workspace">
+        <header class="topbar">
+          <button id="menu" class="icon-button" aria-label="باز کردن فهرست">
+            ☰</button
+          ><strong id="page-title">خانه</strong
+          ><div class="topbar-actions"><span data-theme-slot></span><button id="language" class="language">EN</button></div>
+        </header>
+        <main>
+          <section class="page active" id="section-home">
+            <div class="hero">
+              <div>
+                <p
+                  class="eyebrow"
+                  data-fa="داشبورد شخصی"
+                  data-en="Personal dashboard"
+                >
+                  داشبورد شخصی
+                </p>
+                <h1 id="welcome">خوش آمدید</h1>
+                <p
+                  data-fa="سایت حرفه‌ای خود را از یک‌جا مدیریت کنید."
+                  data-en="Manage your professional site from one place."
+                >
+                  سایت حرفه‌ای خود را از یک‌جا مدیریت کنید.
+                </p>
+              </div>
+              <span class="plan-pill" id="plan-pill">—</span>
+            </div>
+            <div id="trial-card" class="notice"></div>
+            <div id="site-card" class="card site-card">
+              <div class="skeleton"></div>
+            </div>
+          </section>
+          <section class="page" id="section-sites">
+            <div class="page-head">
+              <div>
+                <h1 data-fa="سایت‌ها" data-en="Sites">سایت‌ها</h1>
+                <p
+                  data-fa="همهٔ سایت‌های منتشرشده و پیش‌نویس شما در اینجا قرار می‌گیرند."
+                  data-en="Your published sites and drafts appear here."
+                >
+                  همهٔ سایت‌های منتشرشده و پیش‌نویس شما در اینجا قرار می‌گیرند.
+                </p>
+              </div>
+            </div>
+            <div id="sites-content" class="site-list"></div>
+          </section>
+          <section class="page" id="section-new-site">
+            <div class="page-head">
+              <div>
+                <h1 data-fa="سایت جدید" data-en="New site">سایت جدید</h1>
+                <p data-fa="سایت آماده دارید؟ همین‌جا منتشرش کنید. هنوز سایت ندارید؟ اطلاعاتتان را برای تیم ما بفرستید." data-en="Publish an existing site here, or send your material to our team.">سایت آماده دارید؟ همین‌جا منتشرش کنید. هنوز سایت ندارید؟ اطلاعاتتان را برای تیم ما بفرستید.</p>
+              </div>
+            </div>
+            <div class="new-site-grid">
+              <form id="site-upload-form" class="card upload-card">
+                <span class="new-site-kicker" data-fa="سایت آماده دارم" data-en="I have a site">سایت آماده دارم</span>
+                <h2 data-fa="فایل‌ها را آپلود و سایت را آنلاین کنید" data-en="Upload files and put your site online">فایل‌ها را آپلود و سایت را آنلاین کنید</h2>
+                <p data-fa="یک فایل ZIP یا فایل‌های HTML، CSS و JavaScript را با هم انتخاب کنید. پس از آپلود، سایت شما در آدرس اختصاصی‌تان آنلاین می‌شود." data-en="Choose one ZIP file or your HTML, CSS, and JavaScript files together. Your site goes live at your personal address after upload.">یک فایل ZIP یا فایل‌های HTML، CSS و JavaScript را با هم انتخاب کنید. پس از آپلود، سایت شما در آدرس اختصاصی‌تان آنلاین می‌شود.</p>
+                <label class="file-picker">فایل سایت<input name="site" type="file" multiple required accept=".zip,.html,.htm,.css,.js,application/zip,text/html,text/css,application/javascript" /><small>ZIP تا ۲۵ مگابایت؛ مجموع فایل‌ها تا ۵۰ مگابایت</small></label>
+                <label>نام سایت<input name="siteTitle" maxlength="160" placeholder="نمونه‌کار من" /></label>
+                <div class="actions"><button type="submit" class="primary">آپلود و آنلاین کردن سایت</button></div>
+                <p id="site-upload-result" role="status" aria-live="polite"></p>
+              </form>
+              <form id="team-site-request" class="card">
+                <span class="new-site-kicker" data-fa="هنوز سایت ندارم" data-en="I need a site">هنوز سایت ندارم</span>
+              <h2
+                data-fa="به ما بگویید چه کسی هستید"
+                data-en="Tell us who you are"
+              >
+                به ما بگویید چه کسی هستید
+              </h2>
+              <p data-fa="رزومه اختیاری است؛ می‌توانید با متن، پروژه، تصویر و لینک شروع کنید." data-en="A résumé is optional; you can start with text, projects, images, and links.">رزومه اختیاری است؛ می‌توانید با متن، پروژه، تصویر و لینک شروع کنید.</p>
+              <div id="request-status" class="notice" hidden></div>
+              <div class="form-grid">
+                <label>نوع سایت<select name="siteType"><option value="mixed">ترکیبی</option><option value="portfolio">نمونه‌کار</option><option value="biography">بیوگرافی</option><option value="resume">رزومه</option></select></label>
+                <label>رزومه اختیاری (PDF یا DOCX)<input name="resume" type="file" accept=".pdf,.docx,application/pdf,application/vnd.openxmlformats-officedocument.wordprocessingml.document" /></label>
+                <label class="full">تصاویر و فایل‌های نمونه‌کار<input name="attachments" type="file" multiple accept=".jpg,.jpeg,.png,.webp,.pdf,image/jpeg,image/png,image/webp,application/pdf" /><small>حداکثر ۱۲ فایل، هرکدام ۱۰ مگابایت و مجموعاً ۵۰ مگابایت</small></label>
+                <label
+                  >نام حرفه‌ای<input
+                    name="name"
+                    required
+                    maxlength="120" /></label
+                ><label
+                  >عنوان شغلی<input
+                    name="role"
+                    maxlength="120" /></label
+                ><label class="full"
+                  >معرفی کوتاه<textarea
+                    name="bio"
+                    maxlength="1200"
+                  ></textarea></label
+                ><label class="full"
+                  >هدف اصلی سایت<textarea
+                    name="goal"
+                    maxlength="600"
+                  ></textarea></label
+                ><label>مهارت‌ها<input name="skills" maxlength="600" /></label
+                ><label
+                  >تجربه‌ها<input name="experience" maxlength="2000" /></label
+                ><label class="full">پروژه‌ها و نمونه‌کارها<textarea name="projects" maxlength="2400"></textarea></label
+                ><label
+                  >زبان ترجیحی<input
+                    name="preferredLanguage"
+                    maxlength="80" /></label
+                ><label
+                  >سبک و رنگ‌ها<input name="style" maxlength="300" /></label
+                ><label class="full"
+                  >لینک‌ها و راه تماس<textarea
+                    name="links"
+                    maxlength="1000"
+                  ></textarea></label
+                ><label class="full"
+                  >توضیحات بیشتر<textarea
+                    name="notes"
+                    maxlength="1500"
+                  ></textarea>
+                </label>
+              </div>
+              <div class="actions">
+                <button type="button" id="save-brief" class="secondary">
+                  ذخیره پیش‌نویس</button
+                ><button type="submit" class="primary">
+                  ارسال درخواست ساخت سایت
+                </button>
+              </div>
+              <p id="brief-result" role="status" aria-live="polite"></p>
+              </form>
+            </div>
+          </section>
+          <section class="page" id="section-analytics">
+            <div class="page-head">
+              <div>
+                <h1 data-fa="آمار واقعی سایت" data-en="Real site analytics">
+                  آمار واقعی سایت
+                </h1>
+                <p
+                  data-fa="بازدیدهای پیش‌نمایش و صاحب سایت محاسبه نمی‌شوند."
+                  data-en="Preview and owner visits are excluded."
+                >
+                  بازدیدهای پیش‌نمایش و صاحب سایت محاسبه نمی‌شوند.
+                </p>
+              </div>
+            </div>
+            <div id="analytics-content" class="card">
+              <div class="skeleton"></div>
+            </div>
+          </section>
+          <section class="page" id="section-link">
+            <div class="page-head">
+              <div>
+                <h1 data-fa="لینک عمومی" data-en="Public Link">لینک عمومی</h1>
+                <p
+                  data-fa="این لینک واقعی و قابل اشتراک سایت شماست."
+                  data-en="This is your real shareable site link."
+                >
+                  این لینک واقعی و قابل اشتراک سایت شماست.
+                </p>
+              </div>
+            </div>
+            <div id="public-link-card" class="card"></div>
+          </section>
+          <section class="page" id="section-settings">
+            <div class="page-head">
+              <div>
+                <h1 data-fa="تنظیمات حساب" data-en="Account Settings">
+                  تنظیمات حساب
+                </h1>
+                <p
+                  data-fa="اطلاعات حساب و ترجیحات خود را مدیریت کنید."
+                  data-en="Manage your account information and preferences."
+                >
+                  اطلاعات حساب و ترجیحات خود را مدیریت کنید.
+                </p>
+              </div>
+            </div>
+            <form id="settings-form" class="card form-grid">
+              <label>نام حرفه‌ای<input name="fullName" maxlength="120" /></label
+              ><label
+                >زبان<select name="language">
+                  <option value="fa">فارسی</option>
+                  <option value="en">English</option>
+                </select></label
+              ><label class="full"
+                >ایمیل<input name="email" type="email" disabled /><small
+                  >تغییر ایمیل نیازمند تأیید است.</small
+                ></label
+              >
+              <div class="full actions">
+                <button class="primary" type="submit">ذخیره تنظیمات</button
+                ><a class="secondary button-link" href="contact.html"
+                  >پشتیبانی</a
+                >
+              </div>
+              <p
+                id="settings-result"
+                class="full"
+                role="status"
+                aria-live="polite"
+              ></p>
+            </form>
+            <form id="email-form" class="card form-grid">
+              <div class="full"><h2>تغییر ایمیل</h2><p>یک پیوند تأیید ۳۰ دقیقه‌ای به ایمیل جدید ارسال می‌شود.</p></div>
+              <label class="full">ایمیل جدید<input name="newEmail" type="email" required /></label>
+              <div class="full"><button class="primary" type="submit">ارسال پیوند تأیید</button></div>
+              <p id="email-result" class="full" role="status"></p>
+            </form>
+            <form id="password-form" class="card form-grid">
+              <div class="full"><h2>تغییر رمز عبور</h2></div>
+              <label>رمز فعلی<input name="currentPassword" type="password" required autocomplete="current-password" /></label>
+              <label>رمز جدید<input name="newPassword" type="password" required minlength="8" autocomplete="new-password" /></label>
+              <div class="full"><button class="primary" type="submit">تغییر رمز</button></div>
+              <p id="password-result" class="full" role="status"></p>
+            </form>
+            <form id="delete-form" class="card form-grid danger-zone">
+              <div class="full"><h2>حذف حساب</h2><p>این کار حساب، سایت‌ها، پرداخت‌ها و اطلاعات ذخیره‌شده شما را برای همیشه حذف می‌کند.</p></div>
+              <label class="full">برای تأیید، رمز عبور خود را وارد کنید<input name="password" type="password" required /></label>
+              <div class="full"><button class="danger-button" type="submit">حذف همیشگی حساب</button></div>
+              <p id="delete-result" class="full" role="status"></p>
+            </form>
+          </section>
+        </main>
+      </div>
+    </div>
+    <script src="site-config.js"></script>
+    <script src="dropcv-api.js"></script>
+    <script src="dropcv-auth.js"></script>
+    <script src="dropcv-upload.js"></script>
+    <script src="dashboard-app.js"></script>
+  </body>
+</html>

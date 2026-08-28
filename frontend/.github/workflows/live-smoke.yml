@@ -1,0 +1,71 @@
+name: Frontend CI and Live QA
+
+on:
+  push:
+  pull_request:
+  workflow_dispatch:
+
+concurrency:
+  group: live-qa-${{ github.ref }}
+  cancel-in-progress: true
+
+permissions:
+  contents: read
+
+jobs:
+  build-and-syntax:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: npm
+          cache-dependency-path: package-lock.json
+
+      - name: Install dependencies
+        # The lockfile is generated on multiple platforms and npm ci can reject
+        # optional native packages on the Linux runner. Keep the strict install
+        # first, then let npm resolve platform-specific optional dependencies.
+        run: npm ci --no-fund --no-audit || npm install --no-fund --no-audit
+
+      - name: Check public JavaScript syntax
+        run: npm run test:syntax
+
+      - name: Build frontend
+        run: npm run build
+
+  live-smoke:
+    needs: build-and-syntax
+    if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    env:
+      IMTHIS_FRONTEND_ORIGIN: https://imthis.site
+      IMTHIS_BACKEND_ORIGIN: https://api.imthis.site
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: npm
+          cache-dependency-path: package-lock.json
+
+      - name: Install dependencies
+        run: npm ci --no-fund --no-audit || npm install --no-fund --no-audit
+
+      - name: Run non-mutating production smoke suite
+        run: npm run smoke:live
+
+      # Browser and upload smoke tests create accounts and deployments. Keep
+      # them out of this production workflow until a dedicated staging target
+      # is configured for those scripts.

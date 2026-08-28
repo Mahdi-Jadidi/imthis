@@ -1,0 +1,73 @@
+{
+  "redirects": [
+    { "source": "/index.html", "destination": "/", "permanent": true },
+    { "source": "/signup.html", "destination": "/signup", "permanent": true },
+    { "source": "/login.html", "destination": "/login", "permanent": true },
+    { "source": "/dashboard.html", "destination": "/dashboard", "permanent": true },
+    { "source": "/dashboard-standard.html", "destination": "/dashboard", "permanent": true },
+    { "source": "/dashboard-premium.html", "destination": "/dashboard", "permanent": true },
+    { "source": "/billing.html", "destination": "/billing", "permanent": true },
+    { "source": "/admin.html", "destination": "/admin", "permanent": true },
+    { "source": "/payment-result.html", "destination": "/payment-result", "permanent": true },
+    { "source": "/settings-email-confirm.html", "destination": "/settings-email-confirm", "permanent": true },
+    { "source": "/contact.html", "destination": "/contact", "permanent": true },
+    { "source": "/cookies.html", "destination": "/cookies", "permanent": true },
+    { "source": "/privacy.html", "destination": "/privacy", "permanent": true },
+    { "source": "/terms.html", "destination": "/terms", "permanent": true },
+    { "source": "/site-expired.html", "destination": "/site-expired", "permanent": true }
+  ],
+  "rewrites": [
+    {
+      "source": "/proxy/api/:path*",
+      "destination": "/api/:path*"
+    },
+    {
+      "source": "/signup",
+      "destination": "/signup.html"
+    },
+    {
+      "source": "/login",
+      "destination": "/login.html"
+    },
+    {
+      "source": "/dashboard",
+      "destination": "/dashboard.html"
+    },
+    {
+      "source": "/billing",
+      "destination": "/billing.html"
+    },
+    {
+      "source": "/admin",
+      "destination": "/admin.html"
+    },
+    {
+      "source": "/payment-result",
+      "destination": "/payment-result.html"
+    },
+    {
+      "source": "/settings-email-confirm",
+      "destination": "/settings-email-confirm.html"
+    },
+    {
+      "source": "/contact",
+      "destination": "/contact.html"
+    },
+    {
+      "source": "/cookies",
+      "destination": "/cookies.html"
+    },
+    {
+      "source": "/privacy",
+      "destination": "/privacy.html"
+    },
+    {
+      "source": "/terms",
+      "destination": "/terms.html"
+    },
+    {
+      "source": "/site-expired",
+      "destination": "/site-expired.html"
+    }
+  ]
+}

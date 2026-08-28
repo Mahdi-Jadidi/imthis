@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Page not found on I’m This.">
+  <meta name="robots" content="noindex, nofollow">
+  <title>404 - I’m This</title>
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns=%27http://www.w3.org/2000/svg%27 viewBox=%270 0 32 32%27%3E%3Crect width=%2732%27 height=%2732%27 rx=%278%27 fill=%27%230F6E56%27/%3E%3Ctext x=%2716%27 y=%2722%27 font-family=%27system-ui,sans-serif%27 font-size=%2716%27 font-weight=%27700%27 fill=%27white%27 text-anchor=%27middle%27%3Ed.%3C/text%3E%3C/svg%3E">
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body { font-family: Inter, system-ui, sans-serif; color: #0F0F0F; background: #fff; min-height: 100vh; display: flex; flex-direction: column; }
+    a { color: inherit; text-decoration: none; }
+    header { position: sticky; top: 0; background: rgba(255,255,255,0.95); backdrop-filter: blur(10px); border-bottom: 1px solid #E5E5E5; z-index: 10; }
+    nav, .footer-content { max-width: 1200px; margin: 0 auto; padding: 16px 24px; display: flex; align-items: center; justify-content: space-between; gap: 16px; }
+    .logo { display: flex; align-items: center; gap: 8px; font-weight: 700; }
+    .logo-icon { width: 36px; height: 36px; border-radius: 9px; background: #0F6E56; color: #fff; display: grid; place-items: center; font-weight: 700; }
+    .nav-links, .footer-links { display: flex; gap: 8px; flex-wrap: wrap; align-items: center; }
+    .nav-links a, .footer-links a { padding: 8px 14px; border-radius: 8px; color: #666; }
+    .nav-links a:hover, .footer-links a:hover { background: #F5F5F5; color: #0F0F0F; }
+    main { flex: 1; display: grid; place-items: center; padding: 48px 24px; }
+    .card { text-align: center; max-width: 720px; padding: 24px; }
+    .code { font-size: clamp(72px, 14vw, 96px); line-height: 1; font-weight: 700; letter-spacing: -0.04em; color: #0F6E56; margin-bottom: 16px; }
+    h1 { font-size: clamp(24px, 4vw, 32px); margin-bottom: 8px; }
+    p { color: #666; margin-bottom: 10px; font-size: 16px; }
+    .actions { display: flex; gap: 12px; justify-content: center; flex-wrap: wrap; margin-top: 24px; }
+    .btn { display: inline-flex; align-items: center; justify-content: center; padding: 12px 18px; border-radius: 10px; font-weight: 600; border: 1px solid #E5E5E5; background: #fff; }
+    .btn.primary { background: #0F6E56; color: #fff; border-color: #0F6E56; }
+    footer { border-top: 1px solid #E5E5E5; background: #fff; }
+    .footer-bottom { max-width: 1200px; margin: 0 auto; padding: 0 24px 24px; color: #777; font-size: 13px; }
+    @media (max-width: 640px) { nav, .footer-content { padding: 14px 16px; } .card { padding: 12px; } }
+  </style>
+  <link rel="stylesheet" href="theme.css">
+  <script src="theme.js" defer></script>
+</head>
+<body>
+  <header>
+    <nav>
+      <a class="logo" href="index.html"><img class="logo-icon" src="/logo.svg" alt="I’m This"><span>I’m This</span></a>
+      <div class="nav-links">
+        <a href="index.html#how-it-works">How it works</a>
+        <a href="index.html#pricing">Pricing</a>
+        <a href="index.html#pricing">Pricing</a>
+        <a href="login.html">Log in</a>
+      </div>
+    </nav>
+  </header>
+  <main>
+    <section class="card" aria-labelledby="title">
+      <div class="code">404</div>
+      <h1 id="title">This page doesn't exist.</h1>
+      <p>Maybe the name hasn't been claimed yet.</p>
+      <div class="actions">
+        <a class="btn primary" href="signup.html">Claim this name →</a>
+        <a class="btn" href="index.html">Go home →</a>
+      </div>
+    </section>
+  </main>
+  <footer>
+    <div class="footer-content">
+      <div class="logo"><img class="logo-icon" src="/logo.svg" alt="I’m This"><span>I’m This</span></div>
+      <div class="footer-links">
+        <a href="index.html#how-it-works">How it works</a>
+        <a href="index.html#pricing">Pricing</a>
+        <a href="signup.html">Sign up</a>
+      </div>
+    </div>
+    <div class="footer-bottom">© <span id="footerYear">2025</span> I’m This. All rights reserved.</div>
+  </footer>
+  <script>document.getElementById('footerYear').textContent = new Date().getFullYear();</script>
+</body>
+</html>

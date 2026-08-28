@@ -1,0 +1,549 @@
+<!doctype html>
+<html lang="fa" dir="rtl">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <meta name="robots" content="noindex,nofollow" />
+    <title>صورتحساب و پرداخت — I’m This</title>
+    <link rel="icon" href="/logo.svg" type="image/svg+xml" />
+    <link rel="stylesheet" href="design-system.css" />
+    <link rel="stylesheet" href="app-shell.css" />
+    <style>
+      body {
+        background: #f7faf9;
+        color: #13251f;
+      }
+      .billing-shell {
+        max-width: 980px;
+        margin: auto;
+        padding: 32px 20px 64px;
+      }
+      .billing-head {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 16px;
+        margin-bottom: 28px;
+      }
+      .billing-head a {
+        color: #0f6e56;
+        text-decoration: none;
+        font-weight: 700;
+      }
+      .grid {
+        display: grid;
+        grid-template-columns: 1.15fr 0.85fr;
+        gap: 20px;
+      }
+      .panel {
+        background: #fff;
+        border: 1px solid #dfe8e4;
+        border-radius: 18px;
+        padding: 24px;
+        box-shadow: 0 10px 30px rgba(15, 110, 86, 0.06);
+      }
+      .plan-row {
+        display: flex;
+        gap: 12px;
+        margin: 20px 0;
+      }
+      .plan {
+        flex: 1;
+        border: 2px solid #dfe8e4;
+        border-radius: 14px;
+        padding: 16px;
+        cursor: pointer;
+        background: #fff;
+        text-align: right;
+      }
+      .plan[aria-pressed="true"] {
+        border-color: #0f6e56;
+        background: #eff8f5;
+      }
+      .price {
+        display: block;
+        font-size: 22px;
+        font-weight: 800;
+        margin-top: 8px;
+      }
+      .status {
+        padding: 12px 14px;
+        border-radius: 10px;
+        background: #eff8f5;
+        margin: 16px 0;
+      }
+      .status.error {
+        background: #fff0f0;
+        color: #8b1f1f;
+      }
+      .exact-amount-warning {
+        margin: 14px 0;
+        padding: 12px 14px;
+        border: 1px solid #e7a5a5;
+        border-radius: 10px;
+        background: #fff0f0;
+        color: #b42318;
+        font-weight: 800;
+      }
+      .transfer-countdown {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 16px;
+        margin: 16px 0;
+        padding: 14px 16px;
+        border: 1px solid #b8ded2;
+        border-radius: 14px;
+        background: linear-gradient(135deg, #f3fbf8, #e5f5ee);
+        color: #07513f;
+        box-shadow: inset 0 1px 0 rgba(255,255,255,.75), 0 8px 20px rgba(15,110,86,.06);
+      }
+      .transfer-countdown-label {
+        display: grid;
+        gap: 2px;
+        font-size: 13px;
+        font-weight: 800;
+      }
+      .transfer-countdown-label small { color: #477267; font-size: 11px; font-weight: 600; }
+      .transfer-countdown-time {
+        display: flex;
+        align-items: center;
+        gap: 7px;
+        direction: ltr;
+        font-variant-numeric: tabular-nums;
+      }
+      .transfer-countdown-unit {
+        display: grid;
+        min-width: 44px;
+        padding: 5px 7px;
+        border: 1px solid rgba(15,110,86,.15);
+        border-radius: 9px;
+        background: rgba(255,255,255,.72);
+        text-align: center;
+      }
+      .transfer-countdown-unit b { font-size: 18px; line-height: 1.1; }
+      .transfer-countdown-unit small { color: #477267; font-size: 10px; font-weight: 700; }
+      .transfer-countdown-separator { color: #5b9485; font-weight: 900; }
+      .transfer-countdown.is-expired { border-color: #e7a5a5; background: #fff4f4; color: #a32626; }
+      .transfer-countdown.is-expired .transfer-countdown-time { display: none; }
+      @media (max-width: 520px) {
+        .transfer-countdown { align-items: flex-start; flex-direction: column; }
+      }
+      .copy-line {
+        display: flex;
+        align-items: center;
+        flex-wrap: wrap;
+        gap: 8px;
+      }
+      .copy-button {
+        border: 1px solid #b7d7cc;
+        border-radius: 8px;
+        padding: 6px 10px;
+        background: #fff;
+        color: #0f6e56;
+        font: inherit;
+        font-size: 13px;
+        font-weight: 800;
+        cursor: pointer;
+      }
+      .copy-button:hover { background: #eff8f5; }
+      .pay {
+        width: 100%;
+        border: 0;
+        border-radius: 12px;
+        padding: 14px;
+        background: #0f6e56;
+        color: #fff;
+        font: inherit;
+        font-weight: 800;
+        cursor: pointer;
+      }
+      .pay:disabled {
+        opacity: 0.55;
+        cursor: not-allowed;
+      }
+      #transfer-details label {
+        display: block;
+        margin-top: 12px;
+        font-weight: 700;
+      }
+      #transfer-details input {
+        display: block;
+        width: 100%;
+        box-sizing: border-box;
+        margin-top: 6px;
+        padding: 10px;
+        border: 1px solid #cbd8d3;
+        border-radius: 8px;
+        font: inherit;
+      }
+      #submit-transfer { margin-top: 16px; }
+      .history {
+        width: 100%;
+        border-collapse: collapse;
+        margin-top: 12px;
+      }
+      .history th,
+      .history td {
+        text-align: right;
+        padding: 11px 8px;
+        border-bottom: 1px solid #edf2f0;
+        font-size: 14px;
+      }
+      .muted {
+        color: #66776f;
+      }
+      .loading {
+        min-height: 260px;
+        display: grid;
+        place-items: center;
+      }
+      .hidden {
+        display: none !important;
+      }
+      @media (max-width: 760px) {
+        .grid {
+          grid-template-columns: 1fr;
+        }
+        .billing-head {
+          align-items: flex-start;
+        }
+        .plan-row {
+          flex-direction: column;
+        }
+        .history {
+          display: block;
+          overflow-x: auto;
+          white-space: nowrap;
+        }
+      }
+    </style>
+    <link rel="stylesheet" href="theme.css">
+    <script src="theme.js" defer></script>
+  </head>
+  <body>
+    <main class="billing-shell">
+      <header class="billing-head">
+        <div>
+          <h1>صورتحساب و پرداخت</h1>
+          <p class="muted">اشتراک سالانه و وضعیت انتشار سایت شما</p>
+        </div>
+        <div class="actions"><span data-theme-slot></span><a id="dashboard-link" href="dashboard.html">بازگشت به داشبورد</a></div>
+      </header>
+      <section id="loading" class="panel loading">
+        در حال دریافت اطلاعات حساب…
+      </section>
+      <section id="content" class="grid hidden">
+        <div class="panel">
+          <h2>انتخاب پلن</h2>
+          <p class="muted">
+            برای خرید اشتراک نیازی به ساخت سایت ندارید. مبلغ را کارت‌به‌کارت کنید و پس از تأیید دستی، اشتراک شما فعال می‌شود.
+          </p>
+          <div class="plan-row" role="group" aria-label="انتخاب پلن">
+            <button class="plan" data-plan="Annual" aria-pressed="false">
+              <strong>I’m This سالانه</strong><span class="price">۷۱۰٬۰۰۰ تومان</span
+              ><span class="muted">برای یک سال</span>
+            </button>
+          </div>
+          <div id="subscription-status" class="status"></div>
+          <button id="pay-button" class="pay" disabled>
+            دریافت اطلاعات کارت
+          </button>
+          <p id="message" class="muted" role="status" aria-live="polite"></p>
+          <section id="transfer-details" class="status hidden" aria-live="polite">
+            <strong>اطلاعات واریز</strong>
+            <p class="copy-line">شماره کارت: <b id="card-number" dir="ltr"></b><button class="copy-button" type="button" data-copy-target="card-number">کپی</button></p>
+            <p>به نام: <b id="card-holder"></b> <span id="bank-name"></span></p>
+            <p class="copy-line">مبلغ: <b id="transfer-amount"></b> تومان<button class="copy-button" type="button" data-copy-target="transfer-amount">کپی مبلغ</button></p>
+            <p class="exact-amount-warning">مهم: دقیقاً همین مبلغ را کارت‌به‌کارت کنید. مبلغ اختصاصی شماست و برای شناسایی پرداخت استفاده می‌شود؛ حتی یک تومان اختلاف باعث تأخیر در تأیید می‌شود.</p>
+            <p>اعتبار این مبلغ تا: <b id="transfer-expires"></b></p>
+            <div id="transfer-countdown" class="transfer-countdown" role="timer" aria-live="polite">
+              <span class="transfer-countdown-label"><span>زمان باقی‌مانده</span><small>تا پایان اعتبار کد پرداخت</small></span>
+              <span class="transfer-countdown-time" aria-label="زمان باقی‌مانده">
+                <span class="transfer-countdown-unit"><b data-countdown="hours">--</b><small>ساعت</small></span>
+                <i class="transfer-countdown-separator">:</i>
+                <span class="transfer-countdown-unit"><b data-countdown="minutes">--</b><small>دقیقه</small></span>
+                <i class="transfer-countdown-separator">:</i>
+                <span class="transfer-countdown-unit"><b data-countdown="seconds">--</b><small>ثانیه</small></span>
+              </span>
+            </div>
+            <label>کد پیگیری انتقال (اختیاری) <input id="receipt-code" autocomplete="off" maxlength="100" /></label>
+            <label>چهار رقم آخر کارت پرداخت‌کننده (اختیاری) <input id="payer-card" inputmode="numeric" maxlength="4" /></label>
+            <button id="submit-transfer" class="pay" type="button">واریز کردم؛ ارسال برای تأیید</button>
+          </section>
+        </div>
+        <aside class="panel">
+          <h2>جزئیات حساب</h2>
+          <dl>
+            <dt class="muted">ایمیل</dt>
+            <dd id="account-email">—</dd>
+            <dt class="muted">پلن فعلی</dt>
+            <dd id="account-plan">—</dd>
+            <dt class="muted">وضعیت</dt>
+            <dd id="account-state">—</dd>
+            <dt class="muted">تاریخ پایان</dt>
+            <dd id="account-expiry">—</dd>
+          </dl>
+        </aside>
+      </section>
+      <section id="history-panel" class="panel hidden" style="margin-top: 20px">
+        <h2>سابقه پرداخت</h2>
+        <div id="history-empty" class="muted">هنوز پرداختی ثبت نشده است.</div>
+        <table id="history-table" class="history hidden">
+          <thead>
+            <tr>
+              <th>تاریخ</th>
+              <th>پلن</th>
+              <th>مبلغ</th>
+              <th>وضعیت</th>
+              <th>کد پیگیری</th>
+            </tr>
+          </thead>
+          <tbody></tbody>
+        </table>
+      </section>
+    </main>
+    <script src="site-config.js"></script>
+    <script src="dropcv-api.js"></script>
+    <script>
+      (function () {
+        var selectedPlan = null,
+          user = null,
+          paymentsEnabled = false,
+          renewalPayment = false,
+          transferCountdownTimer = null;
+        function faNumber(value) {
+          return new Intl.NumberFormat("fa-IR").format(Number(value || 0));
+        }
+        function faDate(value) {
+          return value
+            ? new Intl.DateTimeFormat("fa-IR", { dateStyle: "medium" }).format(
+                new Date(value),
+              )
+            : "—";
+        }
+        function faDateTime(value) {
+          return value
+            ? new Intl.DateTimeFormat("fa-IR", { dateStyle: "medium", timeStyle: "short" }).format(new Date(value))
+            : "—";
+        }
+        function startTransferCountdown(expiresAt) {
+          clearInterval(transferCountdownTimer);
+          var target = new Date(expiresAt).getTime();
+          var countdown = document.getElementById("transfer-countdown");
+          function tick() {
+            var seconds = Math.max(0, Math.ceil((target - Date.now()) / 1000));
+            if (!Number.isFinite(seconds) || seconds <= 0) {
+              countdown.classList.add("is-expired");
+              countdown.querySelector(".transfer-countdown-label span").textContent = "اعتبار این کد تمام شده است.";
+              countdown.querySelector(".transfer-countdown-label small").textContent = "برای دریافت مبلغ و کد جدید، دوباره تلاش کنید.";
+              clearInterval(transferCountdownTimer);
+              window.manualTransactionId = null;
+              document.getElementById("submit-transfer").disabled = true;
+              document.getElementById("pay-button").disabled = !paymentsEnabled;
+              return;
+            }
+            var hours = Math.floor(seconds / 3600);
+            var minutes = Math.floor((seconds % 3600) / 60);
+            var secs = seconds % 60;
+            countdown.classList.remove("is-expired");
+            countdown.querySelector(".transfer-countdown-label span").textContent = "زمان باقی‌مانده";
+            countdown.querySelector(".transfer-countdown-label small").textContent = "تا پایان اعتبار کد پرداخت";
+            countdown.querySelector('[data-countdown="hours"]').textContent = faNumber(hours).padStart(2, "۰");
+            countdown.querySelector('[data-countdown="minutes"]').textContent = faNumber(minutes).padStart(2, "۰");
+            countdown.querySelector('[data-countdown="seconds"]').textContent = faNumber(secs).padStart(2, "۰");
+          }
+          tick();
+          transferCountdownTimer = setInterval(tick, 1000);
+        }
+        function showTransferDetails(transaction, info, restored) {
+          window.manualTransactionId = transaction.id;
+          document.getElementById("pay-button").disabled = true;
+          document.getElementById("card-number").textContent = info.cardNumber;
+          document.getElementById("card-number").dataset.copyValue = info.cardNumber;
+          document.getElementById("card-holder").textContent = info.cardHolder;
+          document.getElementById("bank-name").textContent = info.bankName ? "(" + info.bankName + ")" : "";
+          document.getElementById("transfer-amount").textContent = faNumber(info.amount);
+          document.getElementById("transfer-amount").dataset.copyValue = String(info.amount);
+          document.getElementById("transfer-expires").textContent = faDateTime(info.expiresAt);
+          document.getElementById("submit-transfer").disabled = false;
+          document.getElementById("transfer-details").classList.remove("hidden");
+          startTransferCountdown(info.expiresAt);
+          if (restored) {
+            document.getElementById("message").textContent = "اطلاعات پرداخت قبلی شما بازیابی شد. تا پایان زمان باقی‌مانده می‌توانید واریز را انجام دهید و دکمه «واریز کردم» را بزنید.";
+          }
+        }
+        function stateLabel(value) {
+          return (
+            {
+              trial: "آزمایشی",
+              active: "فعال",
+              offline_grace: "متوقف پس از پایان آزمایش",
+              expired: "منقضی",
+              released: "آزاد شده",
+              pending: "در انتظار",
+              verified: "تأیید شده",
+              failed: "ناموفق",
+              cancelled: "لغو شده",
+              pending_review: "در صف بررسی",
+              rejected: "رد شده",
+            }[value] ||
+            value ||
+            "—"
+          );
+        }
+        function selectPlan(plan) {
+          selectedPlan = plan;
+          document.querySelectorAll("[data-plan]").forEach(function (el) {
+            el.setAttribute("aria-pressed", String(el.dataset.plan === plan));
+          });
+          document.getElementById("pay-button").disabled = !paymentsEnabled;
+        }
+        async function copyTransferValue(button) {
+          var target = document.getElementById(button.dataset.copyTarget);
+          var value = target && (target.dataset.copyValue || target.textContent || "").trim();
+          if (!value) return;
+          try {
+            await navigator.clipboard.writeText(value);
+            var original = button.textContent;
+            button.textContent = "کپی شد";
+            setTimeout(function () { button.textContent = original; }, 1600);
+          } catch (error) {
+            document.getElementById("message").textContent = "کپی کردن ممکن نشد؛ لطفاً مقدار را دستی انتخاب کنید.";
+            document.getElementById("message").className = "status error";
+          }
+        }
+        function paymentErrorMessage(error, fallback) {
+          var raw = String(error || "");
+          if (/payment_transactions_status_check|violates check constraint/i.test(raw)) {
+            return "ثبت درخواست موقتاً با مشکل روبه‌رو شد. لطفاً دوباره تلاش کنید.";
+          }
+          return raw || fallback;
+        }
+        async function init() {
+          var me = await dropCVApi.getMe();
+          if (!me.ok || !me.data || !me.data.user) {
+            location.replace("login.html?next=billing.html");
+            return;
+          }
+          user = me.data.user;
+          var plansResponse = await dropCVApi.getPlans();
+          paymentsEnabled = Boolean(
+            plansResponse.ok &&
+            plansResponse.data &&
+            plansResponse.data.capabilities &&
+            plansResponse.data.capabilities.payments
+          );
+          selectPlan("Annual");
+          if (!paymentsEnabled) {
+            var unavailable = document.getElementById("message");
+            document.getElementById("pay-button").textContent =
+              "پرداخت موقتاً در دسترس نیست";
+            unavailable.textContent = "پرداخت موقتاً در دسترس نیست. لطفاً بعداً تلاش کنید.";
+            unavailable.className = "status";
+          }
+      document.getElementById("dashboard-link").href = "dashboard.html";
+          document.getElementById("account-email").textContent =
+            user.email || "—";
+          document.getElementById("account-plan").textContent = "سالانه";
+          var sub = user.subscription || {};
+          renewalPayment = sub.status === "active";
+          document.getElementById("account-state").textContent = stateLabel(
+            sub.status,
+          );
+          document.getElementById("account-expiry").textContent = faDate(
+            sub.expiresAt || sub.expires_at,
+          );
+          document.getElementById("subscription-status").textContent =
+            renewalPayment
+              ? "اشتراک شما فعال است. با تأیید خرید مجدد، یک سال به تاریخ پایان فعلی اضافه می‌شود."
+              : sub.status === "trial"
+              ? "از دوره آزمایشی سه‌روزه شما " +
+                faNumber(sub.daysLeft) +
+                " روز باقی مانده است."
+              : "وضعیت اشتراک: " + stateLabel(sub.status);
+          var pendingManual = await dropCVApi.getPendingManualPayment();
+          if (pendingManual.ok && pendingManual.data && pendingManual.data.transaction && pendingManual.data.instructions) {
+            showTransferDetails(pendingManual.data.transaction, pendingManual.data.instructions, true);
+          }
+          var history = await dropCVApi.getPaymentHistory();
+          var rows =
+            history.ok && history.data && Array.isArray(history.data.payments)
+              ? history.data.payments
+              : [];
+          if (rows.length) {
+            var tbody = document.querySelector("#history-table tbody");
+            rows.forEach(function (p) {
+              var tr = document.createElement("tr");
+              [
+                faDate(p.created_at),
+                "سالانه",
+                faNumber(p.amount) + " تومان",
+                stateLabel(p.status),
+                p.reference_id || "—",
+              ].forEach(function (v) {
+                var td = document.createElement("td");
+                td.textContent = v;
+                tr.appendChild(td);
+              });
+              tbody.appendChild(tr);
+            });
+            document.getElementById("history-empty").classList.add("hidden");
+            document.getElementById("history-table").classList.remove("hidden");
+          }
+          document.getElementById("loading").classList.add("hidden");
+          document.getElementById("content").classList.remove("hidden");
+          document.getElementById("history-panel").classList.remove("hidden");
+        }
+        document.querySelectorAll("[data-plan]").forEach(function (el) {
+          el.addEventListener("click", function () {
+            selectPlan(el.dataset.plan);
+          });
+        });
+        document
+          .getElementById("pay-button")
+          .addEventListener("click", async function () {
+            var button = this,
+              message = document.getElementById("message");
+            button.disabled = true;
+            clearInterval(transferCountdownTimer);
+            message.textContent = "در حال آماده‌سازی اطلاعات واریز…";
+            var result = await dropCVApi.requestPayment(selectedPlan);
+            if (result.ok && result.data && result.data.instructions && result.data.transaction) {
+              var data = result.data;
+              showTransferDetails(data.transaction, data.instructions, false);
+              message.textContent = renewalPayment
+                ? "پس از واریز دقیق مبلغ، درخواست را ارسال کنید تا یک سال به اشتراک فعلی شما اضافه شود."
+                : "پس از واریز دقیق مبلغ، درخواست را برای تأیید ارسال کنید.";
+              return;
+            }
+            message.textContent = paymentErrorMessage(result.error, "شروع پرداخت ممکن نشد.");
+            message.className = "status error";
+            button.disabled = !paymentsEnabled;
+          });
+        document.getElementById("submit-transfer").addEventListener("click", async function () {
+          var receiptCode = document.getElementById("receipt-code").value.trim();
+          var payerCardLast4 = document.getElementById("payer-card").value.trim();
+          var message = document.getElementById("message");
+          if (!window.manualTransactionId) return;
+          this.disabled = true;
+          var result = await dropCVApi.submitManualPayment(window.manualTransactionId, receiptCode, payerCardLast4);
+          if (result.ok) {
+            clearInterval(transferCountdownTimer);
+            message.textContent = "درخواست شما ثبت شد و پس از بررسی دستی فعال می‌شود.";
+            document.getElementById("transfer-details").classList.add("hidden");
+            document.getElementById("pay-button").disabled = true;
+          } else {
+            message.textContent = paymentErrorMessage(result.error, "ثبت درخواست ممکن نشد.");
+            message.className = "status error";
+            this.disabled = false;
+          }
+        });
+        document.querySelectorAll("[data-copy-target]").forEach(function (button) {
+          button.addEventListener("click", function () { copyTransferValue(button); });
+        });
+        init();
+      })();
+    </script>
+  </body>
+</html>

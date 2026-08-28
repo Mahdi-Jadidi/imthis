@@ -1,0 +1,264 @@
+html[data-theme="dark"] {
+  color-scheme: dark;
+  --color-white: #17202b;
+  --color-black: #f5f7fb;
+  --color-gray-900: #edf2f7;
+  --color-gray-700: #cbd5e1;
+  --color-gray-500: #94a3b8;
+  --color-gray-300: #475569;
+  --color-gray-100: #263342;
+  --color-gray-50: #17202b;
+  --bg-page: #0b1017;
+  --bg-subtle: #111923;
+  --bg-muted: #17212d;
+  --bg-border: #2c3a4a;
+  --text-primary: #f5f7fb;
+  --text-secondary: #cbd5e1;
+  --text-tertiary: #94a3b8;
+  --text-disabled: #64748b;
+  --border-subtle: rgba(148, 163, 184, .16);
+  --border-default: rgba(148, 163, 184, .25);
+  --border-medium: rgba(148, 163, 184, .38);
+  --brand: #36c49b;
+  --brand-dark: #8aebce;
+  --brand-soft: rgba(54, 196, 155, .14);
+  --ink: #f5f7fb;
+  --muted: #a6b5c7;
+  --line: #2c3a4a;
+  --surface: #131c27;
+  --page: #0b1017;
+  --bg: #0b1017;
+  --soft: #172b29;
+}
+
+html[data-theme="dark"] body,
+html[data-theme="dark"] .workspace,
+html[data-theme="dark"] main { background-color: #0b1017 !important; color: #f5f7fb !important; }
+
+html[data-theme="dark"] header,
+html[data-theme="dark"] footer,
+html[data-theme="dark"] nav.scrolled,
+html[data-theme="dark"] .sidebar,
+html[data-theme="dark"] .topbar,
+html[data-theme="dark"] .card,
+html[data-theme="dark"] .panel,
+html[data-theme="dark"] .metric,
+html[data-theme="dark"] .plan,
+html[data-theme="dark"] .pricing-card,
+html[data-theme="dark"] .browser,
+html[data-theme="dark"] .auth-point,
+html[data-theme="dark"] .auth-motion-frame,
+html[data-theme="dark"] .auth-motion-card,
+html[data-theme="dark"] .trust-item,
+html[data-theme="dark"] .domain-search-card,
+html[data-theme="dark"] .browser-bar,
+html[data-theme="dark"] .status,
+html[data-theme="dark"] .url,
+html[data-theme="dark"] .secondary,
+html[data-theme="dark"] .button-link,
+html[data-theme="dark"] .btn:not(.btn-primary),
+html[data-theme="dark"] input,
+html[data-theme="dark"] textarea,
+html[data-theme="dark"] select { background: #131c27 !important; color: #f5f7fb !important; border-color: #2c3a4a !important; }
+
+html[data-theme="dark"] header { background: rgba(11, 16, 23, .92) !important; }
+html[data-theme="dark"] .browser-bar { background: #0f1821 !important; }
+html[data-theme="dark"] .chip { background: rgba(54, 196, 155, .16) !important; color: #8aebce !important; }
+html[data-theme="dark"] .domain-suffix { background: rgba(54, 196, 155, .14) !important; color: #8aebce !important; border-color: #2c3a4a !important; }
+html[data-theme="dark"] .final { background: #071310 !important; border-color: rgba(54, 196, 155, .28) !important; }
+html[data-theme="dark"] .final .muted { color: #b9cbc5 !important; }
+html[data-theme="dark"] .domain-search-result.is-available { background: rgba(54, 196, 155, .12) !important; border-color: rgba(54, 196, 155, .4) !important; }
+html[data-theme="dark"] .domain-search-result.is-unavailable { background: rgba(248, 113, 113, .1) !important; border-color: rgba(248, 113, 113, .3) !important; }
+
+html[data-theme="dark"] .muted,
+html[data-theme="dark"] .lede,
+html[data-theme="dark"] .footer-note,
+html[data-theme="dark"] .proof,
+html[data-theme="dark"] small,
+html[data-theme="dark"] .nav-links a,
+html[data-theme="dark"] .footer-links a { color: #a6b5c7 !important; }
+
+html[data-theme="dark"] .btn-primary,
+html[data-theme="dark"] .brand-mark,
+html[data-theme="dark"] .logo-icon,
+html[data-theme="dark"] .nav-logo-icon,
+html[data-theme="dark"] .approve { background: #36c49b !important; border-color: #36c49b !important; color: #07110f !important; }
+
+html[data-theme="dark"] .btn:hover,
+html[data-theme="dark"] .nav-links a:hover,
+html[data-theme="dark"] .footer-links a:hover,
+html[data-theme="dark"] .nav-link:hover,
+html[data-theme="dark"] .footer-link:hover { background: #1b2733 !important; color: #f5f7fb !important; }
+
+.theme-toggle {
+  position: static;
+  flex: 0 0 auto;
+  width: 44px;
+  height: 44px;
+  border: 1px solid #dce7e2;
+  border-radius: 50%;
+  background: #fff;
+  color: #0f6e56;
+  box-shadow: 0 8px 24px rgba(15, 55, 45, .16);
+  cursor: pointer;
+  font: 22px/1 system-ui, sans-serif;
+  transition: background .2s ease, color .2s ease, border-color .2s ease, transform .2s ease;
+}
+.theme-toggle:hover { transform: translateY(-2px); }
+html[data-theme="dark"] .theme-toggle { background: #17202b; color: #fbbf24; border-color: #475569; box-shadow: 0 8px 24px rgba(0, 0, 0, .35); }
+/* Dashboard-specific dark-mode balance: keep controls legible without a bright hero glow. */
+html[data-theme="dark"] .topbar .language {
+  background: #17212d;
+  color: #e6edf5;
+  border-color: #405166;
+  box-shadow: 0 4px 14px rgba(0, 0, 0, .22);
+}
+html[data-theme="dark"] .topbar .language:hover,
+html[data-theme="dark"] .topbar .language:focus-visible {
+  background: #243246;
+  border-color: #6a819b;
+  outline: none;
+}
+/* Landing page: a calm charcoal surface with a restrained green glow. The
+   previous full green slab overpowered the page and made its nested cards feel
+   disconnected in dark mode. */
+html[data-theme="dark"] .hero {
+  background:
+    radial-gradient(circle at 88% 14%, rgba(54, 196, 155, .14), transparent 33%),
+    radial-gradient(circle at 8% 92%, rgba(45, 132, 105, .1), transparent 30%),
+    linear-gradient(135deg, #101923 0%, #0d1620 100%);
+  border: 1px solid rgba(111, 150, 171, .2);
+  border-radius: 24px;
+  box-shadow: 0 24px 58px rgba(0, 0, 0, .2);
+}
+html[data-theme="dark"] .hero .domain-search-card {
+  background: rgba(18, 29, 40, .96) !important;
+  border-color: #30445a !important;
+  box-shadow: 0 18px 44px rgba(0, 0, 0, .2);
+}
+html[data-theme="dark"] .hero .trust-item {
+  background: rgba(18, 29, 40, .9) !important;
+  border-color: #2e4155 !important;
+  box-shadow: none;
+}
+html[data-theme="dark"] .hero .hero-copy,
+html[data-theme="dark"] .hero .trust-item span { color: #b8c9d8 !important; }
+html[data-theme="dark"] .hero .proof { color: #9eb5c7 !important; }
+html[data-theme="dark"] .hero .domain-search-box input {
+  background: #0d1620 !important;
+  border-color: #405771 !important;
+}
+html[data-theme="dark"] .hero .plan-pill {
+  background: rgba(255, 255, 255, .09);
+  border-color: rgba(255, 255, 255, .18);
+}
+html[data-theme="dark"] .transfer-countdown {
+  background: linear-gradient(135deg, #102c28, #12231f);
+  border-color: #286b5b;
+  color: #d2f8eb;
+  box-shadow: inset 0 1px 0 rgba(255,255,255,.04), 0 10px 24px rgba(0,0,0,.18);
+}
+html[data-theme="dark"] .transfer-countdown-label small,
+html[data-theme="dark"] .transfer-countdown-unit small { color: #9bc7ba; }
+html[data-theme="dark"] .transfer-countdown-unit {
+  background: rgba(4, 18, 16, .48);
+  border-color: rgba(115, 220, 184, .2);
+}
+html[data-theme="dark"] .transfer-countdown-separator { color: #74cdb0; }
+html[data-theme="dark"] .transfer-countdown.is-expired { background: #321d22; border-color: #70414b; color: #ffd3d9; }
+
+/* Signup and dashboard forms use a few standalone surfaces outside the shared
+   card/input selectors above. Give them deliberate dark surfaces as well. */
+html[data-theme="dark"] .upload,
+html[data-theme="dark"] .file-picker {
+  background: #111d27 !important;
+  border-color: #3b6570 !important;
+  color: #edf6f4 !important;
+}
+html[data-theme="dark"] .file-picker input[type="file"] {
+  color: #dbe9e5 !important;
+}
+html[data-theme="dark"] .file-picker input[type="file"]::file-selector-button {
+  margin-inline-end: 12px;
+  padding: 8px 12px;
+  border: 1px solid #457468;
+  border-radius: 8px;
+  background: #1b3c35;
+  color: #d8fff1;
+  font: inherit;
+  font-weight: 800;
+}
+html[data-theme="dark"] .password-strength-panel {
+  background: linear-gradient(180deg, #15222d 0%, #101923 100%) !important;
+  border-color: #34495e !important;
+  box-shadow: 0 16px 34px rgba(0,0,0,.24);
+}
+html[data-theme="dark"] .password-strength-panel:before { background: radial-gradient(circle, rgba(54,196,155,.13), transparent 70%); }
+html[data-theme="dark"] .password-strength-track { background: #263543; }
+html[data-theme="dark"] .password-strength-check {
+  background: #121d27 !important;
+  border-color: #364b60 !important;
+  color: #b7c9d7 !important;
+}
+html[data-theme="dark"] .password-strength-check.is-on {
+  background: rgba(34, 118, 92, .28) !important;
+  border-color: rgba(90, 218, 174, .34) !important;
+  color: #e6fff6 !important;
+}
+html[data-theme="dark"] .password-strength-badge { box-shadow: none; }
+html[data-theme="dark"] .domain-suffix {
+  background: #1a2a35 !important;
+  border-color: #3a5165 !important;
+  color: #b9ded3 !important;
+}
+html[data-theme="dark"] input::placeholder,
+html[data-theme="dark"] textarea::placeholder { color: #8ca2b6 !important; opacity: 1; }
+html[data-theme="dark"] .upload small,
+html[data-theme="dark"] .file-picker small { color: #a8bfcb !important; }
+}
+.site-request-progress {
+  position: fixed;
+  inset: 0 0 auto;
+  z-index: 20000;
+  height: 3px;
+  pointer-events: none;
+  opacity: 0;
+  transition: opacity .18s ease;
+}
+.site-request-progress span {
+  display: block;
+  width: 100%;
+  height: 100%;
+  transform: scaleX(0);
+  transform-origin: right center;
+  background: linear-gradient(90deg, #0f6e56, #49cfa6);
+  box-shadow: 0 0 12px rgba(73, 207, 166, .75);
+}
+html[dir="ltr"] .site-request-progress span { transform-origin: left center; }
+.site-request-progress.is-active { opacity: 1; }
+.site-request-progress.is-active span { animation: requestProgress 1.25s ease-in-out infinite alternate; }
+.site-request-progress.is-complete span { animation: none; transform: scaleX(1); transition: transform .2s ease; }
+@keyframes requestProgress {
+  from { transform: scaleX(.1); }
+  to { transform: scaleX(.86); }
+}
+html[data-theme="dark"] .site-request-progress span {
+  background: linear-gradient(90deg, #238c70, #7ce0c0);
+  box-shadow: 0 0 12px rgba(124, 224, 192, .55);
+}
+@media (prefers-reduced-motion: reduce) {
+  .site-request-progress.is-active span { animation: none; transform: scaleX(.7); }
+}
+.theme-slot { display: inline-flex; align-items: center; }
+.theme-toggle.is-floating {
+  position: fixed;
+  right: 18px;
+  bottom: 18px;
+  z-index: 10000;
+}
+html[dir="rtl"] .theme-toggle.is-floating { right: auto; left: 18px; }
+@media (max-width: 720px) {
+  .theme-toggle { width: 42px; height: 42px; }
+  .theme-toggle.is-floating { right: 12px; bottom: 12px; }
+  html[dir="rtl"] .theme-toggle.is-floating { right: auto; left: 12px; }
+}

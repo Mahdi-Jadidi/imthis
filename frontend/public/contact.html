@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>تماس — I’m This</title>
+  <link rel="icon" href="/logo.svg" type="image/svg+xml" />
+  <link rel="stylesheet" href="design-system.css" />
+  <style>
+    body {
+      margin: 0;
+      font-family: Inter, system-ui, sans-serif;
+      color: var(--text-primary);
+      background: var(--bg-page);
+    }
+    .page-shell {
+      max-width: 840px;
+      margin: 0 auto;
+      padding: 56px 24px 80px;
+    }
+    .top-link {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      color: var(--color-teal-700);
+      text-decoration: none;
+      font-weight: 600;
+      margin-bottom: 32px;
+    }
+    h1 {
+      font-size: clamp(36px, 5vw, 56px);
+      line-height: 1.05;
+      letter-spacing: -0.04em;
+      margin: 0 0 16px;
+    }
+    .lede {
+      font-size: 18px;
+      line-height: 1.7;
+      color: var(--text-secondary);
+      margin: 0 0 32px;
+    }
+    .card {
+      background: var(--surface);
+      border: 1px solid var(--line);
+      border-radius: 24px;
+      padding: 32px;
+      box-shadow: 0 18px 40px rgba(15, 55, 45, 0.05);
+    }
+    h2 {
+      margin: 0 0 12px;
+      font-size: 24px;
+    }
+    p, li {
+      line-height: 1.7;
+      color: var(--text-secondary);
+      font-size: 16px;
+    }
+    ul {
+      margin: 0 0 24px 20px;
+      padding: 0;
+    }
+    .contact-pill {
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+      padding: 12px 16px;
+      border-radius: 999px;
+      background: var(--brand-soft);
+      color: var(--color-teal-700);
+      text-decoration: none;
+      font-weight: 700;
+      margin: 8px 0 24px;
+    }
+    .footer-note {
+      margin-top: 28px;
+      font-size: 14px;
+      color: var(--text-tertiary);
+    }
+    footer {
+      padding: 0 24px 80px;
+    }
+    .page-footer {
+      max-width: 840px;
+      margin: 0 auto;
+      padding-top: 18px;
+      border-top: 1px solid var(--line);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      flex-wrap: wrap;
+      font-size: 14px;
+      color: var(--text-tertiary);
+    }
+    .footer-links {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 16px;
+    }
+    .footer-links a {
+      color: var(--color-teal-700);
+      text-decoration: none;
+      font-weight: 600;
+    }
+  </style>
+  <link rel="stylesheet" href="theme.css">
+  <script src="theme.js" defer></script>
+</head>
+<body>
+  <main class="page-shell">
+    <a class="top-link" href="index.html">← بازگشت به I’m This</a>
+    <h1>Contact</h1>
+    <p class="lede">Questions about billing, privacy, takedowns, or a broken page? Use the support details below.</p>
+
+    <section class="card">
+      <h2>Email</h2>
+      <a class="contact-pill" href="mailto:support@imthis.site">support@imthis.site</a>
+
+      <h2>What to include</h2>
+      <ul>
+        <li>Your imthis.site address or account email.</li>
+        <li>A short description of the issue.</li>
+        <li>Any screenshot or error text that will help us reproduce it.</li>
+      </ul>
+
+      <h2>Privacy requests</h2>
+      <p>If you want a copy of your data or want something removed, mention that in your message and we’ll handle it as quickly as we can.</p>
+
+      <p class="footer-note">Effective date: July 2, 2026</p>
+    </section>
+  </main>
+
+  <footer>
+    <div class="page-footer">
+      <span>© <span id="footerYear">2026</span> I’m This</span>
+      <div class="footer-links">
+        <a href="cookies.html">Cookies</a>
+        <a href="privacy.html">Privacy</a>
+        <a href="terms.html">Terms</a>
+      </div>
+    </div>
+  </footer>
+  <script>document.getElementById('footerYear').textContent = new Date().getFullYear();</script>
+</body>
+</html>

@@ -1,0 +1,68 @@
+services:
+  postgres:
+    image: postgres:15
+    environment:
+      POSTGRES_DB: dropcv
+      POSTGRES_USER: dropcv_user
+      POSTGRES_PASSWORD: your_password
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U dropcv_user -d dropcv"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+      - ./migrations:/docker-entrypoint-initdb.d
+    ports:
+      - "127.0.0.1:5432:5432"
+    restart: always
+
+  redis:
+    image: redis:7-alpine
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+    ports:
+      - "127.0.0.1:6379:6379"
+    restart: always
+
+  minio:
+    image: minio/minio
+    command: server /data --console-address ":9001"
+    environment:
+      MINIO_ROOT_USER: your_access_key
+      MINIO_ROOT_PASSWORD: your_secret_key
+    healthcheck:
+      test: ["CMD-SHELL", "curl -f http://localhost:9000/minio/health/live"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+    volumes:
+      - minio_data:/data
+    ports:
+      - "127.0.0.1:9000:9000"
+      - "127.0.0.1:9001:9001"
+    restart: always
+
+  app:
+    build: .
+    ports:
+      - "3000:3000"
+    env_file:
+      - .env.docker
+    environment:
+      ENV_FILE: .env.docker
+    depends_on:
+      postgres:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+      minio:
+        condition: service_healthy
+    restart: on-failure
+
+volumes:
+  postgres_data:
+  minio_data:

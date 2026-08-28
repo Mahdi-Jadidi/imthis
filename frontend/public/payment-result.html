@@ -1,0 +1,106 @@
+<!doctype html>
+<html lang="fa" dir="rtl">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <meta name="robots" content="noindex" />
+    <link rel="icon" href="/logo.svg" type="image/svg+xml" />
+    <title>نتیجه پرداخت — I’m This</title>
+    <link rel="stylesheet" href="app-shell.css" />
+    <style>
+      main {
+        min-height: 100dvh;
+        display: grid;
+        place-items: center;
+        padding: 24px;
+      }
+      .result {
+        max-width: 620px;
+        padding: 42px;
+        text-align: center;
+      }
+      .icon {
+        width: 64px;
+        height: 64px;
+        border-radius: 50%;
+        display: grid;
+        place-items: center;
+        margin: 0 auto 20px;
+        background: var(--brand-soft);
+        color: var(--brand);
+        font-size: 28px;
+        font-weight: 800;
+      }
+      .result h1 {
+        font-size: 32px;
+      }
+      .result .actions {
+        justify-content: center;
+        margin-top: 24px;
+      }
+    </style>
+    <link rel="stylesheet" href="theme.css">
+    <script src="theme.js" defer></script>
+  </head>
+  <body>
+    <main>
+      <section class="card result">
+        <div class="icon" id="icon">✓</div>
+        <h1 id="title"></h1>
+        <p class="muted" id="copy"></p>
+        <p class="fine ltr" id="reference"></p>
+        <div class="actions">
+          <a
+            class="btn btn-primary"
+              href="dashboard.html"
+            data-fa="رفتن به داشبورد"
+            data-en="Go to dashboard"
+            >رفتن به داشبورد</a
+          ><button class="language-toggle" data-lang-toggle>EN</button>
+        </div>
+      </section>
+    </main>
+    <script src="i18n.js"></script>
+    <script>
+      (function () {
+        var q = new URLSearchParams(location.search),
+          status = q.get("status") || "failed",
+          ref = q.get("ref") || "";
+        function render() {
+          var en = dropCVI18n.get() === "en",
+            title = document.getElementById("title"),
+            copy = document.getElementById("copy"),
+            icon = document.getElementById("icon");
+          if (status === "success") {
+            title.textContent = en
+              ? "Payment verified. Your site is live."
+              : "پرداخت تایید شد؛ وب‌سایت شما منتشر شد.";
+            copy.textContent = en
+              ? "You can copy your public link from the dashboard."
+              : "لینک عمومی را از داشبورد کپی کنید.";
+            icon.textContent = "✓";
+          } else if (status === "cancelled") {
+            title.textContent = en ? "Payment cancelled" : "پرداخت لغو شد";
+            copy.textContent = en
+              ? "Your private draft is safe. You can publish whenever you are ready."
+              : "پیش‌نویس خصوصی شما محفوظ است و هر زمان آماده بودید می‌توانید منتشر کنید.";
+            icon.textContent = "—";
+          } else {
+            title.textContent = en
+              ? "Payment could not be verified"
+              : "تایید پرداخت انجام نشد";
+            copy.textContent = en
+              ? "No publication occurred. Return to your dashboard and try again."
+              : "وب‌سایت منتشر نشده است. به داشبورد برگردید و دوباره تلاش کنید.";
+            icon.textContent = "!";
+          }
+          document.getElementById("reference").textContent = ref
+            ? (en ? "Reference: " : "کد پیگیری: ") + ref
+            : "";
+        }
+        window.addEventListener("dropcv:language", render);
+        document.addEventListener("DOMContentLoaded", render);
+      })();
+    </script>
+  </body>
+</html>

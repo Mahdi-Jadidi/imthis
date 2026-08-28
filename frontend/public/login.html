@@ -1,0 +1,344 @@
+<!doctype html>
+<html lang="fa" dir="rtl">
+<head>
+  <link rel="icon" href="/logo.svg" type="image/svg+xml">
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <meta name="robots" content="noindex">
+  <title>ورود — I’m This</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&family=Vazirmatn:wght@400;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="app-shell.css">
+  <style>
+    main.auth-main {
+      min-height: calc(100dvh - 72px);
+    }
+
+    .auth-shell-login {
+      display: block;
+      max-width: 540px;
+      padding-top: 56px;
+      padding-bottom: 56px;
+    }
+
+    .auth-shell-login .auth-panel {
+      width: 100%;
+      margin: 0 auto;
+    }
+
+    .auth-panel .eyebrow {
+      margin-bottom: 8px;
+    }
+
+    .auth-panel .muted {
+      margin: 0;
+    }
+
+    .auth-panel .status {
+      margin-top: 16px;
+    }
+
+    #verificationBox {
+      margin-top: 18px;
+      padding: 18px;
+      border: 1px solid var(--line);
+      border-radius: 14px;
+      background: var(--brand-soft);
+    }
+
+    .auth-link {
+      color: var(--brand);
+      font-weight: 800;
+      text-decoration: none;
+    }
+
+    .auth-link:hover {
+      text-decoration: underline;
+    }
+
+    #mailNotice {
+      position: fixed;
+      inset-inline: 20px;
+      bottom: 24px;
+      z-index: 50;
+      max-width: 560px;
+      margin-inline: auto;
+      padding: 16px 18px;
+      border: 1px solid #9ddac6;
+      border-radius: 14px;
+      background: #ecfdf3;
+      color: #067647;
+      box-shadow: 0 16px 40px rgba(15, 55, 45, .18);
+      font-weight: 700;
+    }
+
+    #mailNotice.error {
+      border-color: #f1c4c4;
+      background: #fff5f5;
+      color: #b42318;
+    }
+  </style>
+  <link rel="stylesheet" href="theme.css">
+  <script src="theme.js" defer></script>
+</head>
+<body>
+  <a class="skip-link" href="#form" data-fa="رفتن به فرم ورود" data-en="Skip to login form">رفتن به فرم ورود</a>
+  <main class="container auth-shell auth-shell-login auth-main">
+    <section class="card auth-panel">
+      <div class="top">
+        <a class="brand" href="index.html"><img class="brand-mark" src="/logo.svg" alt="I’m This" />I’m This</a>
+        <div class="actions"><span data-theme-slot></span><button class="language-toggle" data-lang-toggle>EN</button></div>
+      </div>
+
+      <div class="eyebrow" data-fa="ورود امن" data-en="Secure sign in">ورود امن</div>
+      <h2 data-fa="به حساب خود برگردید" data-en="Return to your account">به حساب خود برگردید</h2>
+      <p class="muted" data-fa="پیش‌نویس و سایت منتشرشده‌تان همین‌جا در دسترس‌اند." data-en="Your draft and published site are ready here.">پیش‌نویس و سایت منتشرشده‌تان همین‌جا در دسترس‌اند.</p>
+
+      <div id="error" class="status error hidden" role="alert"></div>
+
+      <div id="verificationBox" hidden>
+        <strong data-fa="تأیید ایمیل" data-en="Verify your email">تأیید ایمیل</strong>
+        <p class="muted" data-fa="کد شش‌رقمی ارسال‌شده به ایمیل‌تان را وارد کنید." data-en="Enter the six-digit code sent to your email.">کد شش‌رقمی ارسال‌شده به ایمیل‌تان را وارد کنید.</p>
+        <form id="verificationForm" class="form-stack">
+          <div class="field"><label for="verificationCode" data-fa="کد تأیید" data-en="Verification code">کد تأیید</label><input id="verificationCode" inputmode="numeric" autocomplete="one-time-code" pattern="[0-9۰-۹٠-٩]{6}" maxlength="6" required></div>
+          <button class="btn btn-primary" id="verifySubmit" data-fa="تأیید و ورود" data-en="Verify and sign in">تأیید و ورود</button>
+        </form>
+        <button class="btn" id="resendVerification" type="button" style="width:100%;margin-top:10px" data-fa="ارسال دوباره کد" data-en="Resend code">ارسال دوباره کد</button>
+        <p id="resendCountdown" class="muted" style="margin:8px 0 0;text-align:center;font-size:13px" hidden></p>
+      </div>
+
+      <form id="form" class="form-stack">
+        <div class="field">
+          <label for="email" data-fa="ایمیل" data-en="Email">ایمیل</label>
+          <input id="email" type="email" autocomplete="email" required>
+        </div>
+        <div class="field">
+          <label for="password" data-fa="رمز عبور" data-en="Password">رمز عبور</label>
+          <input id="password" type="password" autocomplete="current-password" required>
+        </div>
+        <button class="btn btn-primary" id="submit" data-fa="ورود" data-en="Log in">ورود</button>
+      </form>
+
+      <p class="auth-note">
+        <span data-fa="حساب ندارید؟" data-en="No account yet?">حساب ندارید؟</span>
+        <a class="auth-link" href="signup.html" data-fa="شروع آزمایشی {{trialDays}} روزه" data-en="Start your {{trialDays}}-day trial">شروع آزمایشی 3 روزه</a>
+      </p>
+      <p class="auth-note"><a class="auth-link" href="forgot-password.html" data-fa="رمز عبور را فراموش کرده‌اید؟" data-en="Forgot your password?">رمز عبور را فراموش کرده‌اید؟</a></p>
+    </section>
+  </main>
+  <div id="mailNotice" hidden role="status" aria-live="polite"></div>
+
+  <footer style="padding:0 24px 40px;">
+    <div style="max-width:900px;margin:0 auto;padding-top:16px;border-top:1px solid var(--line);display:flex;flex-wrap:wrap;justify-content:space-between;align-items:center;gap:12px;color:var(--muted);font-size:14px;">
+      <span>© <span id="footerYear">2026</span> I’m This</span>
+      <div style="display:flex;flex-wrap:wrap;gap:16px;">
+        <a href="contact.html" data-fa="تماس" data-en="Contact" style="color:var(--brand);font-weight:800;text-decoration:none;">تماس</a>
+        <a href="cookies.html" data-fa="کوکی‌ها" data-en="Cookies" style="color:var(--brand);font-weight:800;text-decoration:none;">کوکی‌ها</a>
+        <a href="privacy.html" data-fa="حریم خصوصی" data-en="Privacy" style="color:var(--brand);font-weight:800;text-decoration:none;">حریم خصوصی</a>
+        <a href="terms.html" data-fa="قوانین" data-en="Terms" style="color:var(--brand);font-weight:800;text-decoration:none;">قوانین</a>
+      </div>
+    </div>
+  </footer>
+
+  <script src="site-config.js?v=20260713h"></script>
+  <script src="i18n.js?v=20260710b"></script>
+  <script src="dropcv-api.js?v=20260713g"></script>
+  <script>document.getElementById('footerYear').textContent = new Date().getFullYear();</script>
+  <script>
+    function getDashboardUrl(plan) {
+      if (window.dropCVApi && typeof window.dropCVApi.getDashboardUrl === 'function') {
+        return window.dropCVApi.getDashboardUrl(plan);
+      }
+
+      return 'dashboard.html';
+    }
+
+    function getPostLoginUrl(plan) {
+      var next = '';
+      try {
+        next = new URLSearchParams(window.location.search).get('next') || '';
+      } catch (error) {}
+      // Only allow local destinations so the login redirect cannot become an
+      // open redirect. Canonical clean URLs also avoid an unnecessary .html
+      // redirect after authentication.
+      var destinations = {
+        admin: '/admin',
+        'admin.html': '/admin',
+        dashboard: '/dashboard',
+        'dashboard.html': '/dashboard',
+        'dashboard-standard.html': '/dashboard',
+        'dashboard-premium.html': '/dashboard'
+      };
+      if (destinations[next.toLowerCase()]) return destinations[next.toLowerCase()];
+      return getDashboardUrl(plan);
+    }
+
+    function markRecentAuth(reason) {
+      try {
+        window.sessionStorage.setItem(
+          'dropcv_recent_auth',
+          JSON.stringify({ at: Date.now(), reason: reason || 'auth' })
+        );
+      } catch (error) {}
+    }
+
+    (async function redirectIfAlreadySignedIn() {
+      try {
+        var currentUser = await dropCVApi.getCurrentUser();
+        if (currentUser) {
+          location.replace(getPostLoginUrl(currentUser.plan));
+        }
+      } catch (error) {}
+    })();
+
+    (function setupVerificationMode() {
+      var emailInput = document.getElementById('email');
+      var passwordField = document.getElementById('password').closest('.field');
+      var submitButton = document.getElementById('submit');
+      var verificationBox = document.getElementById('verificationBox');
+      var verificationForm = document.getElementById('verificationForm');
+      var resendButton = document.getElementById('resendVerification');
+      var resendCountdown = document.getElementById('resendCountdown');
+      var resendTimer = null;
+      var enabled = false;
+
+      function enableVerificationMode(email, lockEmail) {
+        if (email) emailInput.value = email;
+        emailInput.readOnly = Boolean(lockEmail);
+        passwordField.hidden = true;
+        submitButton.hidden = true;
+        verificationBox.hidden = false;
+        document.getElementById('verificationCode').focus();
+      }
+
+      function showMailNotice(message, isError) {
+        var notice = document.getElementById('mailNotice');
+        notice.textContent = message;
+        notice.className = isError ? 'error' : '';
+        notice.hidden = false;
+        window.clearTimeout(window.__dropcvMailNoticeTimer);
+        window.__dropcvMailNoticeTimer = window.setTimeout(function () { notice.hidden = true; }, 7000);
+      }
+
+      function cooldownKey() { return 'dropcv_verify_resend_until:' + String(emailInput.value || '').trim().toLowerCase(); }
+      function renderCooldown() {
+        var remaining = Math.max(0, Number(window.__dropcvVerifyResendUntil || 0) - Date.now());
+        if (!remaining) {
+          resendButton.disabled = false;
+          resendCountdown.hidden = true;
+          if (resendTimer) window.clearInterval(resendTimer);
+          return;
+        }
+        resendButton.disabled = true;
+        var totalSeconds = Math.ceil(remaining / 1000);
+        var minutes = Math.floor(totalSeconds / 60);
+        var seconds = String(totalSeconds % 60).padStart(2, '0');
+        resendCountdown.textContent = 'ارسال کد جدید تا ' + minutes + ':' + seconds;
+        resendCountdown.hidden = false;
+      }
+      function startCooldown() {
+        window.__dropcvVerifyResendUntil = Date.now() + 2 * 60 * 1000;
+        try { sessionStorage.setItem(cooldownKey(), String(window.__dropcvVerifyResendUntil)); } catch (error) {}
+        renderCooldown();
+        if (resendTimer) window.clearInterval(resendTimer);
+        resendTimer = window.setInterval(renderCooldown, 1000);
+      }
+      function restoreCooldown() {
+        try { window.__dropcvVerifyResendUntil = Number(sessionStorage.getItem(cooldownKey()) || 0); } catch (error) {}
+        if (window.__dropcvVerifyResendUntil > Date.now()) {
+          renderCooldown();
+          resendTimer = window.setInterval(renderCooldown, 1000);
+        }
+      }
+
+      // Expose the same mode switch to the normal login flow. This is what
+      // lets a user recover after closing the original verification URL.
+      window.__dropcvEnableVerification = enableVerificationMode;
+
+      verificationForm.addEventListener('submit', async function (e) {
+        e.preventDefault();
+        var r = await dropCVApi.verifyEmail(emailInput.value, document.getElementById('verificationCode').value);
+        var box = document.getElementById('error');
+        if (r.ok) { markRecentAuth('verify-email'); location.replace(getPostLoginUrl(r.data && r.data.user && r.data.user.plan)); return; }
+        box.textContent = r.error || 'کد تأیید معتبر نیست.'; box.classList.remove('hidden');
+      });
+
+      resendButton.addEventListener('click', async function () {
+        resendButton.disabled = true;
+        var r = await dropCVApi.resendVerification(emailInput.value);
+        var box = document.getElementById('error');
+        resendButton.disabled = false;
+        if (r.ok) {
+          var to = (r.data && r.data.to) || emailInput.value;
+          var from = (r.data && r.data.from) || 'support@imthis.site';
+          showMailNotice('ایمیل کد تأیید به ' + to + ' از آدرس ' + from + ' ارسال شد.');
+          startCooldown();
+          box.classList.add('hidden');
+        } else {
+          var resendError = r.status === 429
+            ? 'برای جلوگیری از ارسال‌های تکراری، لطفاً یک دقیقه صبر کنید و سپس دوباره تلاش کنید.'
+            : (r.error || 'ارسال ایمیل انجام نشد.');
+          showMailNotice(resendError, true);
+          box.textContent = resendError;
+          box.classList.remove('hidden');
+        }
+      });
+
+      var params = new URLSearchParams(window.location.search);
+      if (params.get('verify') !== '1') return;
+      var email = params.get('email') || '';
+      enableVerificationMode(email, Boolean(email));
+      restoreCooldown();
+      try {
+        if (!sessionStorage.getItem(cooldownKey())) startCooldown();
+      } catch (error) {
+        startCooldown();
+      }
+
+    })();
+
+    document.getElementById('form').addEventListener('submit', async function (e) {
+      e.preventDefault();
+
+      var submitButton = document.getElementById('submit');
+      var errorBox = document.getElementById('error');
+      var initialLabel = submitButton.textContent;
+
+      submitButton.disabled = true;
+      submitButton.textContent = window.dropCVI18n && window.dropCVI18n.get() === 'fa' ? 'در حال ورود…' : 'Signing in…';
+      errorBox.classList.add('hidden');
+
+      var response = await dropCVApi.login(
+        document.getElementById('email').value,
+        document.getElementById('password').value
+      );
+
+      submitButton.disabled = false;
+      submitButton.textContent = initialLabel;
+
+      if (response.ok) {
+        markRecentAuth('login');
+        location.replace(getPostLoginUrl(response.data && response.data.user && response.data.user.plan));
+        return;
+      }
+
+      // An unverified account must never become a dead end. The API returns
+      // field=email for this case; switch this same page into verification
+      // mode so the user can enter or resend the code even after leaving the
+      // original verification URL.
+      if (response.status === 403 && response.data && response.data.field === 'email') {
+        document.getElementById('error').textContent = 'ایمیل شما هنوز تأیید نشده است. کد را وارد کنید یا دوباره ارسال کنید.';
+        document.getElementById('error').classList.remove('hidden');
+        if (window.__dropcvEnableVerification) {
+          window.__dropcvEnableVerification(document.getElementById('email').value, false);
+        }
+        return;
+      }
+
+      errorBox.textContent = response.error || (window.dropCVI18n && window.dropCVI18n.get() === 'fa' ? 'ورود انجام نشد.' : 'Login failed.');
+      errorBox.classList.remove('hidden');
+    });
+  </script>
+</body>
+</html>

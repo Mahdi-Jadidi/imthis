@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>سیاست کوکی‌ها — I’m This</title>
+  <link rel="icon" href="/logo.svg" type="image/svg+xml" />
+  <link rel="stylesheet" href="design-system.css" />
+  <style>
+    body {
+      margin: 0;
+      font-family: Inter, system-ui, sans-serif;
+      color: var(--text-primary);
+      background: var(--bg-page);
+    }
+    .page-shell {
+      max-width: 840px;
+      margin: 0 auto;
+      padding: 56px 24px 80px;
+    }
+    .top-link {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      color: var(--color-teal-700);
+      text-decoration: none;
+      font-weight: 600;
+      margin-bottom: 32px;
+    }
+    h1 {
+      font-size: clamp(36px, 5vw, 56px);
+      line-height: 1.05;
+      letter-spacing: -0.04em;
+      margin: 0 0 16px;
+    }
+    .lede {
+      font-size: 18px;
+      line-height: 1.7;
+      color: var(--text-secondary);
+      margin: 0 0 32px;
+    }
+    .card {
+      background: var(--surface);
+      border: 1px solid var(--line);
+      border-radius: 24px;
+      padding: 32px;
+      box-shadow: 0 18px 40px rgba(15, 55, 45, 0.05);
+    }
+    h2 {
+      margin: 0 0 12px;
+      font-size: 24px;
+    }
+    p, li {
+      line-height: 1.7;
+      color: var(--text-secondary);
+      font-size: 16px;
+    }
+    ul {
+      margin: 0 0 24px 20px;
+      padding: 0;
+    }
+    code {
+      padding: 2px 6px;
+      border-radius: 6px;
+      background: #eef5f1;
+      color: var(--text-primary);
+      font-size: 0.95em;
+    }
+    .footer-note {
+      margin-top: 28px;
+      font-size: 14px;
+      color: var(--text-tertiary);
+    }
+    footer {
+      padding: 0 24px 80px;
+    }
+    .page-footer {
+      max-width: 840px;
+      margin: 0 auto;
+      padding-top: 18px;
+      border-top: 1px solid var(--line);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      flex-wrap: wrap;
+      font-size: 14px;
+      color: var(--text-tertiary);
+    }
+    .footer-links {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 16px;
+    }
+    .footer-links a {
+      color: var(--color-teal-700);
+      text-decoration: none;
+      font-weight: 600;
+    }
+  </style>
+  <link rel="stylesheet" href="theme.css">
+  <script src="theme.js" defer></script>
+</head>
+<body>
+  <main class="page-shell">
+    <a class="top-link" href="index.html">← بازگشت به I’m This</a>
+    <h1>Cookie Policy</h1>
+    <p class="lede">This page explains the cookies and browser storage we use, and why they matter to your account and draft data.</p>
+
+    <section class="card">
+      <h2>Authentication</h2>
+      <p>We set the <code>dropcv_token</code> cookie when you sign in or create an account. It keeps your session active and is marked httpOnly so the browser can send it to the server without exposing it to page scripts.</p>
+
+      <h2>Device storage</h2>
+      <p>We store <code>dropcv_lang</code> in local storage to remember your language choice and <code>dropCV_deployment</code> to remember the current draft state in the dashboard.</p>
+
+      <h2>Analytics and third parties</h2>
+      <p>We do not use advertising cookies. Some pages load third-party services for fonts, payments, or optional integrations, and those services may set their own cookies or receive technical data according to their own policies.</p>
+
+      <h2>Managing preferences</h2>
+      <p>You can clear cookies and site data from your browser settings at any time. If you block cookies entirely, sign-in will not work because the service depends on the auth cookie.</p>
+
+      <h2>Contact</h2>
+      <p>If you have a question about cookies or browser storage, <a href="contact.html">contact us</a> or email <a href="mailto:support@imthis.site">support@imthis.site</a>.</p>
+
+      <p class="footer-note">Effective date: July 2, 2026</p>
+    </section>
+  </main>
+
+  <footer>
+    <div class="page-footer">
+      <span>© <span id="footerYear">2026</span> I’m This</span>
+      <div class="footer-links">
+        <a href="contact.html">Contact</a>
+        <a href="privacy.html">Privacy</a>
+        <a href="terms.html">Terms</a>
+      </div>
+    </div>
+  </footer>
+  <script>document.getElementById('footerYear').textContent = new Date().getFullYear();</script>
+</body>
+</html>
