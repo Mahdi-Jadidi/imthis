@@ -155,12 +155,10 @@
         show("new-site");
       };
       document.getElementById("public-link-card").innerHTML =
-        "<p>" +
-        text(
-          "پس از آنلاین شدن سایت، لینک قابل اشتراک شما اینجا نمایش داده می‌شود.",
-          "Your shareable link will appear here when your site is online.",
-        ) +
-        "</p>";
+        "<h2>" + text("لینک تو بعد از انتشار اینجا آماده می‌شود", "Your link will be ready here after publishing") + "</h2><p>" +
+        text("اول سایتت را بساز یا آپلود کن؛ بعد می‌توانی لینک نهایی را کپی و به اشتراک بگذاری.", "Build or upload your site first, then copy and share the final link.") +
+        '</p><button class="primary" id="public-create-site">' + text("ساخت سایت", "Create site") + "</button>";
+      document.getElementById("public-create-site").onclick = function () { show("new-site"); };
       return;
     }
 
@@ -251,12 +249,12 @@
         '" target="_blank" rel="noopener">' +
         text("باز کردن", "Open") +
         "</a></div>"
-      : "<p>" +
+      : "<h2>" + text("لینک تو بعد از انتشار اینجا آماده می‌شود", "Your link will be ready here after publishing") + "</h2><p>" +
         text(
           "هنوز لینک عمومی ندارید. ابتدا یک سایت اضافه کنید.",
           "You do not have a public link yet. Add a site first.",
         ) +
-        "</p>";
+        '</p><button class="primary" id="public-create-site">' + text("ساخت سایت", "Create site") + "</button>";
     var cp = document.getElementById("copy-public");
     if (cp)
       cp.onclick = function () {
@@ -264,6 +262,8 @@
           cp.textContent = text("کپی شد", "Copied");
         });
       };
+    var createPublicSite = document.getElementById("public-create-site");
+    if (createPublicSite) createPublicSite.onclick = function () { show("new-site"); };
 
     var host = document.getElementById("sites-content");
     if (!host) return;
@@ -329,6 +329,10 @@
     host.innerHTML = '<div class="skeleton"></div>';
     var result = await dropCVApi.getAnalyticsDashboard();
     if (!result.ok) {
+      if (result.status === 401 || result.status === 403) {
+        host.innerHTML = '<div class="analytics-locked"><span class="new-site-kicker">' + text("گزارش بازدید", "Visitor insights") + '</span><h2>' + text("بفهم چه کسانی صفحه‌ات را می‌بینند", "See how people find your page") + '</h2><p>' + text("بازدیدهای واقعی، منابع ورود و روند رشد را یک‌جا دنبال کن.", "Follow real visits, referral sources, and growth in one place.") + '</p><div class="metrics" aria-hidden="true"><div class="metric"><span>' + text("کل بازدید", "Total visits") + '</span><strong>—</strong></div><div class="metric"><span>' + text("بازدیدکننده یکتا", "Unique visitors") + '</span><strong>—</strong></div><div class="metric"><span>' + text("منابع ورود", "Sources") + '</span><strong>—</strong></div></div><a class="primary button-link" href="billing.html">' + text("دیدن امکانات پلن", "View plan features") + '</a></div>';
+        return;
+      }
       host.innerHTML =
         '<p class="error">' +
         escape(

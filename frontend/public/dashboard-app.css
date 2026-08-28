@@ -567,6 +567,15 @@ html[dir="ltr"] .sidebar {
     padding: 19px;
   }
 }
+
+.mobile-dock { display:none; }
+@media (max-width: 820px) {
+  .workspace { padding-bottom:84px; }
+  .mobile-dock { position:fixed; z-index:30; inset-inline:12px; bottom:12px; display:grid; grid-template-columns:repeat(4,1fr); gap:4px; padding:7px; border:1px solid var(--line); border-radius:22px; background:var(--glass-strong,rgba(255,255,255,.94)); box-shadow:0 12px 32px rgba(19,54,42,.18); backdrop-filter:blur(16px); }
+  .mobile-dock .nav { min-height:52px; display:grid; place-items:center; gap:1px; border:0; background:transparent; font-size:11px; }
+  .mobile-dock .nav svg { width:19px; height:19px; }
+  .mobile-dock .nav.active { background:var(--brand-soft); color:var(--brand); border-radius:14px; }
+}
 html[dir="ltr"] .sidebar {
   left: 0;
   right: auto;
