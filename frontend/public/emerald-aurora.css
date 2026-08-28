@@ -248,6 +248,7 @@ body > header .nav { min-height: 64px; padding-block: 8px; }
   grid-template-columns: minmax(280px, .9fr) minmax(420px, 540px);
   gap: clamp(30px, 6vw, 88px);
   align-items: center;
+  width: min(1180px, calc(100% - 32px)) !important;
   max-width: 1180px !important;
   padding-block: 52px !important;
 }
@@ -258,6 +259,7 @@ body > header .nav { min-height: 64px; padding-block: 8px; }
   display: grid;
   align-content: end;
   min-height: 600px;
+  max-height: 760px;
   padding: 44px;
   border: 1px solid var(--line);
   border-radius: var(--radius-hero);
@@ -344,8 +346,13 @@ body > header .nav { min-height: 64px; padding-block: 8px; }
 .trial-reminder { padding: 22px !important; }
 .trial-reminder strong { font-size: 19px; }
 .trial-reminder .trial-warning { color: var(--ink-secondary); }
-.setup-checklist { gap: 12px !important; }
+.setup-checklist {
+  display: grid !important;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 12px !important;
+}
 .setup-checklist > div { min-height: 76px; border: 1px solid var(--line) !important; border-radius: 18px !important; background: var(--surface) !important; }
+.setup-checklist > div { display: flex; align-items: center; gap: 12px; padding: 18px 20px; }
 .setup-checklist b { background: var(--brand-soft) !important; color: var(--brand-strong) !important; }
 .site-card, .site-row, .upload-card, .wizard { border-radius: var(--radius-card) !important; }
 .empty-site::before { content: ""; display: block; width: 120px; height: 76px; margin: 0 auto 18px; border: 1px solid var(--line); border-radius: 16px; background: linear-gradient(145deg, var(--brand-soft), var(--surface-solid)); box-shadow: 0 10px 28px rgba(19,54,42,.1); }
