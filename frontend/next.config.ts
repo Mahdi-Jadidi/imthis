@@ -60,6 +60,14 @@ const nextConfig: NextConfig = {
         headers: authNoStoreHeaders,
       },
       {
+        source: "/forgot-password",
+        headers: authNoStoreHeaders,
+      },
+      {
+        source: "/forgot-password.html",
+        headers: authNoStoreHeaders,
+      },
+      {
         source: "/signup",
         headers: authNoStoreHeaders,
       },
