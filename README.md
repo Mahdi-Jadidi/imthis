@@ -25,4 +25,4 @@ cd frontend && npm install && npm run dev
 cd backend && npm install && npm run dev
 ```
 
-See `frontend/DEPLOYMENT.md` for required production environment variables and the deployment checklist.
+See `frontend/DEPLOYMENT.md` for required production environment variables and the deployment checklist
