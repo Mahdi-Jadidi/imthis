@@ -63,6 +63,26 @@ html[data-theme="dark"] {
 html[data-theme="dark"] body,
 html[data-theme="dark"] .workspace,
 html[data-theme="dark"] main { background-color: var(--bg-canvas) !important; color: var(--ink) !important; }
+/* Keep the dark aurora continuous across the entire viewport.  Previously the
+   landing hero used a separate slab while the body exposed a darker strip at
+   the sides, which made the page look clipped on wide screens. */
+html[data-theme="dark"] {
+  background: var(--bg-canvas) !important;
+}
+html[data-theme="dark"] body {
+  background:
+    radial-gradient(circle at 88% 14%, color-mix(in srgb, var(--aurora-sky) 14%, transparent), transparent 38rem),
+    radial-gradient(circle at 8% 92%, color-mix(in srgb, var(--brand) 10%, transparent), transparent 34rem),
+    var(--bg-canvas) !important;
+}
+html[data-theme="dark"] main,
+html[data-theme="dark"] .hero {
+  background: transparent !important;
+}
+html[data-theme="dark"] .hero {
+  border-radius: 0 !important;
+  box-shadow: none !important;
+}
 html[data-theme="dark"] body > header,
 html[data-theme="dark"] .sidebar,
 html[data-theme="dark"] .topbar { background: var(--glass-strong) !important; border-color: var(--line) !important; }
@@ -382,6 +402,12 @@ body > header .nav { min-height: 64px; padding-block: 8px; }
 .danger-zone summary { cursor: pointer; color: var(--danger); font-weight: 800; }
 .danger-zone form { margin-block-start: 18px; }
 .mobile-more { display: none; }
+
+html[data-theme="dark"] .page .hero {
+  background: transparent !important;
+  border-radius: 0 !important;
+  box-shadow: none !important;
+}
 
 /* Billing */
 .billing-shell { max-width: 1180px !important; padding-block: 36px 72px !important; }
