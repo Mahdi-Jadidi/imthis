@@ -545,6 +545,34 @@
   }
   function setupSiteUpload() {
     var form = document.getElementById("site-upload-form");
+    var picker = form && form.querySelector(".file-picker");
+    var input = form && form.elements.site;
+    if (picker && input) {
+      ["dragenter", "dragover"].forEach(function (eventName) {
+        picker.addEventListener(eventName, function (event) {
+          event.preventDefault();
+          picker.classList.add("is-dragging");
+        });
+      });
+      ["dragleave", "drop"].forEach(function (eventName) {
+        picker.addEventListener(eventName, function (event) {
+          event.preventDefault();
+          picker.classList.remove("is-dragging");
+        });
+      });
+      picker.addEventListener("drop", function (event) {
+        var files = event.dataTransfer && event.dataTransfer.files;
+        if (!files || !files.length) return;
+        try {
+          var transfer = new DataTransfer();
+          Array.prototype.forEach.call(files, function (file) { transfer.items.add(file); });
+          input.files = transfer.files;
+        } catch (_) {
+          /* Browsers that do not allow assigning FileList still support click-to-select. */
+        }
+        input.dispatchEvent(new Event("change", { bubbles: true }));
+      });
+    }
     form.onsubmit = async function (event) {
       event.preventDefault();
       var out = document.getElementById("site-upload-result");
