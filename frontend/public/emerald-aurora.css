@@ -81,6 +81,7 @@ html[data-theme="dark"] .hero {
 }
 html[data-theme="dark"] .hero {
   border-radius: 0 !important;
+  border: 0 !important;
   box-shadow: none !important;
 }
 html[data-theme="dark"] body > header,
@@ -406,6 +407,7 @@ body > header .nav { min-height: 64px; padding-block: 8px; }
 html[data-theme="dark"] .page .hero {
   background: transparent !important;
   border-radius: 0 !important;
+  border: 0 !important;
   box-shadow: none !important;
 }
 
