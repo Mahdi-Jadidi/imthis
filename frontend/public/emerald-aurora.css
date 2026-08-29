@@ -186,6 +186,7 @@ body > header .nav { min-height: 64px; padding-block: 8px; }
   animation: aurora-drift 14s var(--ease) infinite alternate;
 }
 .hero h1 { max-width: 760px; margin: 12px 0 20px; font-size: clamp(42px, 6.6vw, 78px) !important; }
+.hero > * { min-width: 0; }
 .hero-copy { max-width: 670px; color: var(--ink-secondary) !important; font-size: clamp(17px, 2vw, 20px) !important; }
 .hero-actions { display: flex; flex-wrap: wrap; gap: 12px; }
 .hero-actions .btn { min-height: 50px; padding-inline: 24px; }
@@ -202,6 +203,11 @@ body > header .nav { min-height: 64px; padding-block: 8px; }
   backdrop-filter: blur(22px) saturate(135%);
   -webkit-backdrop-filter: blur(22px) saturate(135%);
 }
+.domain-search-box { gap: 10px; }
+.domain-search-box input,
+.domain-suffix,
+.domain-search-box .btn { border-radius: var(--radius-control) !important; }
+.domain-suffix { border: 1px solid var(--line) !important; min-height: 52px; }
 .trust-strip {
   border: 1px solid var(--line);
   border-radius: var(--radius-card);
@@ -252,6 +258,7 @@ body > header .nav { min-height: 64px; padding-block: 8px; }
   max-width: 1180px !important;
   padding-block: 52px !important;
 }
+.auth-shell-login > * { min-width: 0; }
 .auth-shell-login::before,
 .flow::before {
   content: "Everything you are, in one link.";
@@ -444,6 +451,7 @@ body > header .nav { min-height: 64px; padding-block: 8px; }
   .hero-actions .btn { width: 100%; }
   .domain-search-box { display: grid !important; grid-template-columns: 1fr auto; }
   .domain-search-box .btn { grid-column: 1 / -1; width: 100%; }
+  .domain-search-box input, .domain-suffix { min-width: 0; }
   .product-preview { padding: 18px; }
   .profile-body { grid-template-columns: 64px 1fr; padding: 20px; }
   .profile-avatar { width: 64px; height: 64px; border-radius: 20px; }
