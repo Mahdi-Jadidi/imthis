@@ -67,13 +67,13 @@ html[data-theme="dark"] main { background-color: var(--bg-canvas) !important; co
    landing hero used a separate slab while the body exposed a darker strip at
    the sides, which made the page look clipped on wide screens. */
 html[data-theme="dark"] {
-  background: var(--bg-canvas) !important;
+  background: #0b1017 !important;
 }
 html[data-theme="dark"] body {
   background:
-    radial-gradient(circle at 88% 14%, color-mix(in srgb, var(--aurora-sky) 14%, transparent), transparent 38rem),
-    radial-gradient(circle at 8% 92%, color-mix(in srgb, var(--brand) 10%, transparent), transparent 34rem),
-    var(--bg-canvas) !important;
+    radial-gradient(circle at 88% 14%, rgba(54, 196, 155, .12), transparent 38rem),
+    radial-gradient(circle at 8% 92%, rgba(35, 105, 122, .14), transparent 34rem),
+    #0b1017 !important;
 }
 html[data-theme="dark"] main,
 html[data-theme="dark"] .hero {
