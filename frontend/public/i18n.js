@@ -1,5 +1,5 @@
 (function () {
-  var lang = localStorage.getItem('dropcv_lang') || 'fa';
+  var lang = localStorage.getItem('dropcv_language') || localStorage.getItem('dropcv_lang') || 'fa';
   var faDigits = ['۰', '۱', '۲', '۳', '۴', '۵', '۶', '۷', '۸', '۹'];
 
   function getTrialDays() {
@@ -65,6 +65,7 @@
     },
     toggle: function () {
       lang = lang === 'fa' ? 'en' : 'fa';
+      localStorage.setItem('dropcv_language', lang);
       localStorage.setItem('dropcv_lang', lang);
       apply();
     },

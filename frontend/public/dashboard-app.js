@@ -4,7 +4,7 @@
     user: null,
     siteRequests: [],
     sites: [],
-    language: localStorage.getItem("dropcv_language") || "fa",
+    language: localStorage.getItem("dropcv_language") || localStorage.getItem("dropcv_lang") || "fa",
     upload: null,
   };
   var icons = {
