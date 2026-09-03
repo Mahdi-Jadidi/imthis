@@ -8,6 +8,7 @@ const { uploadFile, deleteFile } = require('../config/minio');
 const env = require('../config/env');
 const { generateHTML } = require('./parseService');
 const { UploadError } = require('./uploadService');
+const { sanitizeSafeStaticHtml, scanStaticFile } = require('./staticSiteSecurity');
 
 const SITE_MAX_BYTES = 25 * 1024 * 1024;
 const SITE_MAX_FILES = 24;
@@ -112,52 +113,6 @@ function sanitizeGeneratedHtml(value) {
     .replace(/<base\b[^>]*>/gi, '')
     .replace(/\son[a-z0-9_-]+\s*=\s*(?:"[^"]*"|'[^']*'|[^\s>]+)/gi, '')
     .replace(/\s(?:href|src|action|formaction)\s*=\s*(?:"\s*javascript:[^"]*"|'\s*javascript:[^']*'|\s*javascript:[^\s>]+)/gi, '');
-}
-
-function sanitizeSafeStaticHtml(value) {
-  return String(value || '')
-    .replace(/<iframe\b[^>]*>[\s\S]*?<\/iframe\s*>/gi, '')
-    .replace(/<iframe\b[^>]*\/?\s*>/gi, '')
-    .replace(/<object\b[^>]*>[\s\S]*?<\/object\s*>/gi, '')
-    .replace(/<object\b[^>]*\/?\s*>/gi, '')
-    .replace(/<embed\b[^>]*>/gi, '')
-    .replace(/<form\b[^>]*>[\s\S]*?<\/form\s*>/gi, '')
-    .replace(/<form\b[^>]*\/?\s*>/gi, '')
-    .replace(/<\/form\s*>/gi, '')
-    .replace(/<meta\b[^>]*http-equiv\s*=\s*["']?refresh["']?[^>]*>/gi, '')
-    .replace(/<base\b[^>]*>/gi, '')
-    .replace(/<script\b(?![^>]*\bsrc\s*=\s*["'][^"']+\.(?:js)(?:\?[^"']*)?["'])[^>]*>[\s\S]*?<\/script\s*>/gi, '')
-    .replace(/<script\b(?![^>]*\bsrc\s*=\s*["'][^"']+\.(?:js)(?:\?[^"']*)?["'])[^>]*\/?\s*>/gi, '')
-    .replace(/\son[a-z0-9_-]+\s*=\s*(?:"[^"]*"|'[^']*'|[^\s>]+)/gi, '')
-    .replace(/\s(?:href|src|action|formaction)\s*=\s*(?:"\s*(?:javascript:|https?:|data:text\/html|\/\/)[^"]*"|'\s*(?:javascript:|https?:|data:text\/html|\/\/)[^']*'|\s*(?:javascript:|https?:|data:text\/html|\/\/)[^\s>]+)/gi, '');
-}
-
-function scanStaticFile(file) {
-  const extension = file.extension;
-  if (!SAFE_GENERATED_EXTENSIONS.has(extension)) return 'unsupported file type';
-  if (!isTextLikeExtension(extension) && extension !== '.css') return null;
-  const text = file.buffer.toString('utf8');
-  if (text.includes('\u0000')) return 'binary content in a text file';
-  const checks = extension === '.js'
-    ? [
-      [/\beval\s*\(/i, 'eval'],
-      [/\bnew\s+Function\s*\(/i, 'dynamic code execution'],
-      [/document\s*\.\s*cookie/i, 'cookie access'],
-      [/\b(?:localStorage|sessionStorage)\s*\./i, 'browser storage access'],
-      [/\b(?:fetch|XMLHttpRequest|WebSocket|EventSource|sendBeacon)\s*\(/i, 'network exfiltration'],
-      [/(?:window\.)?location\s*(?:=|\.|\[)/i, 'forced navigation'],
-      [/https?:\/\/[^\s"'`]+/i, 'external network URL'],
-    ]
-    : [
-      [/<input\b[^>]*type\s*=\s*["']?password/i, 'password collection'],
-      [/<form\b/i, 'forms are not allowed'],
-      [/<iframe\b|<object\b|<embed\b/i, 'embedded content'],
-      [/javascript\s*:/i, 'javascript URL'],
-      [/\son[a-z0-9_-]+\s*=/i, 'inline event handler'],
-      [/https?:\/\/[^\s"'`]+/i, 'external URL'],
-    ];
-  const match = checks.find(([pattern]) => pattern.test(text));
-  return match ? match[1] : null;
 }
 
 function reviewStaticBundle(files) {
