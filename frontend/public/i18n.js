@@ -26,6 +26,7 @@
     document.documentElement.lang = lang;
     document.documentElement.dir = lang === 'fa' ? 'rtl' : 'ltr';
     document.documentElement.dataset.lang = lang;
+    document.documentElement.dataset.langReady = '1';
     document.documentElement.dataset.trialDays = String(trialDays);
     window.dropCVTrialDays = trialDays;
 

@@ -80,6 +80,7 @@
     localStorage.setItem("dropcv_language", state.language);
     document.documentElement.lang = state.language;
     document.documentElement.dir = state.language === "fa" ? "rtl" : "ltr";
+    document.documentElement.dataset.langReady = "1";
     document.querySelectorAll("[data-fa][data-en]").forEach(function (el) {
       el.textContent = el.getAttribute("data-" + state.language);
     });

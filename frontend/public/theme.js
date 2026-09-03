@@ -3,12 +3,11 @@
   var progressHideTimer;
 
   try {
-    var initialLanguage = localStorage.getItem("dropcv_language") || localStorage.getItem("dropcv_lang");
-    if (initialLanguage === "en" || initialLanguage === "fa") {
-      document.documentElement.lang = initialLanguage;
-      document.documentElement.dir = initialLanguage === "fa" ? "rtl" : "ltr";
-      document.documentElement.dataset.lang = initialLanguage;
-    }
+    var initialLanguage = localStorage.getItem("dropcv_language") || localStorage.getItem("dropcv_lang") || "fa";
+    document.documentElement.lang = initialLanguage === "en" ? "en" : "fa";
+    document.documentElement.dir = initialLanguage === "en" ? "ltr" : "rtl";
+    document.documentElement.dataset.lang = initialLanguage === "en" ? "en" : "fa";
+    document.documentElement.dataset.langReady = "0";
   } catch (_) {}
 
   function pendingRequests() {
@@ -102,11 +101,13 @@
     }
   });
   if (document.readyState === "loading") document.addEventListener("DOMContentLoaded", function () {
+    if (!window.dropCVI18n && !document.getElementById("app")) document.documentElement.dataset.langReady = "1";
     mountToggle();
     mountProgress();
     mountPageTransitions();
   });
   else {
+    if (!window.dropCVI18n && !document.getElementById("app")) document.documentElement.dataset.langReady = "1";
     mountToggle();
     mountProgress();
     mountPageTransitions();
