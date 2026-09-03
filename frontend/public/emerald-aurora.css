@@ -359,6 +359,7 @@ html[dir="ltr"] .sidebar { transform: none !important; inset-inline-start: 0; in
 }
 .workspace main { width: 100%; max-width: 1280px !important; padding: 36px clamp(20px, 4vw, 48px) 72px !important; background: transparent !important; }
 #site-card { margin-top: 24px !important; }
+.upload-card input[name="siteTitle"] { text-align: center; }
 .page-head h1, .hero h1 { font-size: clamp(32px, 4vw, 42px); }
 .page-head p, .hero p { color: var(--ink-secondary); }
 .page .hero {

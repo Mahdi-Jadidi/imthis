@@ -558,6 +558,14 @@
     var picker = form && form.querySelector(".file-picker");
     var input = form && form.elements.site;
     if (picker && input) {
+      input.addEventListener("change", function () {
+        var copy = picker.querySelector(".file-picker-copy");
+        if (!copy) return;
+        var names = Array.prototype.map.call(input.files || [], function (file) { return file.name; });
+        copy.textContent = names.length
+          ? (names.length === 1 ? names[0] : names.length + " فایل انتخاب شد")
+          : copy.getAttribute("data-" + state.language) || "Drop files here or click to choose";
+      });
       ["dragenter", "dragover"].forEach(function (eventName) {
         picker.addEventListener(eventName, function (event) {
           event.preventDefault();
