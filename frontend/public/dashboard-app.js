@@ -561,11 +561,19 @@
     if (picker && input) {
       input.addEventListener("change", function () {
         var copy = picker.querySelector(".file-picker-copy");
-        if (!copy) return;
+        var list = picker.querySelector(".file-picker-files");
         var names = Array.prototype.map.call(input.files || [], function (file) { return file.name; });
-        copy.textContent = names.length
-          ? (names.length === 1 ? names[0] : names.length + " فایل انتخاب شد")
-          : copy.getAttribute("data-" + state.language) || "Drop files here or click to choose";
+        if (copy) copy.textContent = copy.getAttribute("data-" + state.language) || "Drop files here or click to choose";
+        if (list) {
+          list.replaceChildren();
+          names.forEach(function (name) {
+            var chip = document.createElement("span");
+            chip.className = "file-picker-file";
+            chip.textContent = name;
+            list.appendChild(chip);
+          });
+          list.hidden = !names.length;
+        }
       });
       ["dragenter", "dragover"].forEach(function (eventName) {
         picker.addEventListener(eventName, function (event) {

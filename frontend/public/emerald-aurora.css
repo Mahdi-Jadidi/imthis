@@ -401,7 +401,10 @@ html[dir="ltr"] .sidebar { transform: none !important; inset-inline-start: 0; in
   padding: 28px !important;
   border: 2px dashed color-mix(in srgb, var(--brand) 58%, var(--line)) !important;
   border-radius: 22px !important;
-  background: linear-gradient(145deg, color-mix(in srgb, var(--brand) 20%, var(--surface-solid)), var(--brand-soft)) !important;
+  background: linear-gradient(145deg, color-mix(in srgb, var(--brand) 18%, transparent), color-mix(in srgb, var(--surface-solid) 56%, transparent)) !important;
+  backdrop-filter: blur(18px) saturate(135%);
+  -webkit-backdrop-filter: blur(18px) saturate(135%);
+  box-shadow: inset 0 1px 0 rgba(255,255,255,.38), 0 18px 45px rgba(18,91,70,.1);
   color: var(--brand-strong);
   text-align: center;
   cursor: pointer;
@@ -412,6 +415,9 @@ html[dir="ltr"] .sidebar { transform: none !important; inset-inline-start: 0; in
 .file-picker-copy { display: grid; gap: 5px; font-size: 20px; font-weight: 850; pointer-events: none; }
 .file-picker-copy::before { content: "↥"; font-size: 42px; line-height: 1; }
 .file-picker small { pointer-events: none; }
+.file-picker-files { display: flex; flex-wrap: wrap; justify-content: center; gap: 8px; max-width: 100%; }
+.file-picker-files[hidden] { display: none; }
+.file-picker-file { max-width: 100%; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; padding: 7px 12px; border: 1px solid color-mix(in srgb, var(--brand) 32%, transparent); border-radius: 999px; background: color-mix(in srgb, var(--surface-solid) 72%, transparent); color: var(--brand-strong); font-size: 14px; font-weight: 750; }
 .wizard { max-width: 920px; margin-inline: auto; }
 .wizard-progress { height: 7px !important; border-radius: 999px; background: var(--bg-subtle); overflow: hidden; }
 .wizard-progress i { border-radius: 999px; background: transparent !important; }

@@ -132,7 +132,7 @@
                 <span class="new-site-kicker" data-fa="سایت آماده دارم" data-en="I have a site">سایت آماده دارم</span>
                 <h2 data-fa="فایل‌ها را آپلود و سایت را آنلاین کنید" data-en="Upload files and put your site online">فایل‌ها را آپلود و سایت را آنلاین کنید</h2>
                 <p data-fa="یک فایل ZIP یا فایل‌های HTML، CSS و JavaScript را انتخاب کنید. قبل از انتشار، فایل‌ها از نظر امنیتی بررسی می‌شوند و فقط محتوای امن آنلاین می‌شود." data-en="Choose a ZIP file or HTML, CSS, and JavaScript files. We scan everything for security before publishing and only safe content goes live.">یک فایل ZIP یا فایل‌های HTML، CSS و JavaScript را انتخاب کنید. قبل از انتشار، فایل‌ها از نظر امنیتی بررسی می‌شوند و فقط محتوای امن آنلاین می‌شود.</p>
-                <label class="file-picker"><span class="file-picker-copy" data-fa="فایل‌ها را اینجا رها کنید یا کلیک کنید" data-en="Drop files here or click to choose">فایل‌ها را اینجا رها کنید یا کلیک کنید</span><input name="site" type="file" multiple required accept=".zip,.html,.htm,.css,.js,application/zip,text/html,text/css,application/javascript" /><small data-fa="ZIP تا ۲۵ مگابایت؛ مجموع فایل‌ها تا ۵۰ مگابایت" data-en="ZIP up to 25 MB; total files up to 50 MB">ZIP تا ۲۵ مگابایت؛ مجموع فایل‌ها تا ۵۰ مگابایت</small></label>
+                <label class="file-picker"><span class="file-picker-copy" data-fa="فایل‌ها را اینجا رها کنید یا کلیک کنید" data-en="Drop files here or click to choose">فایل‌ها را اینجا رها کنید یا کلیک کنید</span><input name="site" type="file" multiple required accept=".zip,.html,.htm,.css,.js,application/zip,text/html,text/css,application/javascript" /><span class="file-picker-files" aria-live="polite"></span><small data-fa="ZIP تا ۲۵ مگابایت؛ مجموع فایل‌ها تا ۵۰ مگابایت" data-en="ZIP up to 25 MB; total files up to 50 MB">ZIP تا ۲۵ مگابایت؛ مجموع فایل‌ها تا ۵۰ مگابایت</small></label>
                 <label>نام سایت<input name="siteTitle" maxlength="160" placeholder="نمونه‌کار من" /></label>
                 <div class="actions"><button type="submit" class="primary">آپلود و آنلاین کردن سایت</button></div>
                 <div id="site-security-review" class="security-review" hidden aria-live="polite">
@@ -288,6 +288,6 @@
     <script src="dropcv-api.js"></script>
     <script src="dropcv-auth.js"></script>
     <script src="dropcv-upload.js"></script>
-    <script src="dashboard-app.js"></script>
+    <script src="dashboard-app.js?v=20260903-upload"></script>
   </body>
 </html>
