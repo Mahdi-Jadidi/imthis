@@ -29,12 +29,12 @@ function hashCode(purpose, email, code) {
     .digest('hex');
 }
 
-async function issueCode(purpose, email) {
+async function issueCode(purpose, email, options = {}) {
   const client = await connectRedis();
   const normalizedEmail = normalizeEmail(email);
   const recordKey = key(purpose, normalizedEmail);
   const cooldownKey = `${recordKey}:cooldown`;
-  if (await client.exists(cooldownKey)) {
+  if (!options.force && await client.exists(cooldownKey)) {
     const error = new Error('Please wait before requesting another code');
     error.statusCode = 429;
     throw error;

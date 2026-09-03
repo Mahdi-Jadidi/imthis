@@ -225,8 +225,11 @@
         passwordField.hidden = true;
         submitButton.hidden = true;
         verificationBox.hidden = false;
-        if (requestCode) requestVerificationCode();
-        else restoreOrStartCooldown();
+        if (requestCode) requestVerificationCode(requestCode === 'force');
+        else {
+          restoreOrStartCooldown();
+          showMailNotice('کد تأیید ارسال شد. ایمیل خود را بررسی کنید.');
+        }
         document.getElementById('verificationCode').focus();
       }
 
@@ -303,11 +306,11 @@
         box.textContent = r.error || 'کد تأیید معتبر نیست.'; box.classList.remove('hidden');
       });
 
-      async function requestVerificationCode() {
-        if (resendButton.disabled) return;
+      async function requestVerificationCode(force) {
+        if (resendButton.disabled && !force) return;
         resendButton.disabled = true;
         resendButton.setAttribute('aria-busy', 'true');
-        var r = await dropCVApi.resendVerification(emailInput.value);
+        var r = await dropCVApi.resendVerification(emailInput.value, Boolean(force));
         var box = document.getElementById('error');
         if (r.ok) {
           var to = (r.data && r.data.to) || emailInput.value;
@@ -392,7 +395,7 @@
           // This route may be reached long after the original registration.
           // Request a fresh code first; the server applies the authoritative
           // cooldown and the UI starts its matching timer from that response.
-          window.__dropcvEnableVerification(document.getElementById('email').value, false, true);
+          window.__dropcvEnableVerification(document.getElementById('email').value, false, 'force');
         }
         return;
       }

@@ -124,7 +124,7 @@ async function authRoutes(fastify) {
       const email = normalizeEmail(request.body?.email);
       const user = await getUserByEmail(email);
       if (user && !user.email_verified) {
-        const code = await issueCode('verify-email', email);
+        const code = await issueCode('verify-email', email, { force: request.body?.force === true });
         await sendVerificationCode({ email, code });
       }
       return reply.send({ success: true, message: 'If the account needs verification, a code has been sent.', to: email, from: env.smtp.from });

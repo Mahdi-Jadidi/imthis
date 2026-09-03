@@ -77,8 +77,8 @@ window.dropCVApi = {
   async verifyEmail(email, code) {
     return this.request('POST', '/api/auth/verify-email', { email, code });
   },
-  async resendVerification(email) {
-    return this.request('POST', '/api/auth/verify-email/resend', { email });
+  async resendVerification(email, force = false) {
+    return this.request('POST', '/api/auth/verify-email/resend', { email, force: Boolean(force) });
   },
   async requestPasswordReset(email) {
     return this.request('POST', '/api/auth/password-reset/request', { email });
