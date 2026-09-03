@@ -228,6 +228,7 @@ body > header .nav { min-height: 64px; padding-block: 8px; }
 .domain-search-box input,
 .domain-suffix,
 .domain-search-box .btn { border-radius: var(--radius-control) !important; }
+.domain-search-box input { text-align: center; }
 .domain-suffix { border: 1px solid var(--line) !important; min-height: 52px; }
 .trust-strip {
   border: 1px solid var(--line);
