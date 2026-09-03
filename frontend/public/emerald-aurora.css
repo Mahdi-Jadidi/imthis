@@ -224,10 +224,13 @@ body > header .nav { min-height: 64px; padding-block: 8px; }
   backdrop-filter: blur(22px) saturate(135%);
   -webkit-backdrop-filter: blur(22px) saturate(135%);
 }
-.domain-search-box { gap: 10px; }
+.domain-search-box { gap: 0; }
 .domain-search-box input,
 .domain-suffix,
 .domain-search-box .btn { border-radius: var(--radius-control) !important; }
+.domain-search-box input { border-radius: var(--radius-control) 0 0 var(--radius-control) !important; }
+.domain-search-box .domain-suffix { border-radius: 0 !important; border-left: 0 !important; }
+.domain-search-box .btn { border-radius: 0 var(--radius-control) var(--radius-control) 0 !important; }
 .domain-search-box input { text-align: center; }
 .domain-suffix { border: 1px solid var(--line) !important; min-height: 52px; }
 .trust-strip {
