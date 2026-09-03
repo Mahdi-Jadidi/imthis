@@ -289,8 +289,16 @@
 
       verificationForm.addEventListener('submit', async function (e) {
         e.preventDefault();
-        var r = await dropCVApi.verifyEmail(emailInput.value, document.getElementById('verificationCode').value);
         var box = document.getElementById('error');
+        // Email verification creates the authenticated session. Clear any
+        // previous account first so a shared browser cannot retain its cookie.
+        var clearedSession = await dropCVApi.logout();
+        if (!clearedSession.ok) {
+          box.textContent = 'نشست قبلی پاک نشد. دوباره تلاش کنید.';
+          box.classList.remove('hidden');
+          return;
+        }
+        var r = await dropCVApi.verifyEmail(emailInput.value, document.getElementById('verificationCode').value);
         if (r.ok) { markRecentAuth('verify-email'); location.replace(getPostLoginUrl(r.data && r.data.user && r.data.user.plan)); return; }
         box.textContent = r.error || 'کد تأیید معتبر نیست.'; box.classList.remove('hidden');
       });
