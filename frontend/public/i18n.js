@@ -70,6 +70,10 @@
     apply: apply
   };
 
+  // Apply before the first paint; waiting for DOMContentLoaded caused a
+  // visible Persian-to-English flash during navigation.
+  apply();
+
   document.addEventListener('DOMContentLoaded', function () {
     document.querySelectorAll('[data-lang-toggle]').forEach(function (el) {
       el.addEventListener('click', window.dropCVI18n.toggle);

@@ -2,6 +2,15 @@
   var storageKey = "dropcv-theme";
   var progressHideTimer;
 
+  try {
+    var initialLanguage = localStorage.getItem("dropcv_language") || localStorage.getItem("dropcv_lang");
+    if (initialLanguage === "en" || initialLanguage === "fa") {
+      document.documentElement.lang = initialLanguage;
+      document.documentElement.dir = initialLanguage === "fa" ? "rtl" : "ltr";
+      document.documentElement.dataset.lang = initialLanguage;
+    }
+  } catch (_) {}
+
   function pendingRequests() {
     return Number(window.__dropcvPendingRequests || 0);
   }

@@ -679,6 +679,9 @@
     };
   }
   async function init() {
+    // Render the remembered language immediately while the authenticated
+    // dashboard data is loading, avoiding a Persian flash for English users.
+    setLanguage(state.language);
     document.querySelectorAll("[data-icon]").forEach(function (el) {
       el.innerHTML = icons[el.dataset.icon] || "";
     });
