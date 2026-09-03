@@ -1,3 +1,17 @@
+@keyframes page-enter {
+  from { opacity: 0; transform: translateY(8px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+@keyframes page-exit {
+  from { opacity: 1; transform: translateY(0); }
+  to { opacity: 0; transform: translateY(-6px); }
+}
+body { animation: page-enter 420ms cubic-bezier(.22, 1, .36, 1) both; }
+body.page-leaving { animation: page-exit 220ms cubic-bezier(.4, 0, 1, 1) both; }
+@media (prefers-reduced-motion: reduce) {
+  body, body.page-leaving { animation: none !important; }
+}
+
 html[data-theme="dark"] {
   color-scheme: dark;
   --color-white: #17202b;

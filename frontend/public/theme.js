@@ -32,6 +32,22 @@
     setProgress(pendingRequests() > 0);
   }
 
+  function mountPageTransitions() {
+    document.addEventListener("click", function (event) {
+      if (event.defaultPrevented || event.button !== 0 || event.metaKey || event.ctrlKey || event.shiftKey || event.altKey) return;
+      var link = event.target.closest && event.target.closest("a");
+      if (!link || link.target === "_blank" || link.hasAttribute("download")) return;
+      var href = link.getAttribute("href") || "";
+      if (!href || href.charAt(0) === "#" || href.indexOf("mailto:") === 0 || href.indexOf("tel:") === 0) return;
+      var destination;
+      try { destination = new URL(href, window.location.href); } catch (_) { return; }
+      if (destination.origin !== window.location.origin) return;
+      event.preventDefault();
+      document.body.classList.add("page-leaving");
+      window.setTimeout(function () { window.location.href = destination.href; }, 220);
+    });
+  }
+
   function savedTheme() {
     try { return localStorage.getItem(storageKey); } catch (_) { return null; }
   }
@@ -79,9 +95,11 @@
   if (document.readyState === "loading") document.addEventListener("DOMContentLoaded", function () {
     mountToggle();
     mountProgress();
+    mountPageTransitions();
   });
   else {
     mountToggle();
     mountProgress();
+    mountPageTransitions();
   }
 })();
