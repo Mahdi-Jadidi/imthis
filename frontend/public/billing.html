@@ -318,19 +318,17 @@
           paymentsEnabled = false,
           renewalPayment = false,
           transferCountdownTimer = null;
-        function faNumber(value) {
-          return new Intl.NumberFormat("fa-IR").format(Number(value || 0));
-        }
+        function faNumber(value) { return String(Number(value || 0)); }
         function faDate(value) {
           return value
-            ? new Intl.DateTimeFormat("fa-IR", { dateStyle: "medium" }).format(
+            ? new Intl.DateTimeFormat("en-US", { dateStyle: "medium" }).format(
                 new Date(value),
               )
             : "—";
         }
         function faDateTime(value) {
           return value
-            ? new Intl.DateTimeFormat("fa-IR", { dateStyle: "medium", timeStyle: "short" }).format(new Date(value))
+            ? new Intl.DateTimeFormat("en-US", { dateStyle: "medium", timeStyle: "short" }).format(new Date(value))
             : "—";
         }
         function startTransferCountdown(expiresAt) {

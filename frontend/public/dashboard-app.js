@@ -83,6 +83,16 @@
     document.querySelectorAll("[data-fa][data-en]").forEach(function (el) {
       el.textContent = el.getAttribute("data-" + state.language);
     });
+    document.querySelectorAll("body *:not(script):not(style)").forEach(function (el) {
+      el.childNodes.forEach(function (node) {
+        if (node.nodeType !== 3) return;
+        node.nodeValue = node.nodeValue.replace(/[۰-۹٠-٩]/g, function (digit) {
+          var fa = "۰۱۲۳۴۵۶۷۸۹", ar = "٠١٢٣٤٥٦٧٨٩";
+          var index = fa.indexOf(digit);
+          return String(index >= 0 ? index : ar.indexOf(digit));
+        });
+      });
+    });
     var fieldCopy = {
       "site-upload-form": {
         site: ["فایل سایت", "Site files"],

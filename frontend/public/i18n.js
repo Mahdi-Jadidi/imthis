@@ -9,11 +9,7 @@
 
   function toLocalizedDigits(value, currentLang) {
     var text = String(value);
-    if (currentLang !== 'fa') return text;
-
-    return text.replace(/\d/g, function (digit) {
-      return faDigits[Number(digit)] || digit;
-    });
+    return text;
   }
 
   function replaceTokens(value, currentLang) {
@@ -45,6 +41,18 @@
       el.textContent = lang === 'fa' ? 'EN' : 'FA';
       el.setAttribute('aria-label', toggleLabel());
       el.setAttribute('title', toggleLabel());
+    });
+
+    // Keep all visible UI numerals in Latin form, including Persian copy.
+    document.querySelectorAll('body *:not(script):not(style)').forEach(function (el) {
+      el.childNodes.forEach(function (node) {
+        if (node.nodeType !== 3) return;
+        node.nodeValue = node.nodeValue.replace(/[۰-۹٠-٩]/g, function (digit) {
+          var fa = '۰۱۲۳۴۵۶۷۸۹', ar = '٠١٢٣٤٥٦٧٨٩';
+          var index = fa.indexOf(digit);
+          return String(index >= 0 ? index : ar.indexOf(digit));
+        });
+      });
     });
 
     window.dispatchEvent(new CustomEvent('dropcv:language', { detail: { lang: lang } }));
