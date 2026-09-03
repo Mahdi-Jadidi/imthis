@@ -295,12 +295,7 @@
         var box = document.getElementById('error');
         // Email verification creates the authenticated session. Clear any
         // previous account first so a shared browser cannot retain its cookie.
-        var clearedSession = await dropCVApi.logout();
-        if (!clearedSession.ok) {
-          box.textContent = 'نشست قبلی پاک نشد. دوباره تلاش کنید.';
-          box.classList.remove('hidden');
-          return;
-        }
+        await dropCVApi.logout();
         var r = await dropCVApi.verifyEmail(emailInput.value, document.getElementById('verificationCode').value);
         if (r.ok) { markRecentAuth('verify-email'); location.replace(getPostLoginUrl(r.data && r.data.user && r.data.user.plan)); return; }
         box.textContent = r.error || 'کد تأیید معتبر نیست.'; box.classList.remove('hidden');
@@ -359,16 +354,7 @@
       // Explicitly retire any existing browser session before switching
       // accounts. This prevents a previous httpOnly cookie from keeping the
       // old account active when login is attempted on the same device.
-      var clearedSession = await dropCVApi.logout();
-      if (!clearedSession.ok) {
-        submitButton.disabled = false;
-        submitButton.textContent = initialLabel;
-        errorBox.textContent = window.dropCVI18n && window.dropCVI18n.get() === 'fa'
-          ? 'نشست قبلی پاک نشد. دوباره تلاش کنید.'
-          : 'The previous session could not be cleared. Please try again.';
-        errorBox.classList.remove('hidden');
-        return;
-      }
+      await dropCVApi.logout();
 
       var response = await dropCVApi.login(
         document.getElementById('email').value,
