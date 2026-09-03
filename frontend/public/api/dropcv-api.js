@@ -77,6 +77,9 @@ window.dropCVApi = {
   async logout() {
     return this.request('POST', '/api/auth/logout');
   },
+  async refreshSession() {
+    return this.request('POST', '/api/auth/refresh');
+  },
   async getPlans() {
     return this.request('GET', '/api/plans');
   },

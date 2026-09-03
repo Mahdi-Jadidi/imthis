@@ -310,7 +310,7 @@
       </section>
     </main>
     <script src="site-config.js"></script>
-    <script src="dropcv-api.js"></script>
+    <script src="dropcv-api.js?v=20260903-billing-session"></script>
     <script>
       (function () {
         var selectedPlan = null,
@@ -424,10 +424,24 @@
           }
           return raw || fallback;
         }
-        async function init() {
+        async function getAuthenticatedUser() {
           var me = await dropCVApi.getMe();
+          if (me.ok && me.data && me.data.user) return me;
+          if (me.status === 401 && typeof dropCVApi.refreshSession === "function") {
+            var refreshed = await dropCVApi.refreshSession();
+            if (refreshed.ok) me = await dropCVApi.getMe();
+          }
+          return me;
+        }
+        async function init() {
+          var me = await getAuthenticatedUser();
           if (!me.ok || !me.data || !me.data.user) {
-            location.replace("login.html?next=billing.html");
+            if (me.status === 401) {
+              location.replace("login.html?next=billing.html");
+              return;
+            }
+            document.getElementById("loading").textContent = "دریافت اطلاعات حساب ممکن نشد. لطفاً دوباره تلاش کنید.";
+            document.getElementById("loading").classList.add("status", "error");
             return;
           }
           user = me.data.user;
