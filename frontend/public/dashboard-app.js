@@ -407,6 +407,14 @@
   async function renderAnalytics() {
     var host = document.getElementById("analytics-content");
     if (!state.user || !host) return;
+    if (!Array.isArray(state.sites) || !state.sites.length) {
+      host.innerHTML = '<div class="card empty-site analytics-empty"><span class="empty-site-icon" aria-hidden="true">✦</span><h2>' +
+        text("هنوز سایتی ندارید", "You don’t have a site yet") + '</h2><p>' +
+        text("بعد از ساخت سایت، آمار بازدیدهایتان اینجا نمایش داده می‌شود.", "Your visit analytics will appear here after you create a site.") +
+        '</p><div class="actions"><button class="primary" id="analytics-empty-action">' + text("ساخت سایت", "Create a site") + '</button></div></div>';
+      document.getElementById("analytics-empty-action").onclick = function () { show("new-site"); };
+      return;
+    }
     host.innerHTML = '<div class="skeleton"></div>';
     var result = await dropCVApi.getAnalyticsDashboard();
     if (!result.ok) {
