@@ -350,12 +350,11 @@
     if (!host) return;
     var sites = Array.isArray(state.sites) ? state.sites : [];
     if (!sites.length) {
-      host.innerHTML = '<div class="card empty-site"><h2>' +
-        text("اولین صفحه‌ات را بساز", "Build your first page") + '</h2><p>' +
-        text("اطلاعاتت را بفرست یا یک سایت آماده را همین‌جا آنلاین کن.", "Send your information or publish a ready-made site here.") +
-        '</p><div class="actions"><button class="primary" id="sites-empty-action">' + text("ساخت سایت", "Build a site") + '</button><button class="secondary" id="sites-upload-action">' + text("سایت آماده دارم", "I have a ready site") + '</button></div></div>';
+      host.innerHTML = '<div class="card empty-site"><span class="empty-site-icon" aria-hidden="true">✦</span><h2>' +
+        text("هنوز سایتی ندارید", "You don’t have a site yet") + '</h2><p>' +
+        text("برای شروع، اولین سایت شخصی‌تان را بسازید.", "Start by creating your first personal site.") +
+        '</p><div class="actions"><button class="primary" id="sites-empty-action">' + text("ساخت سایت", "Create a site") + '</button></div></div>';
       document.getElementById("sites-empty-action").onclick = function () { show("new-site"); };
-      document.getElementById("sites-upload-action").onclick = function () { show("new-site"); document.querySelector('[data-path="upload"]').click(); };
       return;
     }
     host.innerHTML = sites.map(function (site) {

@@ -387,7 +387,8 @@ html[dir="ltr"] .sidebar { transform: none !important; inset-inline-start: 0; in
 .setup-checklist > div { display: flex; align-items: center; gap: 12px; padding: 18px 20px; }
 .setup-checklist b { background: var(--brand-soft) !important; color: var(--brand-strong) !important; }
 .site-card, .site-row, .upload-card, .wizard { border-radius: var(--radius-card) !important; }
-.empty-site::before { content: ""; display: block; width: 120px; height: 76px; margin: 0 auto 18px; border: 1px solid var(--line); border-radius: 16px; background: linear-gradient(145deg, var(--brand-soft), var(--surface-solid)); box-shadow: 0 10px 28px rgba(19,54,42,.1); }
+.empty-site { text-align: center; background: linear-gradient(145deg, color-mix(in srgb, var(--surface-solid) 64%, transparent), color-mix(in srgb, var(--brand-soft) 75%, transparent)) !important; border: 1px solid color-mix(in srgb, var(--brand) 22%, var(--line)) !important; box-shadow: inset 0 1px 0 rgba(255,255,255,.4), 0 22px 60px rgba(25,83,68,.1) !important; backdrop-filter: blur(18px) saturate(130%); -webkit-backdrop-filter: blur(18px) saturate(130%); }
+.empty-site-icon { display: grid; place-items: center; width: 58px; height: 58px; margin: 0 auto 18px; border-radius: 18px; background: color-mix(in srgb, var(--brand) 18%, transparent); color: var(--brand-strong); font-size: 28px; }
 .aurora-paths { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 18px !important; }
 .path-card { min-height: 260px; padding: clamp(24px, 4vw, 36px) !important; text-align: start !important; }
 .path-card:hover { transform: translateY(-2px); border-color: color-mix(in srgb, var(--brand) 35%, transparent) !important; }
