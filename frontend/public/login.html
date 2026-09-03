@@ -345,6 +345,20 @@
       submitButton.textContent = window.dropCVI18n && window.dropCVI18n.get() === 'fa' ? 'در حال ورود…' : 'Signing in…';
       errorBox.classList.add('hidden');
 
+      // Explicitly retire any existing browser session before switching
+      // accounts. This prevents a previous httpOnly cookie from keeping the
+      // old account active when login is attempted on the same device.
+      var clearedSession = await dropCVApi.logout();
+      if (!clearedSession.ok) {
+        submitButton.disabled = false;
+        submitButton.textContent = initialLabel;
+        errorBox.textContent = window.dropCVI18n && window.dropCVI18n.get() === 'fa'
+          ? 'نشست قبلی پاک نشد. دوباره تلاش کنید.'
+          : 'The previous session could not be cleared. Please try again.';
+        errorBox.classList.remove('hidden');
+        return;
+      }
+
       var response = await dropCVApi.login(
         document.getElementById('email').value,
         document.getElementById('password').value
