@@ -158,7 +158,7 @@
 
   <script src="site-config.js?v=20260713h"></script>
   <script src="i18n.js?v=20260903-reload-lang"></script>
-  <script src="dropcv-api.js?v=20260713g"></script>
+  <script src="dropcv-api.js?v=20260904-session-manager"></script>
   <script>document.getElementById('footerYear').textContent = new Date().getFullYear();</script>
   <script>
     function getDashboardUrl(plan) {
@@ -293,9 +293,8 @@
       verificationForm.addEventListener('submit', async function (e) {
         e.preventDefault();
         var box = document.getElementById('error');
-        // Email verification creates the authenticated session. Clear any
-        // previous account first so a shared browser cannot retain its cookie.
-        await dropCVApi.logout();
+        // The server atomically replaces any previous session after the code
+        // succeeds, so a failed verification never destroys a valid login.
         var r = await dropCVApi.verifyEmail(emailInput.value, document.getElementById('verificationCode').value);
         if (r.ok) { markRecentAuth('verify-email'); location.replace(getPostLoginUrl(r.data && r.data.user && r.data.user.plan)); return; }
         box.textContent = r.error || 'کد تأیید معتبر نیست.'; box.classList.remove('hidden');
@@ -351,11 +350,8 @@
       submitButton.textContent = window.dropCVI18n && window.dropCVI18n.get() === 'fa' ? 'در حال ورود…' : 'Signing in…';
       errorBox.classList.add('hidden');
 
-      // Explicitly retire any existing browser session before switching
-      // accounts. This prevents a previous httpOnly cookie from keeping the
-      // old account active when login is attempted on the same device.
-      await dropCVApi.logout();
-
+      // The backend replaces and revokes the previous session only after
+      // credentials succeed. A failed login therefore cannot log the user out.
       var response = await dropCVApi.login(
         document.getElementById('email').value,
         document.getElementById('password').value

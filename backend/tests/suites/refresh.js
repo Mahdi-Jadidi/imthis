@@ -13,6 +13,7 @@ function includesText(value, text) {
 
 async function refreshSuite({ test }) {
   let passedCount = 0;
+  let preRefreshCookie = null;
 
   async function run(name, fn) {
     const result = await test(name, fn);
@@ -39,8 +40,9 @@ async function refreshSuite({ test }) {
 
   await run('TEST 3: Refresh professional session -> 200', async () => {
     assert(Boolean(context.professionalCookie), 'Expected professional cookie from auth suite');
+    preRefreshCookie = context.professionalCookie;
 
-    const response = await request('POST', '/api/auth/refresh', undefined, context.professionalCookie);
+    const response = await request('POST', '/api/auth/refresh', undefined, preRefreshCookie);
 
     assertStatus(response, 200, 'Refresh professional session');
     assert(response.body?.success === true, 'Expected success === true');
@@ -58,7 +60,12 @@ async function refreshSuite({ test }) {
     assert(response.body?.user?.plan === 'Standard', 'Expected /me to report Standard plan after refresh');
   });
 
-  await run('TEST 5: Refresh with revoked token -> 401', async () => {
+  await run('TEST 5: Refresh revokes the replaced cookie -> 401', async () => {
+    const response = await request('GET', '/api/auth/me', undefined, preRefreshCookie);
+    assertStatus(response, 401, 'Replaced pre-refresh cookie');
+  });
+
+  await run('TEST 6: Refresh with revoked token -> 401', async () => {
     // Register a throwaway user, log them out (which revokes the token in Redis),
     // then confirm refresh rejects the now-revoked cookie.
     const suffix = `${context.startTime}-refresh-revoked`;
@@ -91,11 +98,11 @@ async function refreshSuite({ test }) {
     assertStatus(response, 401, 'Refresh with revoked token');
   });
 
-  console.log(`Refresh suite: ${passedCount}/5 tests passed`);
+  console.log(`Refresh suite: ${passedCount}/6 tests passed`);
 }
 
 module.exports = refreshSuite;
-module.exports.expectedTests = 5;
+module.exports.expectedTests = 6;
 
 if (require.main === module) {
   const runner = createRunner();

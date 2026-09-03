@@ -1,5 +1,11 @@
 (function () {
   "use strict";
+  var sessionRedirecting = false;
+  window.addEventListener("dropcv:session-expired", function () {
+    if (sessionRedirecting) return;
+    sessionRedirecting = true;
+    location.replace("login.html?next=dashboard.html");
+  });
   var state = {
     user: null,
     siteRequests: [],

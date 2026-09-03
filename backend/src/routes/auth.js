@@ -5,55 +5,22 @@ const {
   checkSlugAvailability,
   getUserById,
   isTokenRevoked,
-  revokeToken,
   getUserByEmail,
   verifyEmail,
   assertValidPassword,
   resetPassword,
 } = require('../services/authService');
+const {
+  COOKIE_NAME,
+  clearSession,
+  replaceSession,
+  revokeSessionBestEffort,
+} = require('../services/sessionService');
 const requireAuth = require('../middleware/requireAuth');
 const rateLimiter = require('../middleware/rateLimiter');
 const env = require('../config/env');
 const { issueCode, verifyCode, normalizeEmail } = require('../services/authCodeService');
 const { sendVerificationCode, sendPasswordResetCode } = require('../services/mailService');
-
-const COOKIE_NAME = 'dropcv_token';
-const COOKIE_MAX_AGE_SECONDS = 7 * 24 * 60 * 60;
-
-function toJwtPayload(user) {
-  return {
-    userId: user.id,
-    email: user.email,
-    plan: user.plan,
-    userType: user.userType,
-  };
-}
-
-async function setAuthCookie(fastify, reply, user) {
-  const token = await fastify.jwt.sign(toJwtPayload(user));
-
-  const cookieOptions = {
-    httpOnly: true,
-    secure: env.nodeEnv === 'production',
-    sameSite: env.nodeEnv === 'production' ? 'none' : 'lax',
-    path: '/',
-    maxAge: COOKIE_MAX_AGE_SECONDS,
-  };
-  if (env.cookieDomain) cookieOptions.domain = env.cookieDomain;
-  reply.setCookie(COOKIE_NAME, token, cookieOptions);
-
-  return token;
-}
-
-function clearAuthCookie(reply) {
-  const cookieOptions = {
-    path: '/',
-    secure: env.nodeEnv === 'production',
-    sameSite: env.nodeEnv === 'production' ? 'none' : 'lax',
-  };
-  if (env.cookieDomain) cookieOptions.domain = env.cookieDomain;
-  reply.clearCookie(COOKIE_NAME, cookieOptions);
-}
 
 function sendError(reply, error) {
   if (error instanceof AuthError) {
@@ -113,7 +80,7 @@ async function authRoutes(fastify) {
     }
     const user = await verifyEmail(email);
     if (!user) return reply.code(404).send({ error: 'Account not found' });
-    await setAuthCookie(fastify, reply, user);
+    await replaceSession(fastify, request, reply, user);
     return reply.send({ success: true, user });
   });
 
@@ -174,7 +141,7 @@ async function authRoutes(fastify) {
   }, async function loginHandler(request, reply) {
     try {
       const user = await loginUser(request.body || {});
-      await setAuthCookie(fastify, reply, user);
+      await replaceSession(fastify, request, reply, user);
 
       return reply.send({
         success: true,
@@ -189,17 +156,10 @@ async function authRoutes(fastify) {
     preHandler: rateLimiter({ name: 'auth-logout', windowSeconds: 60, maxRequests: 30 }),
   }, async function logoutHandler(request, reply) {
     const token = request.cookies?.[COOKIE_NAME];
-
-    if (token) {
-      try {
-        const decodedToken = await fastify.jwt.verify(token);
-        await revokeToken(token, decodedToken);
-      } catch (error) {
-        // Invalid cookies are cleared without creating revocation records.
-      }
-    }
-
-    clearAuthCookie(reply);
+    // Clearing the browser cookie is unconditional; Redis availability must
+    // never prevent a user from signing out on this device.
+    clearSession(reply);
+    await revokeSessionBestEffort(fastify, token, request.log);
     return reply.send({ success: true });
   });
 
@@ -230,7 +190,7 @@ async function authRoutes(fastify) {
 
       const decoded = await fastify.jwt.verify(token);
       const user = await getUserById(decoded.userId);
-      await setAuthCookie(fastify, reply, user);
+      await replaceSession(fastify, request, reply, user);
 
       return reply.send({
         success: true,

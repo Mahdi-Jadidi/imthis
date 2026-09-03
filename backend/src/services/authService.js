@@ -2,7 +2,7 @@ const bcrypt = require('bcrypt');
 const slugify = require('slugify');
 const { createHash } = require('node:crypto');
 const { pool } = require('../config/db');
-const { redis } = require('../config/redis');
+const { connectRedis } = require('../config/redis');
 const { buildPublicSiteUrl, getSlugRestriction } = require('../config/publicSite');
 
 const BCRYPT_ROUNDS = 12;
@@ -484,6 +484,7 @@ async function revokeToken(token, decodedToken) {
     return;
   }
 
+  const redis = await connectRedis();
   await redis.set(getRevokedTokenKey(token), '1', {
     EX: getTokenTtlSeconds(decodedToken),
   });
@@ -494,11 +495,19 @@ async function isTokenRevoked(token) {
     return false;
   }
 
-  const [hashed, legacy] = await Promise.all([
-    redis.exists(getRevokedTokenKey(token)),
-    redis.exists(getLegacyRevokedTokenKey(token)),
-  ]);
-  return hashed === 1 || legacy === 1;
+  try {
+    const redis = await connectRedis();
+    const [hashed, legacy] = await Promise.all([
+      redis.exists(getRevokedTokenKey(token)),
+      redis.exists(getLegacyRevokedTokenKey(token)),
+    ]);
+    return hashed === 1 || legacy === 1;
+  } catch (error) {
+    // Revocation storage must not turn every otherwise-valid JWT into a 401
+    // during a transient Redis outage. Logout still clears the host cookie.
+    console.error('Session revocation lookup failed', error);
+    return false;
+  }
 }
 
 async function getUserByEmail(email) {

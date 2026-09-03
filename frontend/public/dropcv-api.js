@@ -16,10 +16,23 @@ const API_BASE = (() => {
 })();
 
 let currentUserRequest = null;
+let sessionRefreshRequest = null;
+let sessionExpiredNotified = false;
+
+function canRefreshSession(path) {
+  const normalized = String(path || '');
+  return normalized === '/api/auth/me' || !normalized.startsWith('/api/auth/');
+}
+
+function notifySessionExpired() {
+  if (sessionExpiredNotified) return;
+  sessionExpiredNotified = true;
+  window.dispatchEvent(new CustomEvent('dropcv:session-expired'));
+}
 
 window.dropCVApi = {
   // Core request method
-  async request(method, path, body = null, isFormData = false) {
+  async request(method, path, body = null, isFormData = false, skipSessionRefresh = false) {
     window.__dropcvPendingRequests = Number(window.__dropcvPendingRequests || 0) + 1;
     window.dispatchEvent(new Event('dropcv:request-start'));
     const options = {
@@ -42,12 +55,22 @@ window.dropCVApi = {
       const res = await fetch(API_BASE + path, options);
       const data = await res.json().catch(() => null);
 
-      return {
+      const result = {
         ok: res.ok,
         status: res.status,
         data,
         error: !res.ok ? (data?.error || 'Request failed') : null,
       };
+
+      if (result.status === 401 && !skipSessionRefresh && canRefreshSession(path)) {
+        const refreshed = await this.refreshSession();
+        if (refreshed.ok) {
+          return this.request(method, path, body, isFormData, true);
+        }
+        notifySessionExpired();
+      }
+
+      return result;
     } catch (err) {
       return {
         ok: false,
@@ -69,13 +92,17 @@ window.dropCVApi = {
     return this.request('GET', '/api/auth/me');
   },
   async login(email, password) {
-    return this.request('POST', '/api/auth/login', { email, password });
+    const result = await this.request('POST', '/api/auth/login', { email, password }, false, true);
+    if (result.ok) sessionExpiredNotified = false;
+    return result;
   },
   async register(payload) {
     return this.request('POST', '/api/auth/register', payload);
   },
   async verifyEmail(email, code) {
-    return this.request('POST', '/api/auth/verify-email', { email, code });
+    const result = await this.request('POST', '/api/auth/verify-email', { email, code }, false, true);
+    if (result.ok) sessionExpiredNotified = false;
+    return result;
   },
   async resendVerification(email, force = false) {
     return this.request('POST', '/api/auth/verify-email/resend', { email, force: Boolean(force) });
@@ -90,10 +117,20 @@ window.dropCVApi = {
     return this.request('GET', `/api/auth/slug-availability?slug=${encodeURIComponent(slug || '')}`);
   },
   async logout() {
-    return this.request('POST', '/api/auth/logout');
+    const result = await this.request('POST', '/api/auth/logout', null, false, true);
+    sessionExpiredNotified = false;
+    return result;
   },
   async refreshSession() {
-    return this.request('POST', '/api/auth/refresh');
+    if (sessionRefreshRequest) return sessionRefreshRequest;
+    sessionRefreshRequest = this.request('POST', '/api/auth/refresh', null, false, true);
+    try {
+      const result = await sessionRefreshRequest;
+      if (result.ok) sessionExpiredNotified = false;
+      return result;
+    } finally {
+      sessionRefreshRequest = null;
+    }
   },
   async getPlans() {
     return this.request('GET', '/api/plans');

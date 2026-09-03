@@ -310,7 +310,7 @@
       </section>
     </main>
     <script src="site-config.js"></script>
-    <script src="dropcv-api.js?v=20260903-billing-session"></script>
+    <script src="dropcv-api.js?v=20260904-session-manager"></script>
     <script>
       (function () {
         var selectedPlan = null,
@@ -424,17 +424,10 @@
           }
           return raw || fallback;
         }
-        async function getAuthenticatedUser() {
-          var me = await dropCVApi.getMe();
-          if (me.ok && me.data && me.data.user) return me;
-          if (me.status === 401 && typeof dropCVApi.refreshSession === "function") {
-            var refreshed = await dropCVApi.refreshSession();
-            if (refreshed.ok) me = await dropCVApi.getMe();
-          }
-          return me;
-        }
         async function init() {
-          var me = await getAuthenticatedUser();
+          // The shared API client performs one coordinated refresh and retry
+          // before this page decides that the session is truly invalid.
+          var me = await dropCVApi.getMe();
           if (!me.ok || !me.data || !me.data.user) {
             if (me.status === 401) {
               location.replace("login.html?next=billing.html");

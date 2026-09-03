@@ -279,11 +279,29 @@ async function authSuite({ test }) {
     context.professionalCookie = response.cookies;
   });
 
-  console.log(`Auth suite: ${passedCount}/17 tests passed`);
+  await run('TEST 18: Consecutive login rotates the session without revoking the new cookie', async () => {
+    const previousCookie = context.professionalCookie;
+    const response = await request('POST', '/api/auth/login', {
+      email: professionalEmail,
+      password: 'TestPass123!',
+    }, previousCookie);
+
+    assertStatus(response, 200, 'Consecutive login');
+    assert(response.cookies && response.cookies !== previousCookie, 'Expected a unique replacement cookie');
+
+    const previousSession = await request('GET', '/api/auth/me', undefined, previousCookie);
+    assertStatus(previousSession, 401, 'Previous cookie after session rotation');
+
+    const currentSession = await request('GET', '/api/auth/me', undefined, response.cookies);
+    assertStatus(currentSession, 200, 'Replacement cookie after session rotation');
+    context.professionalCookie = response.cookies;
+  });
+
+  console.log(`Auth suite: ${passedCount}/18 tests passed`);
 }
 
 module.exports = authSuite;
-module.exports.expectedTests = 17;
+module.exports.expectedTests = 18;
 
 if (require.main === module) {
   const runner = createRunner();

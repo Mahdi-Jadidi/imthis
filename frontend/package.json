@@ -5,7 +5,7 @@
   "scripts": {
     "dev": "next dev -p 3000 2>&1 | tee dev.log",
     "build": "prisma generate && node scripts/build.mjs",
-    "test:syntax": "node scripts/check-public-syntax.mjs",
+    "test:syntax": "node scripts/check-public-syntax.mjs && node --test scripts/session-client.test.mjs",
     "start": "NODE_ENV=production node .next/standalone/server.js > server.log 2>&1",
     "lint": "eslint .",
     "db:push": "prisma db push",

@@ -12,7 +12,7 @@
     "test:health": "dotenv -e .env.local -- node tests/suites/health.js",
     "test:auth": "dotenv -e .env.local -- node tests/suites/auth.js",
     "test:revenue": "dotenv -e .env.local -- node --test --test-concurrency=1 tests/revenue-mvp.test.js tests/payment-security.db.test.js",
-    "test:unit": "node --test --test-concurrency=1 tests/revenue-mvp.test.js tests/site-upload-security.test.js",
+    "test:unit": "node --test --test-concurrency=1 tests/revenue-mvp.test.js tests/session-service.test.js tests/site-upload-security.test.js",
     "test:production": "node scripts/production-smoke.mjs"
   },
   "dependencies": {

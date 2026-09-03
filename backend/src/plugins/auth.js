@@ -20,21 +20,6 @@ async function authPlugin(fastify) {
     },
   });
 
-  fastify.decorate('issueAuthCookie', async function issueAuthCookie(reply, payload) {
-    const token = await fastify.jwt.sign(payload);
-
-    const cookieOptions = {
-      httpOnly: true,
-      secure: env.nodeEnv === 'production',
-      sameSite: env.nodeEnv === 'production' ? 'none' : 'lax',
-      path: '/',
-      maxAge: 7 * 24 * 60 * 60,
-    };
-    if (env.cookieDomain) cookieOptions.domain = env.cookieDomain;
-    reply.setCookie('dropcv_token', token, cookieOptions);
-
-    return token;
-  });
 }
 
 module.exports = fp(authPlugin);
