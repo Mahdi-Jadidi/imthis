@@ -712,7 +712,10 @@
       document.getElementById("sidebar").classList.toggle("open");
     };
     document.getElementById("language").onclick = function () {
-      setLanguage(state.language === "fa" ? "en" : "fa");
+      var nextLanguage = state.language === "fa" ? "en" : "fa";
+      localStorage.setItem("dropcv_language", nextLanguage);
+      localStorage.setItem("dropcv_lang", nextLanguage);
+      window.location.reload();
     };
     document.getElementById("logout").onclick = async function () {
       await dropCVApi.logout();

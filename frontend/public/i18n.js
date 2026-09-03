@@ -67,7 +67,9 @@
       lang = lang === 'fa' ? 'en' : 'fa';
       localStorage.setItem('dropcv_language', lang);
       localStorage.setItem('dropcv_lang', lang);
-      apply();
+      // Reload so every page, including server-rendered content, starts in
+      // the selected direction and language without an intermediate repaint.
+      window.location.reload();
     },
     apply: apply
   };
